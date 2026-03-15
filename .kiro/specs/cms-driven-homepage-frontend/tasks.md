@@ -163,8 +163,8 @@
   - Ensure semantic HTML structure with main, header, footer elements
   - _Requirements: 17.1, 17.4, 20.5_
 
-- [ ] 6. Homepage — hero, facilities, activities, news, events, blogs, testimonials
-- [ ] 6.1 Build the hero carousel with auto-advance, swipe, and LCP optimization
+- [x] 6. Homepage — hero, facilities, activities, news, events, blogs, testimonials
+- [x] 6.1 Build the hero carousel with auto-advance, swipe, and LCP optimization
   - Render a full-width hero section with CMS-sourced slides (image, heading, subheading, CTA)
   - Auto-advance slides every 5 seconds with smooth crossfade transition
   - Support previous/next arrow controls and dot indicators
@@ -174,20 +174,20 @@
   - Ensure minimum 44x44px touch targets for all controls
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [ ] 6.2 (P) Build the facilities preview section
+- [x] 6.2 (P) Build the facilities preview section
   - Render a grid of facility cards with icon, title, and short description from CMS
   - Each card links to the detailed facilities page
   - On mobile, render as a horizontally scrollable carousel
   - Display 4-6 featured facilities
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 6.3 (P) Build the activities carousel section
+- [x] 6.3 (P) Build the activities carousel section
   - Render an auto-scrolling carousel of activity cards with image, title, and short description
   - Each card links to the activities page
   - Support manual navigation controls
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 6.4 (P) Build the latest news and upcoming events sections
+- [x] 6.4 (P) Build the latest news and upcoming events sections
   - Render 3-6 latest news cards with thumbnail, title, date, and excerpt
   - Render upcoming event cards with title, date, time, and description
   - Each card links to its detail page
@@ -195,19 +195,19 @@
   - When no content exists, show a configurable empty state or hide the section
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
 
-- [ ] 6.5 (P) Build the blog preview section
+- [x] 6.5 (P) Build the blog preview section
   - Render 3-4 latest blog cards with featured image, title, author, date, and excerpt
   - Each card links to the blog detail page
   - Include a "Read More" link to the blog listing page
   - _Requirements: 7.1, 7.2, 7.3_
 
-- [ ] 6.6 (P) Build the testimonials carousel
+- [x] 6.6 (P) Build the testimonials carousel
   - Render a rotating carousel of testimonials with quote, author name, role, and optional photo
   - Auto-advance with pause-on-hover behavior
   - Display a minimum of 3 testimonials in rotation
   - _Requirements: 8.1, 8.2, 8.3_
 
-- [ ] 6.7 Compose all homepage sections into the homepage and configure ISR
+- [x] 6.7 Compose all homepage sections into the homepage and configure ISR
   - Compose hero, facilities, activities, news/events, blogs, and testimonials into the homepage
   - Fetch all data via the API client at build time for ISR
   - Add scroll animations to each section using the in-view hook
