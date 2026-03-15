@@ -3,6 +3,7 @@ import { Cormorant_Garamond, DM_Sans, Noto_Sans_Devanagari } from 'next/font/goo
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from '@frontend/providers';
+import { Header, Footer, FloatingCTA } from '@/components/public/layout';
 
 // Primary body font - clean, modern sans-serif
 const dmSans = DM_Sans({
@@ -56,8 +57,13 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${cormorant.variable} ${notoDevanagari.variable}`}>
-      <body>
-        <Providers>{children}</Providers>
+      <body className="flex min-h-screen flex-col">
+        <Providers>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <FloatingCTA />
+        </Providers>
         <Analytics />
         <SpeedInsights />
       </body>

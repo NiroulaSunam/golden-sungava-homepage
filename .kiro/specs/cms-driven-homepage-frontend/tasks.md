@@ -121,8 +121,8 @@
   - Support configurable threshold and trigger-once behavior
   - _Requirements: 24.5_
 
-- [ ] 5. Layout — header, footer, mobile drawer, floating CTA, language switcher
-- [ ] 5.1 Build the responsive header with mega-menu navigation
+- [x] 5. Layout — header, footer, mobile drawer, floating CTA, language switcher
+- [x] 5.1 Build the responsive header with mega-menu navigation
   - Fetch navigation items from the API client using the current language
   - Render desktop navigation with dropdown menus for items that have children
   - Highlight the currently active page based on the current pathname
@@ -130,34 +130,34 @@
   - Include the school logo and name from site config
   - _Requirements: 17.1, 17.3_
 
-- [ ] 5.2 Build the mobile hamburger drawer navigation
+- [x] 5.2 Build the mobile hamburger drawer navigation
   - Render a hamburger button that opens a slide-out drawer on mobile viewports
   - Display all navigation items in an accordion-style expandable list
   - Include the language switcher and admission CTA inside the drawer
   - Close the drawer on navigation or outside click
   - _Requirements: 17.2_
 
-- [ ] 5.3 (P) Build the language switcher toggle component
+- [x] 5.3 (P) Build the language switcher toggle component
   - Render an EN/NP toggle button in the header (desktop) and mobile drawer
   - On click, call the language provider's setLanguage function
   - Show the currently active language with visual indicator
   - _Requirements: 21.4, 17.6_
 
-- [ ] 5.4 (P) Build the CMS-driven footer with contact info and social links
+- [x] 5.4 (P) Build the CMS-driven footer with contact info and social links
   - Render school address, phone numbers, email, office hours, and social media icons from site config
   - Include quick links from navigation data
   - Display copyright text with the school name from CMS
   - Use semantic HTML footer element
   - _Requirements: 17.4, 1.5, 20.5_
 
-- [ ] 5.5 (P) Build the floating admission CTA button for mobile
+- [x] 5.5 (P) Build the floating admission CTA button for mobile
   - Render a persistent "Get Admission" button fixed at the bottom of mobile viewports
   - Hide on desktop viewports
   - Link to the admission page
   - Use CTA text from site config if available
   - _Requirements: 17.5_
 
-- [ ] 5.6 Wire the layout components into a public layout wrapper
+- [x] 5.6 Wire the layout components into a public layout wrapper
   - Create a public layout component that composes header, main content area, footer, and floating CTA
   - Apply the layout in the root or a shared layout file so all pages inherit it
   - Ensure semantic HTML structure with main, header, footer elements
