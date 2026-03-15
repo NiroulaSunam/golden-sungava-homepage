@@ -55,15 +55,15 @@
   - Add a site-defaults constants file with hardcoded fallback values matching the English mock site-config
   - _Requirements: 25.1, 25.2, 25.3, 1.4_
 
-- [ ] 3. Context providers — site config, language, and theme
-- [ ] 3.1 Build the site configuration provider that fetches and caches CMS config
+- [x] 3. Context providers — site config, language, and theme
+- [x] 3.1 Build the site configuration provider that fetches and caches CMS config
   - Fetch site-config via the API client on mount
   - Cache the config in React state (single fetch per session)
   - Fall back to hardcoded site defaults if the API call fails or returns an error
   - Expose a `useSiteConfig()` hook returning config and loading state
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 22.1_
 
-- [ ] 3.2 Build the language provider with localStorage persistence and translation support
+- [x] 3.2 Build the language provider with localStorage persistence and translation support
   - Read the user's preferred language from localStorage on mount; default to English if absent or invalid
   - Provide a `setLanguage()` function that updates state, writes to localStorage, and triggers content re-fetch
   - Implement a `t()` translation function that looks up UI label keys from a translation dictionary
@@ -71,13 +71,13 @@
   - If a translation key is missing, fall back to English
   - _Requirements: 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.8, 22.3_
 
-- [ ] 3.3 Extend the theme provider to inject CMS-sourced color tokens at runtime
+- [x] 3.3 Extend the theme provider to inject CMS-sourced color tokens at runtime
   - Read theme colors from the site config provider
   - Apply CMS colors as `--cms-*` CSS custom properties on the document root element so Tailwind tokens pick them up
   - Support light/dark mode toggle via a CSS class
   - _Requirements: 1.2, 22.2, 24.1, 24.3_
 
-- [ ] 3.4 Compose all providers into the app-level wrapper and wire into root layout
+- [x] 3.4 Compose all providers into the app-level wrapper and wire into root layout
   - Compose SiteConfigProvider, CmsThemeProvider, LanguageProvider, and AuthProvider into a single AppProviders component
   - Display a minimal, non-layout-shifting loading state while providers initialize
   - Wire AppProviders into the root layout replacing the old MUI-based provider tree

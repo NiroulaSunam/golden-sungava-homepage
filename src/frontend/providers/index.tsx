@@ -1,13 +1,15 @@
 /**
  * Main Providers Component
- * Wraps the app with all necessary context providers.
- * MUI removed — uses lightweight CSS-based theming.
+ * Composes all context providers into a single wrapper.
+ * Order: ThemeProvider → SiteConfigProvider → CmsThemeInjector → LanguageProvider → AuthProvider
  */
 
 'use client';
 
 import { type ReactNode } from 'react';
-import { ThemeProvider } from './theme-provider';
+import { ThemeProvider, CmsThemeInjector } from './theme-provider';
+import { SiteConfigProvider } from './site-config-provider';
+import { LanguageProvider } from './language-provider';
 import { AuthProvider } from '@/lib/auth/provider';
 
 interface ProvidersProps {
@@ -17,12 +19,20 @@ interface ProvidersProps {
 export const Providers = ({ children }: ProvidersProps) => {
   return (
     <ThemeProvider defaultMode="light">
-      <AuthProvider>
-        {children}
-      </AuthProvider>
+      <SiteConfigProvider>
+        <CmsThemeInjector>
+          <LanguageProvider>
+            <AuthProvider>
+              {children}
+            </AuthProvider>
+          </LanguageProvider>
+        </CmsThemeInjector>
+      </SiteConfigProvider>
     </ThemeProvider>
   );
 };
 
-// Re-export individual providers for direct use
-export { ThemeProvider, useTheme } from './theme-provider';
+// Re-export providers and hooks for direct use
+export { ThemeProvider, useTheme, CmsThemeInjector } from './theme-provider';
+export { SiteConfigProvider, useSiteConfig } from './site-config-provider';
+export { LanguageProvider, useLanguage } from './language-provider';

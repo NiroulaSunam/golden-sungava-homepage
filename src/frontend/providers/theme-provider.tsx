@@ -2,11 +2,16 @@
  * CMS Theme Provider
  * Injects CMS-sourced theme tokens as CSS custom properties on :root.
  * No MUI dependency — lightweight CSS variable injector.
+ *
+ * Two parts:
+ * 1. ThemeProvider — manages light/dark mode (wraps everything)
+ * 2. CmsThemeInjector — reads SiteConfig and applies --cms-* vars (placed inside SiteConfigProvider)
  */
 
 'use client';
 
 import { type ReactNode, createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
+import { useSiteConfig } from './site-config-provider';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -61,4 +66,31 @@ export const ThemeProvider = ({ children, defaultMode = 'light' }: ThemeProvider
       {children}
     </ThemeContext.Provider>
   );
+};
+
+/**
+ * CMS Theme Injector
+ * Reads theme colors from SiteConfigProvider and applies them as
+ * --cms-* CSS custom properties on document.documentElement.
+ * Must be placed inside SiteConfigProvider.
+ */
+export const CmsThemeInjector = ({ children }: { children: ReactNode }) => {
+  const { config } = useSiteConfig();
+
+  useEffect(() => {
+    const root = document.documentElement.style;
+    const { theme } = config;
+
+    root.setProperty('--cms-primary', theme.primaryColor);
+    root.setProperty('--cms-primary-light', theme.primaryLight);
+    root.setProperty('--cms-primary-dark', theme.primaryDark);
+    root.setProperty('--cms-background', theme.backgroundColor);
+    root.setProperty('--cms-foreground', theme.foregroundColor);
+    root.setProperty('--cms-muted', theme.mutedColor);
+    root.setProperty('--cms-muted-foreground', theme.mutedForeground);
+    root.setProperty('--cms-accent', theme.accentColor);
+    root.setProperty('--cms-accent-foreground', theme.accentForeground);
+  }, [config]);
+
+  return <>{children}</>;
 };
