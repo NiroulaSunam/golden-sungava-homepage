@@ -34,13 +34,13 @@
   - Create a placeholder SVG image for the image fallback component
   - _Requirements: 21.1, 18.3, 20.10_
 
-- [ ] 2. Data layer — API client, registry, and shared types
-- [ ] 2.1 Create the API implementation registry with all endpoint configurations
+- [x] 2. Data layer — API client, registry, and shared types
+- [x] 2.1 Create the API implementation registry with all endpoint configurations
   - Define a typed map of all 13 endpoints with their implementation status (all start as false), API URL pattern, mock data key, and description
   - Export the registry as a compile-time constant
   - _Requirements: 2.6, 2.7, 2.8, 2.9_
 
-- [ ] 2.2 Build the centralized data-fetching client that switches between mock and real API
+- [x] 2.2 Build the centralized data-fetching client that switches between mock and real API
   - Create a single `fetchApi` function that checks the registry for each endpoint
   - When an endpoint is not implemented, resolve from mock data files using the language parameter
   - When an endpoint is implemented, make an HTTP request to the real API URL with the language query parameter appended
@@ -49,7 +49,7 @@
   - Never throw — always return a structured response with data or error
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.10, 21.10, 25.4_
 
-- [ ] 2.3 (P) Define shared API response types and re-export mock types
+- [x] 2.3 (P) Define shared API response types and re-export mock types
   - Create a shared types file exporting ApiEndpoint, FetchOptions, ApiResponse, BilingualData, and all content types (SiteConfig, HeroSlide, NavItem, etc.)
   - Ensure all types align with existing mock data exports
   - Add a site-defaults constants file with hardcoded fallback values matching the English mock site-config
