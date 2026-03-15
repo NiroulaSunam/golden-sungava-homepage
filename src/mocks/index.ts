@@ -29,6 +29,7 @@ export { mockTestimonials } from './data/testimonials';
 export { mockActivities } from './data/activities';
 export { mockHeroSlides } from './data/hero-slides';
 export { mockNavigation } from './data/navigation';
+export { mockFaqs } from './data/faqs';
 
 // --- Type re-exports ---
 export type { StaffMember } from './data/staff';
@@ -42,6 +43,7 @@ export type { Testimonial } from './data/testimonials';
 export type { Activity } from './data/activities';
 export type { HeroSlide } from './data/hero-slides';
 export type { NavItem } from './data/navigation';
+export type { FaqItem } from './data/faqs';
 
 /**
  * Mock Registry — tracks all endpoints

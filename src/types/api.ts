@@ -17,7 +17,8 @@ export type ApiEndpoint =
   | 'activities'
   | 'testimonials'
   | 'gallery-photos'
-  | 'principal-message';
+  | 'principal-message'
+  | 'faqs';
 
 // --- Fetch options ---
 
@@ -59,6 +60,7 @@ export type { Activity } from '@/mocks/data/activities';
 export type { HeroSlide } from '@/mocks/data/hero-slides';
 export type { NavItem } from '@/mocks/data/navigation';
 export type { PrincipalMessage } from '@/mocks/data/principal-message';
+export type { FaqItem } from '@/mocks/data/faqs';
 
 // SiteConfig type — inlined here since the mock file defines it locally
 export type SiteConfig = {

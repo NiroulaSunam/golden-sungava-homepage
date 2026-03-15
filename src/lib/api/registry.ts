@@ -99,6 +99,12 @@ export const apiRegistry: Record<ApiEndpoint, EndpointConfig> = {
     mockKey: 'principal-message',
     description: "Principal's welcome message, photo, and signature",
   },
+  faqs: {
+    implemented: false,
+    apiUrl: '/api/faqs',
+    mockKey: 'faqs',
+    description: 'Frequently asked questions for admission page',
+  },
 };
 
 export const isImplemented = (endpoint: ApiEndpoint): boolean =>

@@ -272,37 +272,38 @@
   - Each route fetches data via the API client with language parameter and generates ISR metadata
   - _Requirements: 13.1, 13.2, 13.3, 13.5, 18.1_
 
-- [ ] 9. Public pages — admission, calendar, facilities, downloads, payment, contact
-- [ ] 9.1 Build the Admission page with online form and QR code
+- [x] 9. Public pages — admission, calendar, facilities, downloads, payment, contact
+- [x] 9.1 Build the Admission page with online form and QR code
   - Display admission information, eligibility criteria, and process steps from CMS
   - Build an embedded admission form with fields validated by Zod schemas
   - Show inline field-level validation errors on submission
   - Display a QR code image from CMS for mobile enrollment
   - Show a confirmation message on successful submission
   - Include FAQ structured data for rich snippet eligibility
+  - FAQ data fetched via `fetchApi('faqs', { lang })` with bilingual mock data and JSON-LD structured data rendered dynamically
   - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5, 20.8_
 
-- [ ] 9.2 (P) Build the Calendar page
+- [x] 9.2 (P) Build the Calendar page
   - Display the academic calendar from CMS with events marked by date
   - Render a visual calendar grid or timeline with event indicators
   - _Requirements: 15.1_
 
-- [ ] 9.3 (P) Build the Facilities detail page
+- [x] 9.3 (P) Build the Facilities detail page
   - Display all school facilities from CMS with name, description, and image gallery
   - Use the image-with-fallback component for all facility images
   - _Requirements: 15.2_
 
-- [ ] 9.4 (P) Build the Downloads page
+- [x] 9.4 (P) Build the Downloads page
   - List downloadable documents from CMS with title, file type icon, and Google Drive download link
   - Each download opens the Google Drive link in a new tab
   - _Requirements: 15.3, 15.4_
 
-- [ ] 9.5 (P) Build the Payment Info page
+- [x] 9.5 (P) Build the Payment Info page
   - Display Khalti and eSewa payment instructions with QR code images from CMS
   - Render step-by-step payment guides
   - _Requirements: 16.1_
 
-- [ ] 9.6 Build the Contact page with form and map
+- [x] 9.6 Build the Contact page with form and map
   - Display phone numbers, emails, office hours, and address from site config
   - Embed a Google Maps iframe showing the school location
   - Include clickable WhatsApp and Messenger links from CMS
