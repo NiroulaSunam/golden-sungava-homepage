@@ -5,3 +5,6 @@ export { JsonLd } from './json-ld';
 export { Breadcrumbs } from './breadcrumbs';
 export { SectionHeading } from './section-heading';
 export { ContentCard } from './content-card';
+export { Pagination } from './pagination';
+export { ListingPage } from './listing-page';
+export { DetailPage } from './detail-page';

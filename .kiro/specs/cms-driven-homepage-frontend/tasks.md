@@ -249,22 +249,22 @@
   - Support pagination for large collections
   - _Requirements: 12.3, 12.4, 12.5_
 
-- [ ] 8. Public pages — news, events, notices, blogs listing and detail
-- [ ] 8.1 Build a reusable listing page component with search and pagination
+- [x] 8. Public pages — news, events, notices, blogs listing and detail
+- [x] 8.1 Build a reusable listing page component with search and pagination
   - Create a shared listing page template that accepts a content type and renders a paginated grid of content cards
   - Support search input and category/date filtering
   - Include skeleton loaders while data is fetching
   - Render pagination controls at the bottom
   - _Requirements: 13.1, 13.2, 13.3, 13.4_
 
-- [ ] 8.2 Build a reusable detail page component for rich content
+- [x] 8.2 Build a reusable detail page component for rich content
   - Create a shared detail page template that renders full CMS content with images, rich text, and related links
   - Support PDF download links for notices with Google Drive attachments
   - Include breadcrumbs and page-specific SEO metadata
   - Implement internal linking between related content types
   - _Requirements: 13.5, 13.6, 20.6, 20.11_
 
-- [ ] 8.3 Wire up News, Events, Notices, and Blogs listing and detail routes
+- [x] 8.3 Wire up News, Events, Notices, and Blogs listing and detail routes
   - Create the news listing page and dynamic detail page route
   - Create the events listing page and dynamic detail page route
   - Create the notices listing page
