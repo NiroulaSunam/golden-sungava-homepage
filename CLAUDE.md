@@ -1,13 +1,19 @@
 # Claude Code Project Context
 
-Golden Sungava Homepage — _project introduction to be added later_.
+Golden Sungava Homepage — Premium school website for Golden Sungava English Boarding School
+(Changunarayan-2, Duwakot, Bhaktapur, Nepal). Replaces the legacy site (goldensungavaschool.edu.np).
+Two-part system: **public-facing ISR website** + **admin CMS** for content management.
 
-**Stack**: Next.js 16.1 + TailwindCSS 4 + shadcn/ui + Supabase (PostgreSQL + Storage) + Zod
+**Stack**: Next.js 16.1 (ISR) + TailwindCSS 4 + shadcn/ui + Supabase (PostgreSQL) + Google Drive (media) + YouTube (video) + Zod
 
 **Architecture**:
 - Path Alias: `@/*` -> `./src/*`
+- Rendering: ISR for public pages, CSR for admin dashboard
 - Auth: Supabase Auth (no RLS - app-layer security via `src/lib/permissions/`)
-- Storage: Supabase Storage for files
+- Media: Google Drive for images/documents, YouTube embeds for videos (no Supabase Storage for public media)
+- PWA: Service worker + web manifest for mobile app experience
+- Design: Mobile-first, premium Deep Gold + dark neutrals (all via CSS custom properties / Tailwind theme tokens, never hardcoded hex)
+- i18n: Bilingual (English + Nepali) with language switcher
 
 ---
 
@@ -212,7 +218,7 @@ src/
 │   └── providers/            # Context providers (Theme, Auth, Emotion)
 ├── lib/
 │   ├── auth/                 # Auth context + guards
-│   ├── supabase/             # Supabase clients (browser, server, middleware)
+│   ├── supabase/             # Supabase clients (browser, server, proxy)
 │   ├── storage/              # File storage utils
 │   ├── hooks/                # Custom hooks
 │   ├── constants/            # Shared constants
@@ -220,7 +226,7 @@ src/
 │   └── utils.ts              # Utilities (cn, etc.)
 ├── types/
 │   └── database.ts           # Type aliases (from database.gen.ts)
-└── middleware.ts              # Next.js middleware (session refresh)
+└── proxy.ts                  # Next.js proxy (session refresh) — NOT middleware.ts
 
 supabase/
 ├── migrations/               # Auto-generated (DO NOT EDIT)
@@ -330,6 +336,55 @@ const form = useForm({
 - **Do not manually define DB enums** - import from `database.gen.ts`
 - **Do not skip `'use client'`** when using hooks/browser APIs
 - **Do not use `any`** - define proper types
+- **Do not use `middleware.ts`** - use `proxy.ts` instead (middleware is deprecated in Next.js 16.1)
+- **Do not use `function` declarations** - use arrow functions (`const fn = () => {}`) everywhere
+
+---
+
+## Component Architecture
+
+**Small, modular, readable components — even for private/single-use ones:**
+
+```
+src/components/public/home/
+├── hero-carousel.tsx        # Hero section only
+├── facilities-preview.tsx   # Facilities grid
+├── activities-section.tsx   # Activities carousel
+├── latest-news.tsx          # News cards
+├── blog-preview.tsx         # Blog cards
+├── testimonials.tsx         # Testimonials carousel
+└── index.ts                 # Barrel export
+```
+
+**Rules:**
+- **Always use arrow functions** — `const fn = () => {}`, never `function fn() {}`. This applies to **everything**: components, helpers, handlers, utilities, callbacks. Hard rule for the entire project.
+- One component per file (max ~50-80 lines of JSX)
+- **Aggressively extract sub-components** — even within the same file, any logical chunk of JSX (list rendering, form section, card layout, conditional block) should become a private sub-component
+- Private sub-components can live in the same file (unexported) or co-located in the same directory
+- Pattern: Large component → break into private `_SectionName` sub-components at the top of the file, compose them in the exported component at the bottom
+- Named exports only (except page components)
+- Props interfaces defined in same file, above component
+
+**Arrow functions only — never use `function` for components:**
+```tsx
+// hero-carousel.tsx
+
+// Private sub-components (not exported)
+const HeroSlide = ({ image, title }: HeroSlideProps) => { ... };
+const HeroIndicators = ({ count, active }: IndicatorProps) => { ... };
+const HeroControls = ({ onPrev, onNext }: ControlProps) => { ... };
+
+// Public component (named export)
+export const HeroCarousel = ({ slides }: HeroCarouselProps) => {
+  return (
+    <section>
+      <HeroSlide ... />
+      <HeroIndicators ... />
+      <HeroControls ... />
+    </section>
+  );
+};
+```
 
 ---
 
@@ -388,53 +443,6 @@ Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life
 
 ## Development Rules
 - 3-phase approval workflow: Requirements -> Design -> Tasks -> Implementation
-- Human review required each phase; use `-y` only for intentional fast-track
-- Keep steering current and verify alignment with `/kiro:spec-status`
-- Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
-
-## Steering Configuration
-- Load entire `.kiro/steering/` as project memory
-- Default files: `product.md`, `tech.md`, `structure.md`
-- Custom files are supported (managed via `/kiro:steering-custom`)
-
-
-# AI-DLC and Spec-Driven Development
-
-Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life Cycle)
-
-## Project Context
-
-### Paths
-- Steering: `.kiro/steering/`
-- Specs: `.kiro/specs/`
-
-### Steering vs Specification
-
-**Steering** (`.kiro/steering/`) - Guide AI with project-wide rules and context
-**Specs** (`.kiro/specs/`) - Formalize development process for individual features
-
-### Active Specifications
-- Check `.kiro/specs/` for active specifications
-- Use `/kiro:spec-status [feature-name]` to check progress
-
-## Development Guidelines
-- Think in English, generate responses in English. All Markdown content written to project files (e.g., requirements.md, design.md, tasks.md, research.md, validation reports) MUST be written in the target language configured for this specification (see spec.json.language).
-
-## Minimal Workflow
-- Phase 0 (optional): `/kiro:steering`, `/kiro:steering-custom`
-- Phase 1 (Specification):
-  - `/kiro:spec-init "description"`
-  - `/kiro:spec-requirements {feature}`
-  - `/kiro:validate-gap {feature}` (optional: for existing codebase)
-  - `/kiro:spec-design {feature} [-y]`
-  - `/kiro:validate-design {feature}` (optional: design review)
-  - `/kiro:spec-tasks {feature} [-y]`
-- Phase 2 (Implementation): `/kiro:spec-impl {feature} [tasks]`
-  - `/kiro:validate-impl {feature}` (optional: after implementation)
-- Progress check: `/kiro:spec-status {feature}` (use anytime)
-
-## Development Rules
-- 3-phase approval workflow: Requirements → Design → Tasks → Implementation
 - Human review required each phase; use `-y` only for intentional fast-track
 - Keep steering current and verify alignment with `/kiro:spec-status`
 - Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
