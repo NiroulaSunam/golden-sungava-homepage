@@ -1,2 +1,1 @@
-// Custom hooks barrel export
-// Add hooks here as the project develops
+export { useInView } from './use-in-view';

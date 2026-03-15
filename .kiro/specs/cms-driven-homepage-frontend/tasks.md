@@ -83,39 +83,39 @@
   - Wire AppProviders into the root layout replacing the old MUI-based provider tree
   - _Requirements: 22.4, 22.5_
 
-- [ ] 4. Shared components — image fallback, skeletons, SEO, breadcrumbs
-- [ ] 4.1 (P) Build the image-with-fallback component wrapping Next.js Image
+- [x] 4. Shared components — image fallback, skeletons, SEO, breadcrumbs
+- [x] 4.1 (P) Build the image-with-fallback component wrapping Next.js Image
   - Wrap the Next.js Image component with an onError handler that swaps to the placeholder SVG
   - Accept all standard Next.js Image props plus an optional custom fallback source
   - Handle Google Drive and S3 URLs that may return 403
   - _Requirements: 20.10, 18.3_
 
-- [ ] 4.2 (P) Build the skeleton loader component for content loading states
+- [x] 4.2 (P) Build the skeleton loader component for content loading states
   - Create a configurable skeleton component that renders animated placeholder shapes (rectangle, circle, text lines)
   - Support variant props for different content types (card, text block, image, avatar)
   - Use CSS animations (pulse) consistent with the design system
   - _Requirements: 18.6_
 
-- [ ] 4.3 (P) Build SEO metadata helper and JSON-LD structured data component
+- [x] 4.3 (P) Build SEO metadata helper and JSON-LD structured data component
   - Create a metadata generation helper that accepts page-specific CMS SEO fields and returns a Next.js Metadata object with title, description, Open Graph tags, and canonical URL
   - Build a JSON-LD component that renders Schema.org structured data as a script tag in the page head
   - Support EducationalOrganization, BreadcrumbList, and FAQPage schema types
   - Source school details from site config
   - _Requirements: 20.1, 20.2, 20.4, 20.5, 20.8, 20.9_
 
-- [ ] 4.4 (P) Build breadcrumb navigation component with structured data
+- [x] 4.4 (P) Build breadcrumb navigation component with structured data
   - Render breadcrumb links based on current path segments
   - Include JSON-LD BreadcrumbList markup for search engine rich results
   - Use semantic HTML nav element
   - _Requirements: 20.6_
 
-- [ ] 4.5 (P) Build section heading and content card shared components
+- [x] 4.5 (P) Build section heading and content card shared components
   - Create a reusable section heading component with title, optional subtitle, and "View All" link
   - Create a reusable content card component for news, events, and blog items (image, title, date, excerpt, link)
   - Use the image-with-fallback component for all images
   - _Requirements: 23.1, 23.3, 23.4_
 
-- [ ] 4.6 (P) Build the scroll-triggered animation hook
+- [x] 4.6 (P) Build the scroll-triggered animation hook
   - Create a custom hook using the Intersection Observer API that returns a ref and a boolean for in-view state
   - Components apply CSS animation classes when the element enters the viewport
   - Support configurable threshold and trigger-once behavior
