@@ -1,13 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { Calendar, Clock } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import type { SchoolEvent } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { useLanguage } from '@/frontend/providers/language-provider';
 
-// --- Sub-component ---
+// --- Sub-components ---
+
+const DateBadge = ({ date }: { date: string }) => {
+  const parts = date.split(' ');
+  const month = parts[0]?.slice(0, 3) || '';
+  const day = parts[1]?.replace(',', '') || '';
+
+  return (
+    <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10 text-primary">
+      <span className="text-xs font-semibold uppercase">{month}</span>
+      <span className="font-heading text-xl font-bold leading-tight">{day}</span>
+    </div>
+  );
+};
 
 interface EventCardProps {
   event: SchoolEvent;
@@ -16,26 +29,14 @@ interface EventCardProps {
 const EventCard = ({ event }: EventCardProps) => (
   <Link
     href={`/events/${event.id}`}
-    className="group flex gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md"
+    className="card-gold-accent group flex gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md"
   >
-    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md">
-      <ImageWithFallback
-        src={event.imageUrl}
-        alt={event.title}
-        fill
-        className="object-cover"
-        sizes="96px"
-      />
-    </div>
+    <DateBadge date={event.date} />
     <div className="flex flex-col justify-center">
       <h3 className="line-clamp-2 font-heading text-base font-semibold group-hover:text-primary">
         {event.title}
       </h3>
       <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <Calendar className="h-3.5 w-3.5" />
-          {event.date}
-        </span>
         {event.time && (
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" />

@@ -23,7 +23,7 @@ interface DetailPageProps {
 
 const MetaItem = ({ icon: Icon, children }: { icon: typeof Calendar; children: React.ReactNode }) => (
   <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-    <Icon className="h-4 w-4" />
+    <Icon className="h-4 w-4 text-primary/60" />
     {children}
   </span>
 );
@@ -56,6 +56,7 @@ export const DetailPage = ({
       </Link>
 
       <h1 className="mt-6 font-heading text-3xl font-bold md:text-4xl">{title}</h1>
+      <div className="mt-3 h-[3px] w-12 rounded-full bg-primary" />
 
       {/* Meta row */}
       <div className="mt-4 flex flex-wrap gap-4">

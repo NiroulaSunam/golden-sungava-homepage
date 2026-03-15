@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { HeroSlide } from '@/types/api';
-import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { cn } from '@/lib/utils';
 
 // --- Sub-components ---
@@ -12,39 +11,41 @@ import { cn } from '@/lib/utils';
 interface HeroSlideProps {
   slide: HeroSlide;
   isActive: boolean;
-  isPriority: boolean;
 }
 
-const HeroSlideItem = ({ slide, isActive, isPriority }: HeroSlideProps) => (
+const HeroSlideItem = ({ slide, isActive }: HeroSlideProps) => (
   <div
     className={cn(
       'absolute inset-0 transition-opacity duration-700',
       isActive ? 'opacity-100' : 'opacity-0 pointer-events-none',
     )}
   >
-    <ImageWithFallback
-      src={slide.imageUrl}
-      alt={slide.heading}
-      fill
-      className="object-cover"
-      sizes="100vw"
-      priority={isPriority}
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-    <div className="absolute inset-0 flex items-end pb-16 md:items-center md:pb-0">
+    {/* Gradient background — always present, premium even without images */}
+    <div className="absolute inset-0 bg-gold-gradient" />
+    {/* Geometric texture overlay */}
+    <div className="absolute inset-0 texture-overlay" />
+    {/* Dark overlay for text readability */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+    {/* Content */}
+    <div className="absolute inset-0 z-10 flex items-end pb-16 md:items-center md:pb-0">
       <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
-        <h1 className="max-w-2xl font-heading text-3xl font-bold text-white md:text-5xl lg:text-6xl">
+        <h1 className="hero-stagger-1 max-w-2xl font-heading text-3xl font-bold text-white opacity-0 md:text-5xl lg:text-6xl">
           {slide.heading}
         </h1>
-        <p className="mt-4 max-w-xl text-base text-white/90 md:text-lg">
+        <p className="hero-stagger-2 mt-4 max-w-xl text-base text-white/90 opacity-0 md:text-lg">
           {slide.subheading}
         </p>
-        <Link
-          href={slide.ctaLink}
-          className="mt-6 inline-block rounded-md bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark md:px-8 md:py-3.5 md:text-base"
-        >
-          {slide.ctaText}
-        </Link>
+        {/* Decorative gold line */}
+        <div className="hero-stagger-3 mt-6 opacity-0">
+          <div className="mb-4 h-[2px] w-16 bg-primary" />
+          <Link
+            href={slide.ctaLink}
+            className="inline-block rounded-md bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark md:px-8 md:py-3.5 md:text-base"
+          >
+            {slide.ctaText}
+          </Link>
+        </div>
       </div>
     </div>
   </div>
@@ -57,7 +58,7 @@ interface HeroIndicatorsProps {
 }
 
 const HeroIndicators = ({ count, active, onSelect }: HeroIndicatorsProps) => (
-  <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+  <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
     {Array.from({ length: count }).map((_, i) => (
       <button
         key={i}
@@ -83,7 +84,7 @@ const HeroControls = ({ onPrev, onNext }: HeroControlsProps) => (
     <button
       type="button"
       onClick={onPrev}
-      className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/50 md:p-3"
+      className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/50 md:p-3"
       aria-label="Previous slide"
     >
       <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
@@ -91,7 +92,7 @@ const HeroControls = ({ onPrev, onNext }: HeroControlsProps) => (
     <button
       type="button"
       onClick={onNext}
-      className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/50 md:p-3"
+      className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/50 md:p-3"
       aria-label="Next slide"
     >
       <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
@@ -140,7 +141,7 @@ export const HeroCarousel = ({ slides }: HeroCarouselProps) => {
 
   return (
     <section
-      className="relative h-[60vh] min-h-[400px] w-full overflow-hidden md:h-[75vh]"
+      className="relative h-[50vh] min-h-[400px] w-full overflow-hidden md:h-[75vh]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -151,7 +152,6 @@ export const HeroCarousel = ({ slides }: HeroCarouselProps) => {
           key={slide.id}
           slide={slide}
           isActive={index === current}
-          isPriority={index === 0}
         />
       ))}
       {slides.length > 1 && (

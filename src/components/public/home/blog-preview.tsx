@@ -24,8 +24,9 @@ export const BlogPreview = ({ blogs }: BlogPreviewProps) => {
           viewAllHref="/blogs"
           viewAllLabel={t('action.readMore')}
         />
+        {/* Offset grid: first two cards, then remaining shifted */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {blogs.slice(0, 4).map((blog) => (
+          {blogs.slice(0, 4).map((blog, i) => (
             <ContentCard
               key={blog.id}
               title={blog.title}
@@ -34,6 +35,7 @@ export const BlogPreview = ({ blogs }: BlogPreviewProps) => {
               date={blog.date}
               excerpt={blog.excerpt}
               author={blog.author}
+              className={i >= 2 ? 'lg:translate-y-4' : ''}
             />
           ))}
         </div>

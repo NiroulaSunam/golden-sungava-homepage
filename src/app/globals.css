@@ -179,3 +179,72 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ============================================================
+   Staggered Animation Delays
+   ============================================================ */
+.delay-100 { animation-delay: 100ms; transition-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; transition-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; transition-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; transition-delay: 400ms; }
+
+/* ============================================================
+   Gold Gradient Utilities
+   ============================================================ */
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #1A1A1A 0%, #2A2218 40%, #3D2E10 70%, var(--cms-primary-dark) 100%);
+}
+
+/* ============================================================
+   Texture Overlay — CSS-only geometric pattern
+   ============================================================ */
+.texture-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.03) 1px, transparent 1px),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================================
+   Section Divider
+   ============================================================ */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--cms-primary), transparent);
+  opacity: 0.3;
+}
+
+/* ============================================================
+   Card Gold Accent on Hover
+   ============================================================ */
+.card-gold-accent {
+  border-top: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.card-gold-accent:hover {
+  border-top-color: var(--cms-primary);
+}
+
+/* ============================================================
+   Hero Stagger Animations
+   ============================================================ */
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-stagger-1 { animation: hero-fade-in 0.8s ease-out 0ms forwards; }
+.hero-stagger-2 { animation: hero-fade-in 0.8s ease-out 150ms forwards; }
+.hero-stagger-3 { animation: hero-fade-in 0.8s ease-out 300ms forwards; }

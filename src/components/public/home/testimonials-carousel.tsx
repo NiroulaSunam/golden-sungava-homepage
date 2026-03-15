@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Quote } from 'lucide-react';
 import type { Testimonial } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
@@ -22,9 +21,12 @@ const TestimonialCard = ({ testimonial, isActive }: TestimonialCardProps) => (
     )}
   >
     <div className="max-w-2xl text-center">
-      <Quote className="mx-auto mb-4 h-8 w-8 text-primary/40" />
+      {/* Large decorative gold quote mark */}
+      <div className="mx-auto mb-2 font-heading text-[120px] leading-[0.6] text-primary/20" aria-hidden="true">
+        &ldquo;
+      </div>
       <blockquote className="font-heading text-lg italic leading-relaxed text-foreground md:text-xl">
-        &ldquo;{testimonial.quote}&rdquo;
+        {testimonial.quote}
       </blockquote>
       <div className="mt-6">
         <p className="font-semibold text-foreground">{testimonial.authorName}</p>
@@ -60,13 +62,17 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
 
   return (
     <section
-      className="bg-muted py-16 md:py-20"
+      className="relative overflow-hidden py-16 md:py-20"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
+      {/* Radial gradient background */}
+      <div className="absolute inset-0 bg-muted" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--cms-primary)_0%,transparent_70%)] opacity-[0.04]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading title={t('heading.testimonials')} />
-        <div className="relative min-h-[250px]">
+        <div className="relative min-h-[280px]">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard
               key={testimonial.id}

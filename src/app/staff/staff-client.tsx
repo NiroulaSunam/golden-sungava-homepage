@@ -6,7 +6,7 @@ import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import type { StaffMember } from '@/types/api';
 import { departmentLabels, designationLabels } from '@/mocks/data/staff';
-import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { PageHeader } from '@/components/shared/page-header';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 import { cn } from '@/lib/utils';
@@ -29,8 +29,8 @@ const StaffCard = ({ member, lang }: StaffCardProps) => {
     : member.designation;
 
   return (
-    <div className="flex items-start gap-4 rounded-lg border border-border bg-card p-4">
-      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full">
+    <div className="card-gold-accent flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:shadow-md">
+      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/10">
         <ImageWithFallback
           src={member.photoUrl || '/images/placeholder.svg'}
           alt={member.name}
@@ -79,55 +79,59 @@ export const StaffDirectoryClient = () => {
     : staff.filter((m) => m.department === activeDept);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={[{ label: t('heading.staff'), href: '/staff' }]} />
+    <>
+      <PageHeader
+        title={t('heading.staff')}
+        subtitle="Meet our dedicated team of teachers and staff."
+        breadcrumbs={[{ label: t('heading.staff'), href: '/staff' }]}
+      />
 
-      <h1 className="mt-8 font-heading text-3xl font-bold md:text-4xl">{t('heading.staff')}</h1>
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        {/* Department Filter */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveDept('all')}
+            className={cn(
+              'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+              activeDept === 'all' ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
+            )}
+          >
+            {t('misc.all')}
+          </button>
+          {DEPARTMENTS.map((dept) => {
+            const label = lang === 'np' ? departmentLabels.np[dept] || dept : dept;
+            return (
+              <button
+                key={dept}
+                type="button"
+                onClick={() => setActiveDept(dept)}
+                className={cn(
+                  'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+                  activeDept === dept ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
 
-      {/* Department Filter */}
-      <div className="mt-6 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setActiveDept('all')}
-          className={cn(
-            'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-            activeDept === 'all' ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
-          )}
-        >
-          {t('misc.all')}
-        </button>
-        {DEPARTMENTS.map((dept) => {
-          const label = lang === 'np' ? departmentLabels.np[dept] || dept : dept;
-          return (
-            <button
-              key={dept}
-              type="button"
-              onClick={() => setActiveDept(dept)}
-              className={cn(
-                'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                activeDept === dept ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {label}
-            </button>
-          );
-        })}
+        {/* Staff Grid */}
+        {isLoading ? (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonLoader key={i} variant="card" />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((member, i) => (
+              <StaffCard key={`${member.name}-${i}`} member={member} lang={lang} />
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Staff Grid */}
-      {isLoading ? (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonLoader key={i} variant="card" />
-          ))}
-        </div>
-      ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((member, i) => (
-            <StaffCard key={`${member.name}-${i}`} member={member} lang={lang} />
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 };

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import type { SchoolEvent } from '@/types/api';
-import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { PageHeader } from '@/components/shared/page-header';
 import { ListingPage } from '@/components/shared/listing-page';
 
 export const EventsListClient = () => {
@@ -30,10 +30,14 @@ export const EventsListClient = () => {
   }));
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={[{ label: t('heading.upcomingEvents'), href: '/events' }]} />
-      <h1 className="mt-8 font-heading text-3xl font-bold md:text-4xl">{t('heading.upcomingEvents')}</h1>
-      <ListingPage items={items} basePath="/events" isLoading={isLoading} searchPlaceholder={t('action.search')} className="mt-8" />
-    </div>
+    <>
+      <PageHeader
+        title={t('heading.upcomingEvents')}
+        breadcrumbs={[{ label: t('heading.upcomingEvents'), href: '/events' }]}
+      />
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        <ListingPage items={items} basePath="/events" isLoading={isLoading} searchPlaceholder={t('action.search')} />
+      </div>
+    </>
   );
 };

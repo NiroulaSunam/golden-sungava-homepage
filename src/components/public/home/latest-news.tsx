@@ -25,7 +25,7 @@ export const LatestNews = ({ news }: LatestNewsProps) => {
           viewAllLabel={t('action.viewAll')}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {news.slice(0, 6).map((article) => (
+          {news.slice(0, 6).map((article, i) => (
             <ContentCard
               key={article.id}
               title={article.title}
@@ -33,6 +33,7 @@ export const LatestNews = ({ news }: LatestNewsProps) => {
               imageUrl={article.imageUrl}
               date={article.date}
               excerpt={article.excerpt}
+              featured={i === 0}
             />
           ))}
         </div>

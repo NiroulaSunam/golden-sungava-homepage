@@ -5,7 +5,7 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import type { PhotoAlbum } from '@/types/api';
-import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { PageHeader } from '@/components/shared/page-header';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 
@@ -59,7 +59,7 @@ const AlbumCard = ({ album, onClick }: AlbumCardProps) => (
   <button
     type="button"
     onClick={onClick}
-    className="group overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:shadow-lg"
+    className="card-gold-accent group overflow-hidden rounded-lg border border-border bg-card text-left transition-all hover:shadow-lg"
   >
     <div className="relative aspect-[4/3] overflow-hidden">
       <ImageWithFallback
@@ -95,40 +95,44 @@ export const PhotoGalleryClient = () => {
   }, [lang]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={[
-        { label: t('nav.gallery'), href: '/gallery/photos' },
-        { label: t('nav.photos'), href: '/gallery/photos' },
-      ]} />
+    <>
+      <PageHeader
+        title={t('heading.gallery')}
+        subtitle="Browse photo albums from school events and activities."
+        breadcrumbs={[
+          { label: t('nav.gallery'), href: '/gallery' },
+          { label: t('nav.photos'), href: '/gallery/photos' },
+        ]}
+      />
 
-      <h1 className="mt-8 font-heading text-3xl font-bold md:text-4xl">{t('heading.gallery')}</h1>
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonLoader key={i} variant="card" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {albums.map((album, index) => (
+              <AlbumCard key={album.id} album={album} onClick={() => setLightboxIndex(index)} />
+            ))}
+          </div>
+        )}
 
-      {isLoading ? (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <SkeletonLoader key={i} variant="card" />
-          ))}
-        </div>
-      ) : (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {albums.map((album, index) => (
-            <AlbumCard key={album.id} album={album} onClick={() => setLightboxIndex(index)} />
-          ))}
-        </div>
-      )}
-
-      {/* Lightbox */}
-      {lightboxIndex !== null && albums[lightboxIndex] && (
-        <Lightbox
-          imageUrl={albums[lightboxIndex].coverUrl}
-          albumName={albums[lightboxIndex].name}
-          onClose={() => setLightboxIndex(null)}
-          onPrev={() => setLightboxIndex((prev) => Math.max(0, (prev ?? 0) - 1))}
-          onNext={() => setLightboxIndex((prev) => Math.min(albums.length - 1, (prev ?? 0) + 1))}
-          hasPrev={lightboxIndex > 0}
-          hasNext={lightboxIndex < albums.length - 1}
-        />
-      )}
-    </div>
+        {/* Lightbox */}
+        {lightboxIndex !== null && albums[lightboxIndex] && (
+          <Lightbox
+            imageUrl={albums[lightboxIndex].coverUrl}
+            albumName={albums[lightboxIndex].name}
+            onClose={() => setLightboxIndex(null)}
+            onPrev={() => setLightboxIndex((prev) => Math.max(0, (prev ?? 0) - 1))}
+            onNext={() => setLightboxIndex((prev) => Math.min(albums.length - 1, (prev ?? 0) + 1))}
+            hasPrev={lightboxIndex > 0}
+            hasNext={lightboxIndex < albums.length - 1}
+          />
+        )}
+      </div>
+    </>
   );
 };

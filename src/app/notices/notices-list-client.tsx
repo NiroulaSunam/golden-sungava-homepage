@@ -5,7 +5,7 @@ import { FileText, Download } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import type { Notice } from '@/types/api';
-import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { PageHeader } from '@/components/shared/page-header';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 
 // --- Sub-component ---
@@ -15,7 +15,7 @@ interface NoticeCardProps {
 }
 
 const NoticeCard = ({ notice }: NoticeCardProps) => (
-  <div className="flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:shadow-md">
+  <div className="card-gold-accent flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:shadow-md">
     <div className="shrink-0 rounded-lg bg-primary/10 p-3">
       <FileText className="h-5 w-5 text-primary" />
     </div>
@@ -62,27 +62,30 @@ export const NoticesListClient = () => {
     : notices;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={[{ label: t('heading.notices'), href: '/notices' }]} />
-      <h1 className="mt-8 font-heading text-3xl font-bold md:text-4xl">{t('heading.notices')}</h1>
-
-      <input
-        type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={t('action.search')}
-        className="mt-6 w-full rounded-md border border-border bg-background px-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+    <>
+      <PageHeader
+        title={t('heading.notices')}
+        breadcrumbs={[{ label: t('heading.notices'), href: '/notices' }]}
       />
+      <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={t('action.search')}
+          className="w-full rounded-md border border-border bg-background px-4 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+        />
 
-      <div className="mt-6 space-y-3">
-        {isLoading ? (
-          Array.from({ length: 5 }).map((_, i) => <SkeletonLoader key={i} variant="rectangle" />)
-        ) : filtered.length === 0 ? (
-          <p className="py-8 text-center text-muted-foreground">{t('empty.noNotices')}</p>
-        ) : (
-          filtered.map((notice) => <NoticeCard key={notice.id} notice={notice} />)
-        )}
+        <div className="mt-6 space-y-3">
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, i) => <SkeletonLoader key={i} variant="rectangle" />)
+          ) : filtered.length === 0 ? (
+            <p className="py-8 text-center text-muted-foreground">{t('empty.noNotices')}</p>
+          ) : (
+            filtered.map((notice) => <NoticeCard key={notice.id} notice={notice} />)
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -8,3 +8,4 @@ export { ContentCard } from './content-card';
 export { Pagination } from './pagination';
 export { ListingPage } from './listing-page';
 export { DetailPage } from './detail-page';
+export { PageHeader } from './page-header';

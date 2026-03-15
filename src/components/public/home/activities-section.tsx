@@ -15,7 +15,7 @@ interface ActivityCardProps {
 const ActivityCard = ({ activity }: ActivityCardProps) => (
   <Link
     href="/activities"
-    className="group flex-shrink-0 snap-start overflow-hidden rounded-xl border border-border bg-card transition-all hover:shadow-lg"
+    className="card-gold-accent group flex-shrink-0 snap-start overflow-hidden rounded-xl border border-border bg-card transition-all hover:shadow-lg"
   >
     <div className="relative aspect-[4/3] overflow-hidden">
       <ImageWithFallback
@@ -43,8 +43,10 @@ export const ActivitiesSection = ({ activities }: ActivitiesSectionProps) => {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-muted py-16 md:py-20">
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
+    <section className="relative bg-muted py-16 md:py-20">
+      {/* Subtle background pattern */}
+      <div className="texture-overlay pointer-events-none absolute inset-0 opacity-40" />
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.activities')}
           viewAllHref="/activities"

@@ -54,7 +54,7 @@ const shared = {
     messenger: 'https://m.me/goldensungavaschool',
   },
   googleMapsEmbed:
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3533.123!2d85.123!3d27.123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sChangunarayan-2%2C+Duwakot%2C+Bhaktapur!5e0!3m2!1sen!2snp',
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.8!2d85.4133!3d27.6859!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1a1f0a0a0a01%3A0x1a2b3c4d5e6f7890!2sGolden+Sungava+English+Boarding+School!5e0!3m2!1sen!2snp',
   theme: {
     primaryColor: '#B8860B',
     primaryLight: '#D4A017',

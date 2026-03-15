@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Play } from 'lucide-react';
-import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
 
 // --- Sub-component ---
@@ -64,19 +64,21 @@ export const VideoGalleryClient = () => {
   const { t } = useLanguage();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={[
-        { label: t('nav.gallery'), href: '/gallery/photos' },
-        { label: t('nav.videos'), href: '/gallery/videos' },
-      ]} />
-
-      <h1 className="mt-8 font-heading text-3xl font-bold md:text-4xl">{t('heading.videoGallery')}</h1>
-
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {PLACEHOLDER_VIDEOS.map((video, index) => (
-          <VideoEmbed key={index} videoId={video.id} title={video.title} />
-        ))}
+    <>
+      <PageHeader
+        title={t('heading.videoGallery')}
+        breadcrumbs={[
+          { label: t('nav.gallery'), href: '/gallery' },
+          { label: t('nav.videos'), href: '/gallery/videos' },
+        ]}
+      />
+      <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {PLACEHOLDER_VIDEOS.map((video, index) => (
+            <VideoEmbed key={index} videoId={video.id} title={video.title} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

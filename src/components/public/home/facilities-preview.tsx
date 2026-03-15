@@ -5,7 +5,6 @@ import { Trophy, Bus, FlaskConical, Monitor, BookOpen, Utensils } from 'lucide-r
 import type { Facility } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
-import { cn } from '@/lib/utils';
 
 // Map icon names to Lucide components
 const iconMap: Record<string, typeof Trophy> = {
@@ -21,18 +20,24 @@ const iconMap: Record<string, typeof Trophy> = {
 
 interface FacilityCardProps {
   facility: Facility;
+  index: number;
 }
 
-const FacilityCard = ({ facility }: FacilityCardProps) => {
+const FacilityCard = ({ facility, index }: FacilityCardProps) => {
   const Icon = iconMap[facility.icon] || BookOpen;
+  const number = String(index + 1).padStart(2, '0');
 
   return (
     <Link
       href="/facilities"
-      className="group flex flex-col items-center rounded-xl border border-border bg-card p-6 text-center transition-all hover:border-primary/30 hover:shadow-lg"
+      className="card-gold-accent group relative flex flex-col items-center rounded-xl border border-border bg-card p-6 text-center transition-all hover:border-primary/30 hover:shadow-lg"
     >
-      <div className="mb-4 rounded-full bg-primary/10 p-4 transition-colors group-hover:bg-primary/20">
-        <Icon className="h-8 w-8 text-primary" />
+      {/* Gold number badge */}
+      <span className="absolute right-3 top-3 font-heading text-sm font-semibold text-primary/30 transition-colors group-hover:text-primary/60">
+        {number}
+      </span>
+      <div className="mb-4 rounded-full bg-primary/10 p-5 transition-colors group-hover:bg-primary/20">
+        <Icon className="h-8 w-8 text-primary md:h-10 md:w-10" />
       </div>
       <h3 className="font-heading text-lg font-semibold">{facility.name}</h3>
       <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{facility.description}</p>
@@ -58,12 +63,10 @@ export const FacilitiesPreview = ({ facilities }: FacilitiesPreviewProps) => {
           viewAllLabel={t('action.viewAll')}
         />
         {/* Desktop grid, mobile horizontal scroll */}
-        <div className={cn(
-          'flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4',
-        )}>
-          {facilities.slice(0, 6).map((facility) => (
-            <div key={facility.id} className="min-w-[250px] snap-start md:min-w-0">
-              <FacilityCard facility={facility} />
+        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4">
+          {facilities.slice(0, 6).map((facility, i) => (
+            <div key={facility.id} className="min-w-[270px] snap-start md:min-w-0">
+              <FacilityCard facility={facility} index={i} />
             </div>
           ))}
         </div>

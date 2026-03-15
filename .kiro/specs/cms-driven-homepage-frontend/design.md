@@ -580,6 +580,128 @@ Files using `function` declarations that must be converted:
 
 ---
 
+## Visual Design System — Premium School Aesthetic
+
+### Design Direction
+Refined luxury — dark gold + warm neutrals, generous whitespace, editorial typography. Not flashy — intentionally elegant. Think Beau Soleil or Sevenoaks School websites.
+
+### Color Palette
+- **Primary**: Deep Gold `#B8860B` (via `--cms-primary`)
+- **Primary Light**: `#D4A017` (hover states, light accents)
+- **Primary Dark**: `#8B6508` (active states, CTA hover)
+- **Background**: `#FFFFFF` / dark mode `#0F0F0F`
+- **Muted**: `#F5F3EF` — warm off-white for alternating sections
+- **Foreground**: `#1A1A1A` — near-black for text
+- **Accent**: `#1A1A1A` — dark sections (footer)
+- All colors referenced via CSS custom properties `--cms-*`, never hardcoded hex
+
+### Typography
+| Context | Font | Size Range | Weight | Class |
+|---------|------|-----------|--------|-------|
+| Headings | Cormorant Garamond | 3xl–6xl | 600–700 | `font-heading` |
+| Body | DM Sans | sm–base | 400 | `font-body` / default |
+| Nepali fallback | Noto Sans Devanagari | — | 400–600 | auto via font stack |
+
+### Shared Design Patterns
+
+#### 1. Page Header (`PageHeader` component)
+Every inner page uses `<PageHeader>` — a `bg-muted` banner with texture overlay:
+```
+┌──────────────────────────────────────┐
+│ texture-overlay (subtle dot pattern) │
+│   Breadcrumbs > Current Page         │
+│   Page Title                         │
+│   ███ (3px gold underline bar)       │
+│   Optional subtitle                  │
+└──────────────────────────────────────┘
+```
+- Background: `bg-muted` with `texture-overlay` at 30% opacity
+- Gold accent bar: `h-[3px] w-12 bg-primary rounded-full` below title
+- Creates visual consistency across all 20+ pages
+
+#### 2. Section Heading (`SectionHeading` component)
+Used in homepage sections and content blocks:
+- Title in `font-heading text-3xl md:text-4xl`
+- Gold underline bar `mt-3 h-[3px] w-12 rounded-full bg-primary`
+- Optional "View All →" link right-aligned
+
+#### 3. Gold Gradient Hero
+CSS class `.bg-gold-gradient` — used when no hero image:
+```css
+background: linear-gradient(135deg, #1A1A1A 0%, #2A2218 40%, #3D2E10 70%, var(--cms-primary-dark) 100%);
+```
+Always paired with `.texture-overlay` for geometric dot pattern.
+
+#### 4. Card Gold Accent
+CSS class `.card-gold-accent` on all interactive cards:
+- Default: `border-top: 2px solid transparent`
+- Hover: `border-top-color: var(--cms-primary)` with 0.3s ease transition
+- Applied to: facility cards, staff cards, notice cards, download cards, event cards, album cards, calendar events, payment methods, admission steps
+
+#### 5. Section Dividers
+CSS class `.section-divider`:
+```css
+height: 1px;
+background: linear-gradient(to right, transparent, var(--cms-primary), transparent);
+opacity: 0.3;
+```
+Used between major content groups (e.g., between news and blog sections on homepage).
+
+#### 6. Staggered Scroll Animations
+- CSS classes: `.delay-100`, `.delay-200`, `.delay-300`, `.delay-400`
+- Applied via `<AnimatedSection delay="delay-200">` wrapper
+- Homepage sections stagger their entrance by 100-200ms
+- Hero elements stagger: heading (0ms) → subheading (150ms) → CTA (300ms) via `.hero-stagger-1/2/3`
+
+#### 7. Numbered Cards
+For ordered content (facilities, process steps):
+- Gold number badge: `font-heading text-sm text-primary/30` in top-right corner
+- Format: `01`, `02`, `03`
+- Subtle on default, stronger on hover: `group-hover:text-primary/60`
+
+#### 8. Featured/Editorial Card Layout
+First card in news section spans 2 columns:
+- `ContentCard` supports `featured={true}` prop
+- Featured card: `sm:col-span-2 sm:flex-row` with gold left border
+- Larger title, more excerpt lines, side-by-side image layout
+
+#### 9. Decorative Quote Marks
+Testimonials section uses oversized decorative quote:
+- Character: `"` at `text-[120px]` in `text-primary/20`
+- Creates editorial, magazine-like feel
+- Radial gradient background: `bg-[radial-gradient(ellipse_at_center,var(--cms-primary)_0%,transparent_70%)] opacity-[0.04]`
+
+#### 10. Footer Design
+- Gold gradient top border: `h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent`
+- Dark gradient background: `from-[#1A1A1A] to-[#111111]`
+- Social buttons: `bg-white/10` default, `bg-primary` on hover
+- Copyright bar: `border-white/10` separator
+
+#### 11. Date Badge
+Events use a structured date badge instead of inline text:
+```
+┌──────┐
+│ MAR  │  ← month abbreviation
+│  15  │  ← day number, large heading font
+└──────┘
+```
+- Container: `bg-primary/10 text-primary rounded-lg`
+- Creates visual hierarchy over flat date strings
+
+#### 12. Form Card Elevation
+Forms (contact, admission) wrapped in card:
+- `rounded-xl border border-border bg-card p-6 md:p-8`
+- Sub-heading gold accent: `h-[2px] w-8 rounded-full bg-primary/30`
+- Visually separates form from surrounding content
+
+### Responsive Patterns
+- **Mobile hero**: `h-[50vh]` (reduced from 60vh for thumb reachability)
+- **Facility cards**: `min-w-[270px]` on mobile scroll (wider for better readability)
+- **Section padding**: `py-12 md:py-16` for inner pages, `py-16 md:py-20` for homepage sections
+- **Mobile scrolling**: `snap-x snap-mandatory` with peek of next card
+
+---
+
 ## Error Handling
 
 ### Error Strategy
