@@ -1,6 +1,6 @@
 /**
  * Mock: Staff Directory
- * @endpoint GET /api/staff
+ * @endpoint GET /api/staff?lang={en|np}
  * @description All school staff grouped by department
  * @source Scraped from goldensungavaschool.edu.np/staffs.php on 2026-03-15
  * @status mock
@@ -9,11 +9,48 @@
 export type StaffMember = {
   name: string;
   designation: string;
-  department: 'Administration' | 'Teaching' | 'Co-curricular' | 'Support';
+  department: string;
   email: string | null;
   photoUrl: string | null;
 };
 
+/** Department name translations */
+export const departmentLabels: Record<string, Record<string, string>> = {
+  en: { Administration: 'Administration', Teaching: 'Teaching', 'Co-curricular': 'Co-curricular', Support: 'Support' },
+  np: { Administration: 'प्रशासन', Teaching: 'शिक्षण', 'Co-curricular': 'पाठ्यक्रम बाहिरको', Support: 'सहयोगी' },
+};
+
+/** Designation translations — keys are English designations */
+export const designationLabels: Record<string, string> = {
+  Chairperson: 'अध्यक्ष',
+  Principal: 'प्रधानाध्यापक',
+  'Vice Principal': 'उप-प्रधानाध्यापक',
+  'Senior Accountant': 'वरिष्ठ लेखापाल',
+  'Assistant Accountant': 'सहायक लेखापाल',
+  'I.T. Officer': 'सूचना प्रविधि अधिकृत',
+  'ECA Incharge': 'ECA इन्चार्ज',
+  'Football Coach': 'फुटबल प्रशिक्षक',
+  'Drama Teacher': 'नाटक शिक्षक',
+  'Wushu Teacher': 'वुशु शिक्षक',
+  'Music Teacher': 'संगीत शिक्षक',
+  'Art Teacher': 'कला शिक्षक',
+  'Volleyball Coach': 'भलिबल प्रशिक्षक',
+  'Scout Teacher': 'स्काउट शिक्षक',
+  'Dance Teacher': 'नृत्य शिक्षक',
+  'Canteen Incharge': 'क्यान्टिन इन्चार्ज',
+  Librarian: 'पुस्तकालय अध्यक्ष',
+  'Security Guard': 'सुरक्षा गार्ड',
+  Sister: 'दिदी',
+  'Bus Driver': 'बस चालक',
+  'Van Driver': 'भ्यान चालक',
+  'Canteen Helper': 'क्यान्टिन सहयोगी',
+  'Officer Helper': 'कार्यालय सहयोगी',
+};
+
+/**
+ * Staff data — names and photos are language-independent.
+ * Use `departmentLabels[lang]` and `designationLabels` for Nepali labels.
+ */
 export const mockStaff: StaffMember[] = [
   // --- Administration ---
   { name: 'Lila Nath Niroula', designation: 'Chairperson', department: 'Administration', email: 'lilanath.niroula@gmail.com', photoUrl: 'https://s3.veda-app.com/veda-app-private/assets/806203/staff/2022-07-29/Noo32dlE4Q9Y7r8f-1659086616.jpg' },
