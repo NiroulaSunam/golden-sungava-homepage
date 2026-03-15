@@ -215,21 +215,21 @@
   - Include JSON-LD EducationalOrganization structured data
   - _Requirements: 18.1, 20.1, 20.2, 20.7, 24.5, 24.7_
 
-- [ ] 7. Public pages — about, principal, staff, gallery
-- [ ] 7.1 Build the About Us page
+- [x] 7. Public pages — about, principal, staff, gallery
+- [x] 7.1 Build the About Us page
   - Render school history, mission, vision, and values from CMS content
   - Display accompanying images using the image-with-fallback component
   - Include a link/section to the principal's message
   - Generate page-specific SEO metadata and breadcrumbs
   - _Requirements: 9.1, 9.2, 9.3_
 
-- [ ] 7.2 (P) Build the Principal's Message page
+- [x] 7.2 (P) Build the Principal's Message page
   - Display the principal's full message, name, title, photo, and signature from CMS
   - Render rich text content (paragraphs, emphasis, lists) using markdown renderer
   - Generate page-specific SEO metadata and breadcrumbs
   - _Requirements: 10.1, 10.2_
 
-- [ ] 7.3 (P) Build the Teacher & Staff Directory page
+- [x] 7.3 (P) Build the Teacher & Staff Directory page
   - Display all staff members grouped by department with filtering capability
   - Each staff card shows photo, name, designation, department, and optionally email
   - Support department filter tabs or dropdown
@@ -237,13 +237,13 @@
   - Use department and designation label translations for Nepali language
   - _Requirements: 11.1, 11.2, 11.3, 11.4_
 
-- [ ] 7.4 (P) Build the Photo Gallery page with lightbox
+- [x] 7.4 (P) Build the Photo Gallery page with lightbox
   - Display photo albums as a grid of cover thumbnails with album name and date
   - On album click, open a lightbox/modal gallery with navigation between photos
   - Support pagination or infinite scroll for large collections
   - _Requirements: 12.1, 12.2, 12.5_
 
-- [ ] 7.5 (P) Build the Video Gallery page with lazy YouTube embeds
+- [x] 7.5 (P) Build the Video Gallery page with lazy YouTube embeds
   - Render YouTube video thumbnails from CMS-stored YouTube URLs
   - Use click-to-play pattern: show static thumbnail, load iframe only on click for performance
   - Support pagination for large collections
