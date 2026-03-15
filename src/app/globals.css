@@ -1,21 +1,84 @@
+@import "tailwindcss";
+
 /**
  * Fonts are loaded via next/font in layout.tsx for optimal performance:
  * - Automatic font optimization and self-hosting
  * - No render-blocking @import
- * - CSS variables: --font-dm-sans, --font-cormorant
+ * - CSS variables: --font-dm-sans, --font-cormorant, --font-devanagari
  */
 
-/**
- * Global CSS
- * - MUI handles all component styling via CssBaseline and theme
- * - This file contains base resets and global utilities
- */
+/* ============================================================
+   CMS-Ready Color Tokens
+   --cms-* variables are overridden at runtime by CmsThemeProvider.
+   Fallback values provide the default Deep Gold theme.
+   ============================================================ */
+:root {
+  --cms-primary: #B8860B;
+  --cms-primary-light: #D4A017;
+  --cms-primary-dark: #8B6508;
+  --cms-background: #FFFFFF;
+  --cms-foreground: #1A1A1A;
+  --cms-muted: #F5F3EF;
+  --cms-muted-foreground: #6B6B6B;
+  --cms-accent: #1A1A1A;
+  --cms-accent-foreground: #F5F3EF;
+  --cms-border: #E5E2DB;
+  --cms-ring: #B8860B;
+  --cms-card: #FFFFFF;
+  --cms-card-foreground: #1A1A1A;
+  --cms-destructive: #DC2626;
+  --cms-destructive-foreground: #FFFFFF;
+}
 
-/* Reset and base styles */
+.dark {
+  --cms-background: #0F0F0F;
+  --cms-foreground: #F5F3EF;
+  --cms-muted: #1A1A1A;
+  --cms-muted-foreground: #A3A3A3;
+  --cms-accent: #F5F3EF;
+  --cms-accent-foreground: #1A1A1A;
+  --cms-border: #2A2A2A;
+  --cms-card: #141414;
+  --cms-card-foreground: #F5F3EF;
+}
+
+/* ============================================================
+   Tailwind CSS 4 Theme — references CMS CSS variables
+   ============================================================ */
+@theme {
+  --color-primary: var(--cms-primary);
+  --color-primary-light: var(--cms-primary-light);
+  --color-primary-dark: var(--cms-primary-dark);
+  --color-background: var(--cms-background);
+  --color-foreground: var(--cms-foreground);
+  --color-muted: var(--cms-muted);
+  --color-muted-foreground: var(--cms-muted-foreground);
+  --color-accent: var(--cms-accent);
+  --color-accent-foreground: var(--cms-accent-foreground);
+  --color-border: var(--cms-border);
+  --color-ring: var(--cms-ring);
+  --color-card: var(--cms-card);
+  --color-card-foreground: var(--cms-card-foreground);
+  --color-destructive: var(--cms-destructive);
+  --color-destructive-foreground: var(--cms-destructive-foreground);
+
+  --font-sans: var(--font-dm-sans), var(--font-devanagari), system-ui, sans-serif;
+  --font-heading: var(--font-cormorant), var(--font-devanagari), Georgia, serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  border-color: var(--color-border);
 }
 
 html {
@@ -28,44 +91,91 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--color-foreground);
+  background-color: var(--color-background);
 }
 
-/* Remove default focus outline and add consistent one */
+/* ============================================================
+   Typography Utilities
+   ============================================================ */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-sans);
+}
+
+/* ============================================================
+   Focus Styles — Deep Gold ring
+   ============================================================ */
 :focus-visible {
-  outline: 2px solid #097420;
+  outline: 2px solid var(--color-ring);
   outline-offset: 2px;
 }
 
-/* Scrollbar styling */
+/* ============================================================
+   Scrollbar Styling
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--color-muted);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-muted-foreground);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-foreground);
 }
 
-/* Dark mode scrollbar */
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-track {
-    background: #1e293b;
+/* ============================================================
+   Scroll Animations
+   ============================================================ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  ::-webkit-scrollbar-thumb {
-    background: #475569;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
-  }
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.8s ease-out forwards;
+}
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, DM_Sans } from 'next/font/google';
+import { Cormorant_Garamond, DM_Sans, Noto_Sans_Devanagari } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from '@frontend/providers';
@@ -11,6 +11,14 @@ const dmSans = DM_Sans({
   style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-dm-sans',
+});
+
+// Devanagari fallback for Nepali text
+const notoDevanagari = Noto_Sans_Devanagari({
+  subsets: ['devanagari'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-devanagari',
 });
 
 // Display/heading font - elegant serif
@@ -36,18 +44,18 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#1a4d2e' },
-    { media: '(prefers-color-scheme: dark)', color: '#0d3320' },
+    { media: '(prefers-color-scheme: light)', color: '#B8860B' },
+    { media: '(prefers-color-scheme: dark)', color: '#8B6508' },
   ],
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
-    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${cormorant.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${cormorant.variable} ${notoDevanagari.variable}`}>
       <body>
         <Providers>{children}</Providers>
         <Analytics />
@@ -55,4 +63,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

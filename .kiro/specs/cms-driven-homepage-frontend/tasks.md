@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Foundation — Remove MUI, setup design system, refactor existing code
-- [ ] 1.1 Remove MUI dependencies and rewrite providers without Emotion or MUI
+- [x] 1. Foundation — Remove MUI, setup design system, refactor existing code
+- [x] 1.1 Remove MUI dependencies and rewrite providers without Emotion or MUI
   - Uninstall MUI, Emotion, and MUI-NextJS packages
   - Delete the Emotion cache provider
   - Rewrite the theme provider as a lightweight CSS custom property injector that reads from site config
@@ -10,13 +10,13 @@
   - Ensure the build passes with no MUI references remaining
   - _Requirements: 1.2, 22.2, 24.1, 24.3_
 
-- [ ] 1.2 (P) Refactor all existing files to use arrow functions
+- [x] 1.2 (P) Refactor all existing files to use arrow functions
   - Convert layout, page, providers, auth provider, and auth guards from `function` declarations to arrow functions
   - Ensure named exports for all non-page components, default export for page components
   - Verify build passes after refactoring
   - _Requirements: 23.2_
 
-- [ ] 1.3 Setup TailwindCSS 4 design system with CMS-ready CSS custom properties
+- [x] 1.3 Setup TailwindCSS 4 design system with CMS-ready CSS custom properties
   - Add `@import "tailwindcss"` to globals.css
   - Define `:root` color tokens for Deep Gold theme (primary, primary-light, primary-dark, background, foreground, muted, accent) with `--cms-` prefixed variables that the CMS theme provider will override at runtime
   - Add `@theme` directive referencing the CSS variables with hardcoded fallback defaults
@@ -26,7 +26,7 @@
   - Replace hardcoded scrollbar hex colors with theme tokens
   - _Requirements: 24.1, 24.2, 24.3, 24.4, 24.5, 24.6_
 
-- [ ] 1.4 (P) Add Devanagari font and update next.config for external images
+- [x] 1.4 (P) Add Devanagari font and update next.config for external images
   - Add Noto Sans Devanagari via next/font in the root layout as a CSS variable fallback for Nepali text
   - Update the font-family chain to include the Devanagari variable after the primary font
   - Add remote image patterns for Google Drive, S3 veda-app domains

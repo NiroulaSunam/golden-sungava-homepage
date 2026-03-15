@@ -39,6 +39,21 @@ const nextConfig: NextConfig = {
         hostname: "127.0.0.1",
         port: "54521",
       },
+      {
+        // Google Drive images
+        protocol: "https",
+        hostname: "drive.google.com",
+      },
+      {
+        // S3 veda-app (school media)
+        protocol: "https",
+        hostname: "s3.veda-app.com",
+      },
+      {
+        // S3 veda-app legacy (school media)
+        protocol: "https",
+        hostname: "veda-app.s3.ap-south-1.amazonaws.com",
+      },
     ],
   },
 

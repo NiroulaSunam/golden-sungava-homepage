@@ -3,10 +3,9 @@
 // Auth Guards
 // Components for protecting routes and UI elements based on authentication
 
-import { ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './provider';
-import { CircularProgress, Box } from '@mui/material';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -15,7 +14,7 @@ interface AuthGuardProps {
 }
 
 // Requires user to be authenticated
-export function RequireAuth({ children, fallback, redirectTo = '/login' }: AuthGuardProps) {
+export const RequireAuth = ({ children, fallback, redirectTo = '/login' }: AuthGuardProps) => {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
@@ -30,20 +29,13 @@ export function RequireAuth({ children, fallback, redirectTo = '/login' }: AuthG
   }
 
   return <>{children}</>;
-}
+};
 
 // Loading spinner component
-function LoadingSpinner() {
+const LoadingSpinner = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 200,
-      }}
-    >
-      <CircularProgress size={32} />
-    </Box>
+    <div className="flex min-h-[200px] items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+    </div>
   );
-}
+};

@@ -1,12 +1,12 @@
 /**
- * MUI Theme Provider
- * Handles theme switching (light/dark) and MUI setup
+ * CMS Theme Provider
+ * Injects CMS-sourced theme tokens as CSS custom properties on :root.
+ * No MUI dependency — lightweight CSS variable injector.
  */
 
 'use client';
 
-import { ReactNode, createContext, useContext, useState, useMemo, useCallback } from 'react';
-import { ThemeProvider as MuiThemeProvider, CssBaseline, createTheme } from '@mui/material';
+import { type ReactNode, createContext, useContext, useState, useMemo, useCallback, useEffect } from 'react';
 
 type ThemeMode = 'light' | 'dark';
 
@@ -18,39 +18,20 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function useTheme() {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-}
+};
 
 interface ThemeProviderProps {
   children: ReactNode;
   defaultMode?: ThemeMode;
 }
 
-// Create themes — customize these as the project develops
-const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-  },
-  typography: {
-    fontFamily: 'var(--font-dm-sans), sans-serif',
-  },
-});
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-  typography: {
-    fontFamily: 'var(--font-dm-sans), sans-serif',
-  },
-});
-
-export function ThemeProvider({ children, defaultMode = 'light' }: ThemeProviderProps) {
+export const ThemeProvider = ({ children, defaultMode = 'light' }: ThemeProviderProps) => {
   const [mode, setMode] = useState<ThemeMode>(defaultMode);
 
   const toggleTheme = useCallback(() => {
@@ -61,19 +42,23 @@ export function ThemeProvider({ children, defaultMode = 'light' }: ThemeProvider
     setMode(newMode);
   }, []);
 
-  const theme = useMemo(() => (mode === 'light' ? lightTheme : darkTheme), [mode]);
+  // Apply dark class to html element for Tailwind dark mode
+  useEffect(() => {
+    if (mode === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [mode]);
 
   const contextValue = useMemo(
     () => ({ mode, toggleTheme, setTheme }),
-    [mode, toggleTheme, setTheme]
+    [mode, toggleTheme, setTheme],
   );
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </MuiThemeProvider>
+      {children}
     </ThemeContext.Provider>
   );
-}
+};
