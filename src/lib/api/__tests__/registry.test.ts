@@ -1,0 +1,34 @@
+import { describe, it, expect } from 'vitest';
+import { apiRegistry, isImplemented, getApiUrl } from '../registry';
+
+describe('apiRegistry', () => {
+  it('should have all 14 endpoints registered', () => {
+    expect(Object.keys(apiRegistry).length).toBe(14);
+  });
+
+  it('should have all endpoints marked as not implemented initially', () => {
+    Object.values(apiRegistry).forEach((config) => {
+      expect(config.implemented).toBe(false);
+    });
+  });
+
+  it('should return correct implementation status', () => {
+    expect(isImplemented('site-config')).toBe(false);
+    expect(isImplemented('hero-slides')).toBe(false);
+    expect(isImplemented('faqs')).toBe(false);
+  });
+
+  it('should return correct API URLs', () => {
+    expect(getApiUrl('site-config')).toBe('/api/site-config');
+    expect(getApiUrl('news')).toBe('/api/news');
+    expect(getApiUrl('gallery-photos')).toBe('/api/gallery/photos');
+    expect(getApiUrl('faqs')).toBe('/api/faqs');
+  });
+
+  it('should have description for every endpoint', () => {
+    Object.values(apiRegistry).forEach((config) => {
+      expect(config.description).toBeTruthy();
+      expect(config.description.length).toBeGreaterThan(5);
+    });
+  });
+});

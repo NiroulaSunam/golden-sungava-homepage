@@ -345,15 +345,15 @@
   - When installed, render in standalone mode with the school's theme color for the status bar
   - _Requirements: 19.4, 19.5_
 
-- [ ] 12. Integration testing and final verification
-- [ ] 12.1 Verify all homepage sections render correctly with mock data in both languages
+- [x] 12. Integration testing and final verification
+- [x] 12.1 Verify all homepage sections render correctly with mock data in both languages
   - Test that all 7 homepage sections render with English mock data
   - Toggle language to Nepali and verify all content switches
   - Verify image fallbacks work for inaccessible URLs
   - Confirm scroll animations trigger on viewport entry
   - _Requirements: 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 21.6, 24.5_
 
-- [ ] 12.2 (P) Verify navigation, layout, and responsive behavior
+- [x] 12.2 (P) Verify navigation, layout, and responsive behavior
   - Test desktop mega-menu navigation with active page highlighting
   - Test mobile hamburger drawer opens/closes correctly
   - Verify language switcher persists preference across page navigation
@@ -361,14 +361,14 @@
   - Verify footer renders all CMS content
   - _Requirements: 17.1, 17.2, 17.3, 17.4, 17.5, 17.6_
 
-- [ ] 12.3 (P) Verify ISR, performance, and build output
+- [x] 12.3 (P) Verify ISR, performance, and build output
   - Run a production build and verify all pages generate as static ISR pages
   - Verify route-based code splitting produces separate bundles per page
   - Check that the first hero image loads with priority for LCP
   - Verify navigation link prefetching is active
   - _Requirements: 18.1, 18.2, 18.3, 18.4, 18.5_
 
-- [ ] 12.4 Verify SEO output and structured data across all pages
+- [x] 12.4 Verify SEO output and structured data across all pages
   - Check that every page generates correct title, meta description, and Open Graph tags
   - Verify JSON-LD EducationalOrganization schema on the homepage
   - Verify BreadcrumbList schema on inner pages
@@ -377,7 +377,7 @@
   - Confirm robots.txt is correctly generated
   - _Requirements: 20.1, 20.2, 20.3, 20.4, 20.6, 20.8_
 
-- [ ]* 12.5 (P) Unit tests for API client, language provider, and translation function
+- [x]* 12.5 (P) Unit tests for API client, language provider, and translation function
   - Test API client routes to mock data when endpoint is not implemented
   - Test API client routes to real API when endpoint is implemented
   - Test language provider reads/writes localStorage and defaults correctly
