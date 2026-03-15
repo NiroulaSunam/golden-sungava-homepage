@@ -327,19 +327,19 @@
   - Ensure all images have descriptive alt text from CMS metadata
   - _Requirements: 20.5, 20.7, 20.9, 20.10, 20.11_
 
-- [ ] 11. PWA — manifest, service worker, offline page, install prompt
-- [ ] 11.1 Create a dynamic web manifest sourced from CMS site config
+- [x] 11. PWA — manifest, service worker, offline page, install prompt
+- [x] 11.1 Create a dynamic web manifest sourced from CMS site config
   - Generate manifest.json with school name, icons, theme color from CMS, and standalone display mode
   - Include 192px and 512px icon sizes
   - _Requirements: 19.1_
 
-- [ ] 11.2 Set up service worker for offline caching
+- [x] 11.2 Set up service worker for offline caching
   - Register a service worker that caches static pages and assets
   - Cache ISR-generated pages for offline access
   - Create a branded offline fallback page for uncached dynamic content
   - _Requirements: 19.2, 19.3_
 
-- [ ] 11.3 (P) Build the PWA install prompt banner
+- [x] 11.3 (P) Build the PWA install prompt banner
   - Detect eligible mobile browsers and show an install prompt banner
   - Allow dismissal and remember the user's choice
   - When installed, render in standalone mode with the school's theme color for the status bar

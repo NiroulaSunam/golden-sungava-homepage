@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from '@frontend/providers';
 import { Header, Footer, FloatingCTA } from '@/components/public/layout';
+import { SwRegister } from '@/components/shared/sw-register';
+import { InstallPrompt } from '@/components/shared/install-prompt';
 import { fetchApi } from '@/lib/api/client';
 import type { SiteConfig } from '@/types/api';
 
@@ -84,10 +86,12 @@ const RootLayout = ({
     <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${cormorant.variable} ${notoDevanagari.variable}`}>
       <body className="flex min-h-screen flex-col">
         <Providers>
+          <SwRegister />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
           <FloatingCTA />
+          <InstallPrompt />
         </Providers>
         <Analytics />
         <SpeedInsights />
