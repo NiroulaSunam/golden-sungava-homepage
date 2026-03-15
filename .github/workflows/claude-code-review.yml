@@ -1,0 +1,217 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    if: |
+      github.event_name == 'pull_request' ||
+      (
+        github.event_name == 'issue_comment' &&
+        github.event.issue.pull_request != null &&
+        contains(github.event.comment.body, '/review')
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Post In-Progress Comment
+        id: post-progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- claude-code-review-bot -->';
+
+            let prNumber, headSha, prAuthorLogin;
+
+            if (context.eventName === 'pull_request') {
+              prNumber      = context.payload.pull_request.number;
+              headSha       = context.payload.pull_request.head.sha;
+              prAuthorLogin = context.payload.pull_request.user.login;
+            } else {
+              prNumber = context.issue.number;
+              const { data: pr } = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber,
+              });
+              headSha       = pr.head.sha;
+              prAuthorLogin = pr.user.login;
+
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: context.payload.comment.id,
+                content: 'eyes',
+              });
+            }
+
+            const now = new Date();
+            const formattedTime = now.toLocaleString('en-US', {
+              timeZone: 'UTC',
+              year: 'numeric', month: 'short', day: 'numeric',
+              hour: '2-digit', minute: '2-digit', hour12: false,
+            }) + ' UTC';
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+
+            const botComment = comments.find(c => c.body.includes(marker));
+
+            const progressSection =
+              marker + '\n## Claude Code Review\n\n' +
+              '| | |\n|---|---|\n' +
+              '| **Status** | Review in progress... |\n' +
+              '| **Started** | ' + formattedTime + ' |\n' +
+              '| **Commit** | `' + headSha.substring(0, 7) + '` |\n\n' +
+              '_Analyzing code changes..._\n';
+
+            let inProgressBody = progressSection;
+            if (botComment) {
+              const oldBody = botComment.body.replace(marker + '\n', '').trim();
+              const wasCompleted = !oldBody.includes('Review in progress');
+              if (oldBody && wasCompleted) {
+                inProgressBody +=
+                  '\n---\n\n' +
+                  '<details>\n<summary>Previous Review</summary>\n\n' +
+                  oldBody + '\n\n</details>\n';
+              }
+            }
+
+            let commentId;
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: inProgressBody,
+              });
+              commentId = botComment.id;
+            } else {
+              const { data: created } = await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: inProgressBody,
+              });
+              commentId = created.id;
+            }
+
+            core.setOutput('comment_id', commentId.toString());
+            core.setOutput('head_sha', headSha);
+            core.setOutput('pr_number', prNumber.toString());
+
+      - name: Run Claude Code Review
+        id: claude-review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
+          prompt: |
+            Provide a code review for PR #${{ steps.post-progress.outputs.pr_number }} in ${{ github.repository }}.
+
+            Follow these steps:
+
+            1. Launch a haiku agent to check if any of the following are true:
+               - The pull request is closed or a draft
+               - Claude has already commented on this PR
+               If any condition is true, write "No issues found." to .review-result.txt and stop.
+
+            2. Launch a haiku agent to return CLAUDE.md file paths relevant to the changed files.
+
+            3. Launch a sonnet agent to view the pull request and return a summary.
+
+            4. Launch 4 agents in parallel:
+               Agent 1+2: CLAUDE.md compliance (sonnet)
+               Agent 3: Bug detection (opus)
+               Agent 4: Security/logic review (opus)
+
+               Only flag HIGH SIGNAL issues.
+
+            5. Validate each issue with subagents.
+
+            6. Write ALL validated findings to .review-result.txt.
+
+               If no issues found, write exactly: No issues found.
+
+            IMPORTANT: You MUST write to .review-result.txt using the Write tool.
+          settings: |
+            {
+              "permissions": {
+                "allow": [
+                  "Bash(gh pr view *)",
+                  "Bash(gh pr diff *)",
+                  "Bash(gh pr list *)",
+                  "Bash(gh pr comments *)",
+                  "Bash(gh issue view *)",
+                  "Bash(gh api *)",
+                  "Bash(git diff *)",
+                  "Bash(git log *)",
+                  "Bash(git show *)",
+                  "Bash(git status *)",
+                  "Read",
+                  "Write",
+                  "Glob",
+                  "Grep",
+                  "LS"
+                ]
+              }
+            }
+
+      - name: Post Review Comment
+        if: always()
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          settings: |
+            {
+              "permissions": {
+                "allow": [
+                  "Read",
+                  "Write",
+                  "Bash(date *)",
+                  "Bash(gh api *)",
+                  "Bash(gh pr view *)"
+                ]
+              }
+            }
+          prompt: |
+            Post the code review summary to PR #${{ steps.post-progress.outputs.pr_number }}.
+
+            1. Read .review-result.txt
+            2. Determine status: FAIL (CRITICAL/HIGH), WARN (MEDIUM/LOW), PASS (none)
+            3. Write status to .review-status.txt
+            4. Write formatted comment to .pr-comment.md (start with <!-- claude-code-review-bot -->)
+            5. Update PR comment: gh api repos/${{ github.repository }}/issues/comments/${{ steps.post-progress.outputs.comment_id }} -X PATCH -F body=@.pr-comment.md
+
+      - name: Fail if Major Issues Found
+        if: always()
+        run: |
+          if [ ! -f "$GITHUB_WORKSPACE/.review-status.txt" ]; then
+            echo "Warning: .review-status.txt was not written"
+            exit 1
+          fi
+          STATUS=$(cat "$GITHUB_WORKSPACE/.review-status.txt" | tr -d '[:space:]')
+          echo "Review status: $STATUS"
+          if [ "$STATUS" = "FAIL" ]; then
+            echo "Critical/High issues must be fixed before merging"
+            exit 1
+          fi
+          echo "Review complete: $STATUS"

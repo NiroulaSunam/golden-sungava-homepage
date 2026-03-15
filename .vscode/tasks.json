@@ -1,0 +1,273 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Launch All (Dev + Docker + Claude)",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "Dev Server",
+        "Docker Up",
+        "Claude Terminal"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev Server",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-i",
+        "-c",
+        "pnpm dev"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}",
+          "NODE_ENV": "development"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": "$tsc-watch",
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "Docker Up",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Starting Docker services...'; docker-compose -f docker/docker-compose.yml up -d && docker-compose -f docker/docker-compose.yml logs -f"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "Docker Down",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Stopping Docker services...'; docker-compose -f docker/docker-compose.yml down"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DB Studio",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Opening Supabase Studio...'; pnpm sb:status"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "DB Migrate",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Running database migrations...'; pnpm db:migrate && echo 'Migrations complete!'"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DB Generate",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Generating migration...'; pnpm db:diff && echo 'Migration files generated!'"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "DB Push",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Pushing schema to database...'; pnpm db:push && echo 'Schema pushed!'"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Building for production...'; pnpm build"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}",
+          "NODE_ENV": "production"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Running ESLint...'; pnpm lint"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "label": "Claude Terminal",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": ["-i", "-c", "claude"],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "Clean & Reinstall",
+      "type": "shell",
+      "command": "/bin/zsh",
+      "args": [
+        "-c",
+        "echo 'Cleaning node_modules and .next...'; rm -rf node_modules .next && echo 'Reinstalling dependencies...'; pnpm install && echo 'Done!'"
+      ],
+      "options": {
+        "env": {
+          "PATH": "${env:PATH}"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

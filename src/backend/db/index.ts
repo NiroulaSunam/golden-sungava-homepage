@@ -1,0 +1,46 @@
+/**
+ * Database Module
+ * Exports Supabase admin client for server-side operations
+ */
+
+import 'server-only';
+
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+// Local Supabase defaults (from `pnpm sb:start`)
+const DEFAULT_LOCAL_URL = 'http://localhost:54321';
+const DEFAULT_LOCAL_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_LOCAL_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || DEFAULT_LOCAL_SERVICE_KEY;
+
+/**
+ * Admin Supabase client with service role key
+ * Use this for server-side operations that need to bypass RLS
+ */
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
+
+/**
+ * Get the admin Supabase client
+ * Alias for supabaseAdmin for backward compatibility
+ */
+export const db = supabaseAdmin;
+
+/**
+ * Create a new Supabase client (for cases where you need a fresh instance)
+ */
+export function createAdminClient(): SupabaseClient {
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
+}
+
+export default supabaseAdmin;

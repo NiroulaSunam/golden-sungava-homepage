@@ -1,0 +1,2 @@
+-- Golden Sungava Homepage - Seed Data
+-- Add initial seed data here after defining your schema

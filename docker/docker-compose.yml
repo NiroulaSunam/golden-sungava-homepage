@@ -1,0 +1,57 @@
+# Docker Compose for Golden Sungava Homepage Services
+#
+# For local development: Use `pnpm sb:start` (Supabase CLI)
+# This file is for:
+# 1. Production deployment (optional)
+# 2. Backup service to sync local Supabase to Cloud
+
+version: '3.8'
+
+services:
+  # =====================================
+  # BACKUP SERVICE - Syncs to Supabase Cloud
+  # =====================================
+  backup:
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    container_name: sungava-backup
+    restart: unless-stopped
+    environment:
+      # Local Supabase (from `supabase start`)
+      LOCAL_SUPABASE_URL: http://host.docker.internal:54521
+      LOCAL_SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
+      LOCAL_DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:54522/postgres
+      # Supabase Cloud (backup destination)
+      BACKUP_SUPABASE_URL: ${BACKUP_SUPABASE_URL}
+      BACKUP_SUPABASE_SERVICE_KEY: ${BACKUP_SUPABASE_SERVICE_KEY}
+      BACKUP_SUPABASE_DB_URL: ${BACKUP_SUPABASE_DB_URL}
+      # Backup intervals
+      DB_BACKUP_INTERVAL_SECONDS: ${DB_BACKUP_INTERVAL_SECONDS:-60}
+      FILE_BACKUP_INTERVAL_SECONDS: ${FILE_BACKUP_INTERVAL_SECONDS:-300}
+      FULL_BACKUP_CRON: ${FULL_BACKUP_CRON:-0 0 * * *}
+      # Backup retention
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+      # Enable/disable backup
+      BACKUP_ENABLED: ${BACKUP_ENABLED:-true}
+    volumes:
+      - backup_data:/var/lib/backup:z
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - sungava-network
+
+# =====================================
+# VOLUMES
+# =====================================
+volumes:
+  backup_data:
+    driver: local
+
+# =====================================
+# NETWORKS
+# =====================================
+networks:
+  sungava-network:
+    name: sungava-network
+    driver: bridge
