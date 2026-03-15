@@ -16,7 +16,7 @@
 
 | Purpose | Library |
 |---------|---------|
-| UI Components | MUI v7 + shadcn/ui (Radix primitives) |
+| UI Components | shadcn/ui (Radix primitives) — MUI removed |
 | Styling | TailwindCSS 4 |
 | Forms | React Hook Form + Zod validation |
 | Data Viz | Recharts |
