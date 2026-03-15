@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from '@frontend/providers';
 import { Header, Footer, FloatingCTA } from '@/components/public/layout';
+import { fetchApi } from '@/lib/api/client';
+import type { SiteConfig } from '@/types/api';
 
 // Primary body font - clean, modern sans-serif
 const dmSans = DM_Sans({
@@ -31,12 +33,35 @@ const cormorant = Cormorant_Garamond({
   variable: '--font-cormorant',
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Golden Sungava',
-    template: '%s | Golden Sungava',
-  },
-  description: 'Golden Sungava Homepage',
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://goldensungava.edu.np';
+
+/**
+ * Dynamic metadata fetched from CMS site-config via ISR.
+ * Runs at build time, revalidates when ISR triggers.
+ * Always uses default language (English) for SEO — search engines index the ISR shell.
+ */
+export const generateMetadata = async (): Promise<Metadata> => {
+  const { data: config } = await fetchApi<SiteConfig>('site-config', { lang: 'en' });
+
+  return {
+    title: {
+      default: config?.seo?.defaultTitle || 'Golden Sungava English Boarding School',
+      template: `%s | ${config?.schoolName || 'Golden Sungava'}`,
+    },
+    description: config?.seo?.defaultDescription || 'Premium English-medium boarding school in Changunarayan-2, Duwakot, Bhaktapur, Nepal.',
+    keywords: config?.seo?.keywords,
+    metadataBase: new URL(BASE_URL),
+    alternates: {
+      canonical: '/',
+    },
+    openGraph: {
+      title: config?.seo?.defaultTitle || 'Golden Sungava English Boarding School',
+      description: config?.seo?.defaultDescription,
+      images: [{ url: config?.seo?.ogImage || '/images/logo.png' }],
+      type: 'website',
+      siteName: config?.schoolName || 'Golden Sungava English Boarding School',
+    },
+  };
 };
 
 export const viewport: Viewport = {

@@ -310,18 +310,18 @@
   - Build a contact form with name, email, phone, subject, and message fields with Zod validation
   - _Requirements: 16.2, 16.3, 16.4, 16.5_
 
-- [ ] 10. SEO infrastructure — sitemap, robots, canonical URLs, semantic HTML
-- [ ] 10.1 Generate dynamic sitemap.xml including all public pages
+- [x] 10. SEO infrastructure — sitemap, robots, canonical URLs, semantic HTML
+- [x] 10.1 Generate dynamic sitemap.xml including all public pages
   - Create a sitemap route that lists all public pages with correct lastmod dates
   - Include listing pages and individual detail pages for news, events, blogs
   - _Requirements: 20.3_
 
-- [ ] 10.2 (P) Generate robots.txt allowing search engine crawling
+- [x] 10.2 (P) Generate robots.txt allowing search engine crawling
   - Create a robots route that allows crawling of all public pages
   - Reference the sitemap URL
   - _Requirements: 20.4_
 
-- [ ] 10.3 Verify semantic HTML and canonical URLs across all pages
+- [x] 10.3 Verify semantic HTML and canonical URLs across all pages
   - Ensure all pages use semantic elements (article, section, nav, header, footer, main)
   - Verify canonical URLs are set correctly on every page to prevent duplicate content
   - Ensure all images have descriptive alt text from CMS metadata
