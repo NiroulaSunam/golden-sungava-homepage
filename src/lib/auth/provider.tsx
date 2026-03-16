@@ -45,30 +45,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
-          setState({
-            supabaseUser: session.user,
-            session,
-            isLoading: false,
-            isAuthenticated: true,
-          });
-        } else if (event === 'INITIAL_SESSION' && !session) {
-          setState(prev => ({ ...prev, isLoading: false }));
-        } else if (event === 'SIGNED_OUT') {
-          setState({
-            supabaseUser: null,
-            session: null,
-            isLoading: false,
-            isAuthenticated: false,
-          });
+    let subscription: { unsubscribe: () => void } | null = null;
+
+    try {
+      const { data } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if ((event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session) {
+            setState({
+              supabaseUser: session.user,
+              session,
+              isLoading: false,
+              isAuthenticated: true,
+            });
+          } else if (event === 'INITIAL_SESSION' && !session) {
+            setState(prev => ({ ...prev, isLoading: false }));
+          } else if (event === 'SIGNED_OUT') {
+            setState({
+              supabaseUser: null,
+              session: null,
+              isLoading: false,
+              isAuthenticated: false,
+            });
+          }
         }
-      }
-    );
+      );
+      subscription = data.subscription;
+    } catch {
+      // Supabase unavailable (local instance not running) — skip auth
+      setState(prev => ({ ...prev, isLoading: false }));
+    }
 
     return () => {
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
     };
   }, [supabase, configured]);
 

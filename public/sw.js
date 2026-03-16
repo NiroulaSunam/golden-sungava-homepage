@@ -65,14 +65,16 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
-      return fetch(request).then((response) => {
-        // Cache static assets (images, fonts, CSS, JS)
-        if (response.ok && (request.url.match(/\.(js|css|png|jpg|jpeg|svg|webp|woff2?)$/))) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-        }
-        return response;
-      });
+      return fetch(request)
+        .then((response) => {
+          // Cache static assets (images, fonts, CSS, JS)
+          if (response.ok && (request.url.match(/\.(js|css|png|jpg|jpeg|svg|webp|woff2?)$/))) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
+          return response;
+        })
+        .catch(() => new Response('', { status: 408, statusText: 'Offline' }));
     })
   );
 });

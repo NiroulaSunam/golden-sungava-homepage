@@ -9,7 +9,22 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export function createClient() {
   return createBrowserClient(
     SUPABASE_URL,
-    SUPABASE_ANON_KEY
+    SUPABASE_ANON_KEY,
+    {
+      global: {
+        fetch: async (url, options) => {
+          try {
+            return await fetch(url, options);
+          } catch {
+            // Return a synthetic error response when Supabase is unreachable
+            return new Response(JSON.stringify({ error: 'Supabase unavailable' }), {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+        },
+      },
+    }
   );
 }
 

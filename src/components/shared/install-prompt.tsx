@@ -1,51 +1,36 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Download, X } from 'lucide-react';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useInstall } from '@/frontend/providers/install-provider';
 
 const DISMISSED_KEY = 'pwa-install-dismissed';
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
+const isDismissed = () => {
+  try {
+    return localStorage.getItem(DISMISSED_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
 
 export const InstallPrompt = () => {
   const { t } = useLanguage();
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // Don't show if user previously dismissed
-    if (localStorage.getItem(DISMISSED_KEY)) return;
-
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsVisible(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
-  }, []);
+  const { canInstall, triggerInstall } = useInstall();
+  const [dismissed, setDismissed] = useState(isDismissed);
 
   const handleInstall = useCallback(async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setIsVisible(false);
-    }
-    setDeferredPrompt(null);
-  }, [deferredPrompt]);
+    await triggerInstall();
+    setDismissed(true);
+  }, [triggerInstall]);
 
   const handleDismiss = useCallback(() => {
-    setIsVisible(false);
+    setDismissed(true);
     localStorage.setItem(DISMISSED_KEY, 'true');
   }, []);
 
-  if (!isVisible) return null;
+  if (!canInstall || dismissed) return null;
 
   return (
     <div className="fixed bottom-20 left-4 right-4 z-40 rounded-xl border border-primary/20 bg-card p-4 shadow-xl lg:bottom-4 lg:left-auto lg:right-4 lg:max-w-sm">

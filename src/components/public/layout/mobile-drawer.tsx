@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, ChevronDown } from 'lucide-react';
+import { X, ChevronDown, Download } from 'lucide-react';
 import type { NavItem } from '@/types/api';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useInstall } from '@/frontend/providers/install-provider';
 import { LanguageSwitcher } from './language-switcher';
 import { cn } from '@/lib/utils';
 
@@ -68,6 +69,30 @@ const DrawerNavItem = ({ item, onClose }: DrawerNavItemProps) => {
   );
 };
 
+// --- Install Button for Drawer ---
+
+const DrawerInstallButton = ({ onClose }: { onClose: () => void }) => {
+  const { canInstall, triggerInstall } = useInstall();
+
+  if (!canInstall) return null;
+
+  const handleInstall = async () => {
+    await triggerInstall();
+    onClose();
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleInstall}
+      className="flex w-full items-center gap-2 rounded-md border border-primary/30 py-2.5 text-sm font-medium text-primary transition-all hover:bg-primary/10 justify-center"
+    >
+      <Download className="h-4 w-4" />
+      Install App
+    </button>
+  );
+};
+
 // --- Main Drawer ---
 
 interface MobileDrawerProps {
@@ -123,8 +148,8 @@ export const MobileDrawer = ({ isOpen, onClose, navItems }: MobileDrawerProps) =
           ))}
         </nav>
 
-        {/* CTA */}
-        <div className="border-t border-border p-4">
+        {/* CTA + Install */}
+        <div className="border-t border-border p-4 space-y-3">
           <Link
             href="/admission"
             onClick={onClose}
@@ -132,6 +157,7 @@ export const MobileDrawer = ({ isOpen, onClose, navItems }: MobileDrawerProps) =
           >
             {t('action.getAdmission')}
           </Link>
+          <DrawerInstallButton onClose={onClose} />
         </div>
       </div>
     </div>

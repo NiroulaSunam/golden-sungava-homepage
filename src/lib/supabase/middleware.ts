@@ -31,6 +31,18 @@ export async function updateSession(request: NextRequest) {
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     {
+      global: {
+        fetch: async (url, options) => {
+          try {
+            return await fetch(url, options);
+          } catch {
+            return new Response(JSON.stringify({ error: 'Supabase unavailable' }), {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' },
+            });
+          }
+        },
+      },
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -50,9 +62,14 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Supabase unavailable (e.g., local instance not running) — skip auth
+    return NextResponse.next({ request });
+  }
 
   // Protected routes check
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||

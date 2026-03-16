@@ -11,6 +11,7 @@ import { ThemeProvider, CmsThemeInjector } from './theme-provider';
 import { SiteConfigProvider } from './site-config-provider';
 import { LanguageProvider } from './language-provider';
 import { AuthProvider } from '@/lib/auth/provider';
+import { InstallProvider } from './install-provider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -23,7 +24,9 @@ export const Providers = ({ children }: ProvidersProps) => {
         <CmsThemeInjector>
           <LanguageProvider>
             <AuthProvider>
-              {children}
+              <InstallProvider>
+                {children}
+              </InstallProvider>
             </AuthProvider>
           </LanguageProvider>
         </CmsThemeInjector>
@@ -36,3 +39,4 @@ export const Providers = ({ children }: ProvidersProps) => {
 export { ThemeProvider, useTheme, CmsThemeInjector } from './theme-provider';
 export { SiteConfigProvider, useSiteConfig } from './site-config-provider';
 export { LanguageProvider, useLanguage } from './language-provider';
+export { InstallProvider, useInstall } from './install-provider';

@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, ChevronDown } from 'lucide-react';
+import { Menu, ChevronDown, Download } from 'lucide-react';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useInstall } from '@/frontend/providers/install-provider';
 import { fetchApi } from '@/lib/api/client';
 import type { NavItem } from '@/types/api';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
@@ -92,6 +93,26 @@ const SingleNavLink = ({ item, isActive }: NavLinkProps) => (
   </Link>
 );
 
+// --- Install Button Sub-component ---
+
+const InstallButton = () => {
+  const { canInstall, triggerInstall } = useInstall();
+
+  if (!canInstall) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={triggerInstall}
+      className="flex items-center gap-1.5 rounded-md border border-primary/30 px-3 py-1.5 text-xs font-medium text-primary transition-all hover:bg-primary/10"
+      aria-label="Install app"
+    >
+      <Download className="h-3.5 w-3.5" />
+      <span className="hidden xl:inline">Install</span>
+    </button>
+  );
+};
+
 // --- Main Header ---
 
 export const Header = () => {
@@ -177,6 +198,7 @@ export const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex shrink-0">
+            <InstallButton />
             <LanguageSwitcher />
             <Link
               href="/admission"
