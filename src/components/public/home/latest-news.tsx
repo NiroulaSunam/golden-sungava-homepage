@@ -7,9 +7,10 @@ import { useLanguage } from '@/frontend/providers/language-provider';
 
 interface LatestNewsProps {
   news: NewsArticle[];
+  subtitle?: string;
 }
 
-export const LatestNews = ({ news }: LatestNewsProps) => {
+export const LatestNews = ({ news, subtitle }: LatestNewsProps) => {
   const { t } = useLanguage();
 
   if (news.length === 0) {
@@ -17,10 +18,11 @@ export const LatestNews = ({ news }: LatestNewsProps) => {
   }
 
   return (
-    <section className="py-16 md:py-20">
+    <section className="py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.latestNews')}
+          subtitle={subtitle || 'Stay informed about school happenings'}
           viewAllHref="/news"
           viewAllLabel={t('action.viewAll')}
         />

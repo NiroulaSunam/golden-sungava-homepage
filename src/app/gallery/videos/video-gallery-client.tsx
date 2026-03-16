@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Play } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { fetchApi } from '@/lib/api/client';
+import type { GalleryVideo } from '@/types/api';
 
 // --- Sub-component ---
 
@@ -53,15 +55,17 @@ const VideoEmbed = ({ videoId, title }: VideoEmbedProps) => {
 
 // --- Main Component ---
 
-// Placeholder video data (no videos in mock data yet)
-const PLACEHOLDER_VIDEOS = [
-  { id: 'dQw4w9WgXcQ', title: 'School Tour - Golden Sungava' },
-  { id: 'dQw4w9WgXcQ', title: 'Annual Day Celebration 2082' },
-  { id: 'dQw4w9WgXcQ', title: 'Sports Meet Highlights' },
-];
-
 export const VideoGalleryClient = () => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+  const [videos, setVideos] = useState<GalleryVideo[]>([]);
+
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await fetchApi<GalleryVideo[]>('gallery-videos', { lang });
+      if (data) setVideos(data);
+    };
+    load();
+  }, [lang]);
 
   return (
     <>
@@ -74,8 +78,8 @@ export const VideoGalleryClient = () => {
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PLACEHOLDER_VIDEOS.map((video, index) => (
-            <VideoEmbed key={index} videoId={video.id} title={video.title} />
+          {videos.map((video) => (
+            <VideoEmbed key={video.id} videoId={video.videoId} title={video.title} />
           ))}
         </div>
       </div>

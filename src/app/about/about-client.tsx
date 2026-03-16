@@ -15,7 +15,7 @@ export const AboutPageClient = () => {
     <>
       <PageHeader
         title={t('heading.about')}
-        subtitle={`${config.schoolName} — Nurturing excellence in Changunarayan, Bhaktapur`}
+        subtitle={`${config.schoolName} — ${config.pageDescriptions.about}`}
         breadcrumbs={[{ label: t('heading.about'), href: '/about' }]}
       />
 

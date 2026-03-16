@@ -1,4 +1,5 @@
 export { HeroCarousel } from './hero-carousel';
+export { StatsCounter } from './stats-counter';
 export { FacilitiesPreview } from './facilities-preview';
 export { ActivitiesSection } from './activities-section';
 export { LatestNews } from './latest-news';

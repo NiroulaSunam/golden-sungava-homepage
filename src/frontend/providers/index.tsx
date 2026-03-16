@@ -1,7 +1,7 @@
 /**
  * Main Providers Component
  * Composes all context providers into a single wrapper.
- * Order: ThemeProvider → SiteConfigProvider → CmsThemeInjector → LanguageProvider → AuthProvider
+ * Order: ThemeProvider → LanguageProvider → SiteConfigProvider → CmsThemeInjector → AuthProvider → InstallProvider
  */
 
 'use client';
@@ -20,17 +20,17 @@ interface ProvidersProps {
 export const Providers = ({ children }: ProvidersProps) => {
   return (
     <ThemeProvider defaultMode="light">
-      <SiteConfigProvider>
-        <CmsThemeInjector>
-          <LanguageProvider>
+      <LanguageProvider>
+        <SiteConfigProvider>
+          <CmsThemeInjector>
             <AuthProvider>
               <InstallProvider>
                 {children}
               </InstallProvider>
             </AuthProvider>
-          </LanguageProvider>
-        </CmsThemeInjector>
-      </SiteConfigProvider>
+          </CmsThemeInjector>
+        </SiteConfigProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };

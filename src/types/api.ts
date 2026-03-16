@@ -17,8 +17,11 @@ export type ApiEndpoint =
   | 'activities'
   | 'testimonials'
   | 'gallery-photos'
+  | 'gallery-videos'
   | 'principal-message'
-  | 'faqs';
+  | 'faqs'
+  | 'admission-steps'
+  | 'payment-methods';
 
 // --- Fetch options ---
 
@@ -61,6 +64,9 @@ export type { HeroSlide } from '@/mocks/data/hero-slides';
 export type { NavItem } from '@/mocks/data/navigation';
 export type { PrincipalMessage } from '@/mocks/data/principal-message';
 export type { FaqItem } from '@/mocks/data/faqs';
+export type { GalleryVideo } from '@/mocks/data/gallery-videos';
+export type { AdmissionStep } from '@/mocks/data/admission-steps';
+export type { PaymentMethod } from '@/mocks/data/payment-methods';
 
 // SiteConfig type — inlined here since the mock file defines it locally
 export type SiteConfig = {
@@ -98,4 +104,33 @@ export type SiteConfig = {
   currency: string;
   languages: string[];
   defaultLanguage: string;
+  stats: { icon: string; value: string; label: string }[];
+  heroAccentText: string;
+  sectionSubtitles: {
+    facilities: string;
+    activities: string;
+    latestNews: string;
+    upcomingEvents: string;
+    blogs: string;
+    testimonials: string;
+  };
+  pageDescriptions: {
+    about: string;
+    admission: string;
+    contact: string;
+    paymentInfo: string;
+    facilities: string;
+    activities: string;
+    gallery: string;
+    staff: string;
+    calendar: string;
+    downloads: string;
+    notices: string;
+  };
+  footer: {
+    ctaHeading: string;
+    ctaDescription: string;
+    ctaButtonText: string;
+    tagline: string;
+  };
 };

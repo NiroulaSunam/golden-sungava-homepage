@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Mail } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import type { StaffMember } from '@/types/api';
 import { departmentLabels, designationLabels } from '@/mocks/data/staff';
 import { PageHeader } from '@/components/shared/page-header';
@@ -61,6 +62,7 @@ const StaffCard = ({ member, lang }: StaffCardProps) => {
 
 export const StaffDirectoryClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [activeDept, setActiveDept] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +84,7 @@ export const StaffDirectoryClient = () => {
     <>
       <PageHeader
         title={t('heading.staff')}
-        subtitle="Meet our dedicated team of teachers and staff."
+        subtitle={config.pageDescriptions.staff}
         breadcrumbs={[{ label: t('heading.staff'), href: '/staff' }]}
       />
 

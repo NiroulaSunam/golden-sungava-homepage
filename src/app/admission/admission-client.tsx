@@ -7,8 +7,9 @@ import { CheckCircle, GraduationCap, FileText, Users, ChevronDown } from 'lucide
 import { PageHeader } from '@/components/shared/page-header';
 import { JsonLd } from '@/components/shared/json-ld';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { fetchApi } from '@/lib/api/client';
-import type { FaqItem } from '@/types/api';
+import type { FaqItem, AdmissionStep } from '@/types/api';
 import { cn } from '@/lib/utils';
 
 // --- Zod Schema ---
@@ -90,16 +91,29 @@ const FaqAccordion = ({ faqs }: FaqAccordionProps) => {
 
 // --- Main Component ---
 
+// Icon map for CMS-driven admission steps
+const stepIconMap: Record<string, typeof GraduationCap> = {
+  'file-text': FileText,
+  users: Users,
+  'graduation-cap': GraduationCap,
+};
+
 export const AdmissionClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [steps, setSteps] = useState<AdmissionStep[]>([]);
   const { register, handleSubmit, formState: { errors } } = useForm<AdmissionFormData>();
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await fetchApi<FaqItem[]>('faqs', { lang });
-      if (data) setFaqs(data);
+      const [faqRes, stepsRes] = await Promise.all([
+        fetchApi<FaqItem[]>('faqs', { lang }),
+        fetchApi<AdmissionStep[]>('admission-steps', { lang }),
+      ]);
+      if (faqRes.data) setFaqs(faqRes.data);
+      if (stepsRes.data) setSteps(stepsRes.data);
     };
     load();
   }, [lang]);
@@ -117,16 +131,22 @@ export const AdmissionClient = () => {
     <>
       <PageHeader
         title={t('heading.admission')}
-        subtitle="Apply for admission at Golden Sungava English Boarding School. Play Group to Grade 10."
+        subtitle={config.pageDescriptions.admission}
         breadcrumbs={[{ label: t('heading.admission'), href: '/admission' }]}
       />
 
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
         {/* Process Steps */}
         <div className="grid gap-4 sm:grid-cols-3">
-          <StepCard icon={FileText} step={1} title="Fill Form" desc="Complete the online admission form below" />
-          <StepCard icon={Users} step={2} title="Visit School" desc="Bring original documents for verification" />
-          <StepCard icon={GraduationCap} step={3} title="Get Admitted" desc="Complete enrollment and start learning" />
+          {steps.map((step, i) => (
+            <StepCard
+              key={step.id}
+              icon={stepIconMap[step.icon] || FileText}
+              step={i + 1}
+              title={step.title}
+              desc={step.description}
+            />
+          ))}
         </div>
 
         {/* Admission Form */}

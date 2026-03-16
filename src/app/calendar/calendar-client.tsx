@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import type { SchoolEvent } from '@/types/api';
 import { PageHeader } from '@/components/shared/page-header';
 
 export const CalendarClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [events, setEvents] = useState<SchoolEvent[]>([]);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export const CalendarClient = () => {
     <>
       <PageHeader
         title={t('heading.calendar')}
-        subtitle="Academic calendar and events schedule."
+        subtitle={config.pageDescriptions.calendar}
         breadcrumbs={[{ label: t('heading.calendar'), href: '/calendar' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">

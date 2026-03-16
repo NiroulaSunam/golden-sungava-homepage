@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import type { Notice } from '@/types/api';
 import { PageHeader } from '@/components/shared/page-header';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
@@ -44,6 +45,7 @@ const NoticeCard = ({ notice }: NoticeCardProps) => (
 
 export const NoticesListClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [notices, setNotices] = useState<Notice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -65,6 +67,7 @@ export const NoticesListClient = () => {
     <>
       <PageHeader
         title={t('heading.notices')}
+        subtitle={config.pageDescriptions.notices}
         breadcrumbs={[{ label: t('heading.notices'), href: '/notices' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">

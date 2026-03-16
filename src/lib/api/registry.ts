@@ -105,6 +105,24 @@ export const apiRegistry: Record<ApiEndpoint, EndpointConfig> = {
     mockKey: 'faqs',
     description: 'Frequently asked questions for admission page',
   },
+  'gallery-videos': {
+    implemented: false,
+    apiUrl: '/api/gallery/videos',
+    mockKey: 'gallery-videos',
+    description: 'YouTube video gallery for school events and tours',
+  },
+  'admission-steps': {
+    implemented: false,
+    apiUrl: '/api/admission-steps',
+    mockKey: 'admission-steps',
+    description: 'Step-by-step admission process guide',
+  },
+  'payment-methods': {
+    implemented: false,
+    apiUrl: '/api/payment-methods',
+    mockKey: 'payment-methods',
+    description: 'Available fee payment methods with instructions',
+  },
 };
 
 export const isImplemented = (endpoint: ApiEndpoint): boolean =>

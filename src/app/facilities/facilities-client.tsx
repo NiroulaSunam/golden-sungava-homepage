@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import type { Facility } from '@/types/api';
 import { PageHeader } from '@/components/shared/page-header';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
@@ -37,6 +38,7 @@ const FacilityRow = ({ facility, index }: FacilityRowProps) => {
 
 export const FacilitiesClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,7 +55,7 @@ export const FacilitiesClient = () => {
     <>
       <PageHeader
         title={t('heading.facilities')}
-        subtitle="Explore our school facilities — sports, labs, library, transport, and more."
+        subtitle={config.pageDescriptions.facilities}
         breadcrumbs={[{ label: t('heading.facilities'), href: '/facilities' }]}
       />
 

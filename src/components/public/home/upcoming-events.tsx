@@ -1,23 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock } from 'lucide-react';
+import { Clock, MapPin, ArrowRight } from 'lucide-react';
 import type { SchoolEvent } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
-import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { useLanguage } from '@/frontend/providers/language-provider';
 
 // --- Sub-components ---
 
 const DateBadge = ({ date }: { date: string }) => {
-  const parts = date.split(' ');
-  const month = parts[0]?.slice(0, 3) || '';
-  const day = parts[1]?.replace(',', '') || '';
+  const parsed = new Date(date);
+  const month = parsed.toLocaleString('en', { month: 'short' });
+  const day = parsed.getDate();
 
   return (
-    <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-lg bg-primary/10 text-primary">
-      <span className="text-xs font-semibold uppercase">{month}</span>
-      <span className="font-heading text-xl font-bold leading-tight">{day}</span>
+    <div className="flex h-[72px] w-[72px] shrink-0 flex-col items-center justify-center rounded-2xl bg-primary text-white shadow-md shadow-primary/20">
+      <span className="text-[10px] font-bold uppercase tracking-wider">{month}</span>
+      <span className="font-heading text-2xl font-bold leading-tight">{day}</span>
     </div>
   );
 };
@@ -29,14 +28,14 @@ interface EventCardProps {
 const EventCard = ({ event }: EventCardProps) => (
   <Link
     href={`/events/${event.id}`}
-    className="card-gold-accent group flex gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-primary/30 hover:shadow-md"
+    className="group flex gap-4 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
   >
     <DateBadge date={event.date} />
-    <div className="flex flex-col justify-center">
-      <h3 className="line-clamp-2 font-heading text-base font-semibold group-hover:text-primary">
+    <div className="flex flex-1 flex-col justify-center">
+      <h3 className="line-clamp-2 font-heading text-base font-bold text-card-foreground transition-colors group-hover:text-primary md:text-lg">
         {event.title}
       </h3>
-      <div className="mt-2 flex flex-wrap gap-3 text-xs text-muted-foreground">
+      <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         {event.time && (
           <span className="flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" />
@@ -45,6 +44,7 @@ const EventCard = ({ event }: EventCardProps) => (
         )}
       </div>
     </div>
+    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/30 transition-all group-hover:text-primary group-hover:translate-x-0.5" />
   </Link>
 );
 
@@ -52,9 +52,10 @@ const EventCard = ({ event }: EventCardProps) => (
 
 interface UpcomingEventsProps {
   events: SchoolEvent[];
+  subtitle?: string;
 }
 
-export const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
+export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
   const { t } = useLanguage();
 
   if (events.length === 0) {
@@ -62,14 +63,17 @@ export const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
   }
 
   return (
-    <section className="bg-muted py-16 md:py-20">
-      <div className="mx-auto max-w-7xl px-4 md:px-6">
+    <section className="relative overflow-hidden bg-muted py-16 md:py-24">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,var(--cms-primary)_0%,transparent_50%)] opacity-[0.03]" />
+
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.upcomingEvents')}
+          subtitle={subtitle || 'Mark your calendar for important dates'}
           viewAllHref="/events"
           viewAllLabel={t('action.viewAll')}
         />
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
           {events.slice(0, 6).map((event) => (
             <EventCard key={event.id} event={event} />
           ))}

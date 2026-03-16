@@ -50,6 +50,40 @@ export const SITE_DEFAULTS: SiteConfig = {
   currency: 'NPR',
   languages: ['en', 'np'],
   defaultLanguage: 'en',
+  stats: [
+    { icon: 'graduation-cap', value: '1000+', label: 'Students Enrolled' },
+    { icon: 'users', value: '50+', label: 'Expert Teachers' },
+    { icon: 'award', value: '20+', label: 'Years of Excellence' },
+    { icon: 'calendar', value: '100+', label: 'Events Per Year' },
+  ],
+  heroAccentText: 'Golden Sungava',
+  sectionSubtitles: {
+    facilities: 'World-class infrastructure for holistic development',
+    activities: 'Nurturing talent beyond the classroom',
+    latestNews: 'Stay informed about school happenings',
+    upcomingEvents: 'Mark your calendar for important dates',
+    blogs: 'Insights and stories from our school community',
+    testimonials: 'What parents and students say about us',
+  },
+  pageDescriptions: {
+    about: 'Nurturing excellence in Changunarayan, Bhaktapur',
+    admission: 'Apply for admission at Golden Sungava English Boarding School. Play Group to Grade 10.',
+    contact: 'Get in touch with us. We would love to hear from you.',
+    paymentInfo: 'We kindly request you to pay the fees either online or by visiting the school.',
+    facilities: 'Explore our school facilities — sports, labs, library, transport, and more.',
+    activities: 'Extracurricular programs that build complete individuals.',
+    gallery: 'Explore moments from school life — events, celebrations, and everyday learning.',
+    staff: 'Meet our dedicated team of teachers and staff.',
+    calendar: 'Academic calendar and events schedule.',
+    downloads: 'Download forms, syllabi, and other documents.',
+    notices: 'Official school notices and announcements.',
+  },
+  footer: {
+    ctaHeading: 'Get In Touch',
+    ctaDescription: 'Ready to give your child the best education? Visit us or get in touch today.',
+    ctaButtonText: 'Contact Us',
+    tagline: 'Crafted with care for quality education',
+  },
 };
 
 export const DEFAULT_LANGUAGE = 'en' as const;

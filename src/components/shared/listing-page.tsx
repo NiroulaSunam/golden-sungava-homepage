@@ -89,15 +89,15 @@ export const ListingPage = ({
   return (
     <div className={className}>
       {/* Search + Filter Bar */}
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative max-w-sm flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full rounded-md border border-border bg-background py-2 pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-xl border border-border bg-card py-2.5 pl-10 pr-4 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:border-primary/30 focus:outline-none focus:ring-2 focus:ring-ring/20"
           />
         </div>
 
@@ -107,8 +107,10 @@ export const ListingPage = ({
               type="button"
               onClick={() => handleCategory('all')}
               className={cn(
-                'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-                activeCategory === 'all' ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
+                'rounded-lg px-4 py-1.5 text-xs font-semibold transition-all',
+                activeCategory === 'all'
+                  ? 'bg-primary text-white shadow-sm shadow-primary/20'
+                  : 'bg-muted text-muted-foreground hover:bg-primary/5 hover:text-primary',
               )}
             >
               All
@@ -119,8 +121,10 @@ export const ListingPage = ({
                 type="button"
                 onClick={() => handleCategory(cat)}
                 className={cn(
-                  'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-                  activeCategory === cat ? 'bg-primary text-white' : 'bg-muted text-muted-foreground hover:text-foreground',
+                  'rounded-lg px-4 py-1.5 text-xs font-semibold transition-all',
+                  activeCategory === cat
+                    ? 'bg-primary text-white shadow-sm shadow-primary/20'
+                    : 'bg-muted text-muted-foreground hover:bg-primary/5 hover:text-primary',
                 )}
               >
                 {cat}
@@ -132,7 +136,10 @@ export const ListingPage = ({
 
       {/* Content Grid */}
       {paginated.length === 0 ? (
-        <p className="py-12 text-center text-muted-foreground">No items found.</p>
+        <div className="flex flex-col items-center py-16 text-center">
+          <Search className="mb-3 h-8 w-8 text-muted-foreground/30" />
+          <p className="text-muted-foreground">No items found.</p>
+        </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {paginated.map((item) => (
@@ -154,7 +161,7 @@ export const ListingPage = ({
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        className="mt-8"
+        className="mt-10"
       />
     </div>
   );

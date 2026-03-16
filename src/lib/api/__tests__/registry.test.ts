@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { apiRegistry, isImplemented, getApiUrl } from '../registry';
 
 describe('apiRegistry', () => {
-  it('should have all 14 endpoints registered', () => {
-    expect(Object.keys(apiRegistry).length).toBe(14);
+  it('should have all 17 endpoints registered', () => {
+    expect(Object.keys(apiRegistry).length).toBe(17);
   });
 
   it('should have all endpoints marked as not implemented initially', () => {

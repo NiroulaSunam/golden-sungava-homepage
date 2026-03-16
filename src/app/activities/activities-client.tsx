@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import type { Activity } from '@/types/api';
 import { PageHeader } from '@/components/shared/page-header';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
@@ -26,6 +27,7 @@ const ActivityFullCard = ({ activity }: { activity: Activity }) => (
 
 export const ActivitiesClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,7 +44,7 @@ export const ActivitiesClient = () => {
     <>
       <PageHeader
         title={t('heading.activities')}
-        subtitle="Extracurricular programs that build complete individuals."
+        subtitle={config.pageDescriptions.activities}
         breadcrumbs={[{ label: t('heading.activities'), href: '/activities' }]}
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">

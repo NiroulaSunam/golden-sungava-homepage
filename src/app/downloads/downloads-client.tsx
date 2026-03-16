@@ -3,6 +3,7 @@
 import { FileText, Download, ExternalLink } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 
 // Placeholder downloads (will come from CMS)
 const DOWNLOADS = [
@@ -15,12 +16,13 @@ const DOWNLOADS = [
 
 export const DownloadsClient = () => {
   const { t } = useLanguage();
+  const { config } = useSiteConfig();
 
   return (
     <>
       <PageHeader
         title={t('heading.downloads')}
-        subtitle="Download forms, syllabi, and other documents."
+        subtitle={config.pageDescriptions.downloads}
         breadcrumbs={[{ label: t('heading.downloads'), href: '/downloads' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">

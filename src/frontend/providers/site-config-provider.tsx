@@ -10,6 +10,7 @@ import { type ReactNode, createContext, useContext, useState, useEffect, useMemo
 import type { SiteConfig } from '@/types/api';
 import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
 import { fetchApi } from '@/lib/api/client';
+import { useLanguage } from './language-provider';
 
 interface SiteConfigContextType {
   config: SiteConfig;
@@ -31,6 +32,7 @@ interface SiteConfigProviderProps {
 }
 
 export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
+  const { lang } = useLanguage();
   const [config, setConfig] = useState<SiteConfig>(SITE_DEFAULTS);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,7 +40,7 @@ export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
     let cancelled = false;
 
     const loadConfig = async () => {
-      const { data, error } = await fetchApi<SiteConfig>('site-config', { lang: 'en' });
+      const { data, error } = await fetchApi<SiteConfig>('site-config', { lang });
 
       if (!cancelled) {
         if (!error && data) {
@@ -54,7 +56,7 @@ export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [lang]);
 
   const value = useMemo(() => ({ config, isLoading }), [config, isLoading]);
 

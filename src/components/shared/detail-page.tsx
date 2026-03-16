@@ -45,21 +45,24 @@ export const DetailPage = ({
 }: DetailPageProps) => {
   return (
     <article className="mx-auto max-w-4xl px-4 py-8 md:px-6 md:py-12">
-      <Breadcrumbs items={breadcrumbItems} />
+      <Breadcrumbs items={breadcrumbItems} variant="light" />
 
       <Link
         href={backHref}
-        className="mt-4 inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary"
+        className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <ArrowLeft className="h-4 w-4" />
         {backLabel}
       </Link>
 
       <h1 className="mt-6 font-heading text-3xl font-bold md:text-4xl">{title}</h1>
-      <div className="mt-3 h-[3px] w-12 rounded-full bg-primary" />
+      <div className="mt-3 flex items-center gap-1.5">
+        <div className="h-[3px] w-8 rounded-full bg-primary" />
+        <div className="h-[3px] w-3 rounded-full bg-primary/40" />
+      </div>
 
       {/* Meta row */}
-      <div className="mt-4 flex flex-wrap gap-4">
+      <div className="mt-5 flex flex-wrap gap-4">
         {date && <MetaItem icon={Calendar}>{date}</MetaItem>}
         {time && <MetaItem icon={Clock}>{time}</MetaItem>}
         {author && <MetaItem icon={User}>{author}</MetaItem>}
@@ -67,7 +70,7 @@ export const DetailPage = ({
 
       {/* Featured Image */}
       {imageUrl && (
-        <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-xl">
+        <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl">
           <ImageWithFallback
             src={imageUrl}
             alt={title}
@@ -79,9 +82,9 @@ export const DetailPage = ({
       )}
 
       {/* Content */}
-      <div className="prose prose-lg mt-8 max-w-none">
+      <div className="mt-8 space-y-4">
         {content.split('\n\n').map((paragraph, i) => (
-          <p key={i} className="text-muted-foreground leading-relaxed">
+          <p key={i} className="text-base leading-relaxed text-muted-foreground">
             {paragraph}
           </p>
         ))}
@@ -93,7 +96,7 @@ export const DetailPage = ({
           href={pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex items-center gap-2 rounded-md border border-primary bg-primary/5 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+          className="mt-8 inline-flex items-center gap-2 rounded-xl border border-primary/20 bg-primary/5 px-5 py-2.5 text-sm font-semibold text-primary transition-all hover:bg-primary/10 hover:border-primary/30"
         >
           <Download className="h-4 w-4" />
           Download PDF
@@ -102,14 +105,14 @@ export const DetailPage = ({
 
       {/* Related Links */}
       {relatedLinks.length > 0 && (
-        <div className="mt-10 border-t border-border pt-6">
-          <h3 className="font-heading text-lg font-semibold">Related</h3>
-          <div className="mt-3 flex flex-wrap gap-3">
+        <div className="mt-12 border-t border-border pt-8">
+          <h3 className="font-heading text-lg font-bold">Related</h3>
+          <div className="mt-4 flex flex-wrap gap-3">
             {relatedLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-md bg-muted px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+                className="rounded-lg bg-muted px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-primary/5 hover:text-primary"
               >
                 {link.label}
               </Link>

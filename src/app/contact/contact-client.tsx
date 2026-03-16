@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Phone, Mail, MapPin, Clock, MessageCircle, CheckCircle } from 'lucide-react';
-import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { PageHeader } from '@/components/shared/page-header';
 import { cn } from '@/lib/utils';
 
@@ -54,7 +54,7 @@ export const ContactClient = () => {
     <>
       <PageHeader
         title={t('heading.contactUs')}
-        subtitle="Get in touch with us. We would love to hear from you."
+        subtitle={config.pageDescriptions.contact}
         breadcrumbs={[{ label: t('heading.contactUs'), href: '/contact' }]}
       />
 

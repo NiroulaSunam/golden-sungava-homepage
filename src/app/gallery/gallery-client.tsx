@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { Play } from 'lucide-react';
 import { fetchApi } from '@/lib/api/client';
 import { useLanguage } from '@/frontend/providers/language-provider';
-import type { PhotoAlbum } from '@/types/api';
+import { useSiteConfig } from '@/frontend/providers/site-config-provider';
+import type { PhotoAlbum, GalleryVideo } from '@/types/api';
 import { PageHeader } from '@/components/shared/page-header';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
@@ -67,25 +68,23 @@ const VideoThumbnail = ({ videoId, title }: VideoThumbnailProps) => {
   );
 };
 
-// --- Placeholder video data ---
-
-const PLACEHOLDER_VIDEOS = [
-  { id: 'dQw4w9WgXcQ', title: 'School Tour - Golden Sungava' },
-  { id: 'dQw4w9WgXcQ', title: 'Annual Day Celebration 2082' },
-  { id: 'dQw4w9WgXcQ', title: 'Sports Meet Highlights' },
-];
-
 // --- Main Component ---
 
 export const GalleryClient = () => {
   const { lang, t } = useLanguage();
+  const { config } = useSiteConfig();
   const [albums, setAlbums] = useState<PhotoAlbum[]>([]);
+  const [videos, setVideos] = useState<GalleryVideo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await fetchApi<PhotoAlbum[]>('gallery-photos', { lang });
-      if (data) setAlbums(data);
+      const [albumRes, videoRes] = await Promise.all([
+        fetchApi<PhotoAlbum[]>('gallery-photos', { lang }),
+        fetchApi<GalleryVideo[]>('gallery-videos', { lang }),
+      ]);
+      if (albumRes.data) setAlbums(albumRes.data);
+      if (videoRes.data) setVideos(videoRes.data);
       setIsLoading(false);
     };
     load();
@@ -95,7 +94,7 @@ export const GalleryClient = () => {
     <>
       <PageHeader
         title={t('heading.gallery')}
-        subtitle="Explore moments from school life — events, celebrations, and everyday learning."
+        subtitle={config.pageDescriptions.gallery}
         breadcrumbs={[{ label: t('nav.gallery'), href: '/gallery' }]}
       />
 
@@ -134,8 +133,8 @@ export const GalleryClient = () => {
         />
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PLACEHOLDER_VIDEOS.map((video, index) => (
-            <VideoThumbnail key={index} videoId={video.id} title={video.title} />
+          {videos.map((video) => (
+            <VideoThumbnail key={video.id} videoId={video.videoId} title={video.title} />
           ))}
         </div>
       </div>

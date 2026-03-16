@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { Quote } from 'lucide-react';
 import type { Testimonial } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
@@ -16,21 +17,18 @@ interface TestimonialCardProps {
 const TestimonialCard = ({ testimonial, isActive }: TestimonialCardProps) => (
   <div
     className={cn(
-      'absolute inset-0 flex items-center justify-center transition-opacity duration-500',
-      isActive ? 'opacity-100' : 'opacity-0 pointer-events-none',
+      'absolute inset-0 flex items-center justify-center transition-all duration-700',
+      isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none',
     )}
   >
-    <div className="max-w-2xl text-center">
-      {/* Large decorative gold quote mark */}
-      <div className="mx-auto mb-2 font-heading text-[120px] leading-[0.6] text-primary/20" aria-hidden="true">
-        &ldquo;
-      </div>
-      <blockquote className="font-heading text-lg italic leading-relaxed text-foreground md:text-xl">
-        {testimonial.quote}
+    <div className="mx-auto max-w-3xl px-4 text-center">
+      <blockquote className="font-heading text-xl italic leading-relaxed text-white/90 md:text-2xl lg:text-3xl">
+        &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
-      <div className="mt-6">
-        <p className="font-semibold text-foreground">{testimonial.authorName}</p>
-        <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+      <div className="mt-8 flex flex-col items-center gap-1">
+        <div className="h-[2px] w-8 rounded-full bg-primary-light" />
+        <p className="mt-3 text-base font-bold text-white">{testimonial.authorName}</p>
+        <p className="text-sm text-white/50">{testimonial.role}</p>
       </div>
     </div>
   </div>
@@ -62,17 +60,21 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
 
   return (
     <section
-      className="relative overflow-hidden py-16 md:py-20"
+      className="relative overflow-hidden py-16 md:py-24"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Radial gradient background */}
-      <div className="absolute inset-0 bg-muted" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--cms-primary)_0%,transparent_70%)] opacity-[0.04]" />
+      {/* Background */}
+      <div className="absolute inset-0 bg-gold-gradient" />
+      <div className="absolute inset-0 texture-overlay opacity-50" />
 
-      <div className="relative mx-auto max-w-7xl px-4 md:px-6">
-        <SectionHeading title={t('heading.testimonials')} />
-        <div className="relative min-h-[280px]">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 md:px-6">
+        {/* Quote icon */}
+        <div className="mb-6 flex justify-center">
+          <Quote className="h-10 w-10 text-primary-light/30" />
+        </div>
+
+        <div className="relative min-h-[260px] md:min-h-[300px]">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard
               key={testimonial.id}
@@ -81,6 +83,7 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
             />
           ))}
         </div>
+
         {/* Indicators */}
         <div className="mt-8 flex justify-center gap-2">
           {testimonials.map((_, i) => (
@@ -89,8 +92,8 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
               type="button"
               onClick={() => setCurrent(i)}
               className={cn(
-                'h-2 rounded-full transition-all',
-                i === current ? 'w-6 bg-primary' : 'w-2 bg-foreground/20 hover:bg-foreground/40',
+                'rounded-full transition-all duration-300',
+                i === current ? 'h-2.5 w-8 bg-primary-light' : 'h-2.5 w-2.5 bg-white/20 hover:bg-white/40',
               )}
               aria-label={`Testimonial ${i + 1}`}
             />

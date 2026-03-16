@@ -28,6 +28,9 @@ import {
   mockPhotoAlbums,
   mockPrincipalMessage,
   mockFaqs,
+  mockGalleryVideos,
+  mockAdmissionSteps,
+  mockPaymentMethods,
 } from '@/mocks';
 
 // Map of endpoint keys to their mock data objects
@@ -47,6 +50,9 @@ const mockDataMap: Record<ApiEndpoint, Record<string, unknown> | unknown[]> = {
   'gallery-photos': mockPhotoAlbums,
   'principal-message': mockPrincipalMessage,
   faqs: mockFaqs,
+  'gallery-videos': mockGalleryVideos,
+  'admission-steps': mockAdmissionSteps,
+  'payment-methods': mockPaymentMethods,
 };
 
 /**

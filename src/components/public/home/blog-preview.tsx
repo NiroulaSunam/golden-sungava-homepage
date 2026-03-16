@@ -7,9 +7,10 @@ import { useLanguage } from '@/frontend/providers/language-provider';
 
 interface BlogPreviewProps {
   blogs: BlogPost[];
+  subtitle?: string;
 }
 
-export const BlogPreview = ({ blogs }: BlogPreviewProps) => {
+export const BlogPreview = ({ blogs, subtitle }: BlogPreviewProps) => {
   const { t } = useLanguage();
 
   if (blogs.length === 0) {
@@ -17,16 +18,16 @@ export const BlogPreview = ({ blogs }: BlogPreviewProps) => {
   }
 
   return (
-    <section className="py-16 md:py-20">
+    <section className="py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.blogs')}
+          subtitle={subtitle || 'Insights and stories from our school community'}
           viewAllHref="/blogs"
           viewAllLabel={t('action.readMore')}
         />
-        {/* Offset grid: first two cards, then remaining shifted */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {blogs.slice(0, 4).map((blog, i) => (
+          {blogs.slice(0, 3).map((blog) => (
             <ContentCard
               key={blog.id}
               title={blog.title}
@@ -35,7 +36,6 @@ export const BlogPreview = ({ blogs }: BlogPreviewProps) => {
               date={blog.date}
               excerpt={blog.excerpt}
               author={blog.author}
-              className={i >= 2 ? 'lg:translate-y-4' : ''}
             />
           ))}
         </div>
