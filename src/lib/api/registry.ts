@@ -87,11 +87,11 @@ export const apiRegistry: Record<ApiEndpoint, EndpointConfig> = {
     mockKey: 'testimonials',
     description: 'Parent and student testimonials',
   },
-  'gallery-photos': {
+  'gallery-events': {
     implemented: false,
-    apiUrl: '/api/gallery/photos',
-    mockKey: 'gallery-photos',
-    description: 'Photo albums organized by event/year',
+    apiUrl: '/api/gallery/events',
+    mockKey: 'gallery-events',
+    description: 'Event-based gallery with photos and videos per event',
   },
   'principal-message': {
     implemented: false,
@@ -104,12 +104,6 @@ export const apiRegistry: Record<ApiEndpoint, EndpointConfig> = {
     apiUrl: '/api/faqs',
     mockKey: 'faqs',
     description: 'Frequently asked questions for admission page',
-  },
-  'gallery-videos': {
-    implemented: false,
-    apiUrl: '/api/gallery/videos',
-    mockKey: 'gallery-videos',
-    description: 'YouTube video gallery for school events and tours',
   },
   'admission-steps': {
     implemented: false,

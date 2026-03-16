@@ -45,14 +45,7 @@ export const mockNavigation: Record<string, NavItem[]> = {
         { label: 'Blogs', href: '/blogs' },
       ],
     },
-    {
-      label: 'Gallery',
-      href: '/gallery',
-      children: [
-        { label: 'Photos', href: '/gallery/photos' },
-        { label: 'Videos', href: '/gallery/videos' },
-      ],
-    },
+    { label: 'Gallery', href: '/gallery' },
     { label: 'Contact', href: '/contact',
       children: [
         { label: 'Contact Us', href: '/contact' },
@@ -92,14 +85,7 @@ export const mockNavigation: Record<string, NavItem[]> = {
         { label: 'ब्लग', href: '/blogs' },
       ],
     },
-    {
-      label: 'ग्यालरी',
-      href: '/gallery',
-      children: [
-        { label: 'फोटोहरू', href: '/gallery/photos' },
-        { label: 'भिडियोहरू', href: '/gallery/videos' },
-      ],
-    },
+    { label: 'ग्यालरी', href: '/gallery' },
     {
       label: 'सम्पर्क',
       href: '/contact',

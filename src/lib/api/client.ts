@@ -25,10 +25,9 @@ import {
   mockFacilities,
   mockActivities,
   mockTestimonials,
-  mockPhotoAlbums,
+  mockGalleryEvents,
   mockPrincipalMessage,
   mockFaqs,
-  mockGalleryVideos,
   mockAdmissionSteps,
   mockPaymentMethods,
 } from '@/mocks';
@@ -47,10 +46,9 @@ const mockDataMap: Record<ApiEndpoint, Record<string, unknown> | unknown[]> = {
   facilities: mockFacilities,
   activities: mockActivities,
   testimonials: mockTestimonials,
-  'gallery-photos': mockPhotoAlbums,
+  'gallery-events': mockGalleryEvents,
   'principal-message': mockPrincipalMessage,
   faqs: mockFaqs,
-  'gallery-videos': mockGalleryVideos,
   'admission-steps': mockAdmissionSteps,
   'payment-methods': mockPaymentMethods,
 };

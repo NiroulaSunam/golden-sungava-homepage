@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { apiRegistry, isImplemented, getApiUrl } from '../registry';
 
 describe('apiRegistry', () => {
-  it('should have all 17 endpoints registered', () => {
-    expect(Object.keys(apiRegistry).length).toBe(17);
+  it('should have all 16 endpoints registered', () => {
+    expect(Object.keys(apiRegistry).length).toBe(16);
   });
 
   it('should have all endpoints marked as not implemented initially', () => {
@@ -21,7 +21,7 @@ describe('apiRegistry', () => {
   it('should return correct API URLs', () => {
     expect(getApiUrl('site-config')).toBe('/api/site-config');
     expect(getApiUrl('news')).toBe('/api/news');
-    expect(getApiUrl('gallery-photos')).toBe('/api/gallery/photos');
+    expect(getApiUrl('gallery-events')).toBe('/api/gallery/events');
     expect(getApiUrl('faqs')).toBe('/api/faqs');
   });
 

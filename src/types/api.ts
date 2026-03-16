@@ -16,8 +16,7 @@ export type ApiEndpoint =
   | 'facilities'
   | 'activities'
   | 'testimonials'
-  | 'gallery-photos'
-  | 'gallery-videos'
+  | 'gallery-events'
   | 'principal-message'
   | 'faqs'
   | 'admission-steps'
@@ -56,7 +55,7 @@ export type { NewsArticle } from '@/mocks/data/news';
 export type { SchoolEvent } from '@/mocks/data/events';
 export type { BlogPost } from '@/mocks/data/blogs';
 export type { Notice } from '@/mocks/data/notices';
-export type { PhotoAlbum } from '@/mocks/data/gallery';
+export type { GalleryEvent, GalleryPhoto } from '@/mocks/data/gallery';
 export type { Facility } from '@/mocks/data/facilities';
 export type { Testimonial } from '@/mocks/data/testimonials';
 export type { Activity } from '@/mocks/data/activities';
@@ -64,7 +63,6 @@ export type { HeroSlide } from '@/mocks/data/hero-slides';
 export type { NavItem } from '@/mocks/data/navigation';
 export type { PrincipalMessage } from '@/mocks/data/principal-message';
 export type { FaqItem } from '@/mocks/data/faqs';
-export type { GalleryVideo } from '@/mocks/data/gallery-videos';
 export type { AdmissionStep } from '@/mocks/data/admission-steps';
 export type { PaymentMethod } from '@/mocks/data/payment-methods';
 

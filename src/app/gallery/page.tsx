@@ -4,7 +4,7 @@ import { GalleryClient } from './gallery-client';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Gallery',
-  description: 'Explore photo albums and videos from Golden Sungava English Boarding School events and activities.',
+  description: 'Explore photos and videos from Golden Sungava English Boarding School events and activities.',
 });
 
 const GalleryPage = () => <GalleryClient />;

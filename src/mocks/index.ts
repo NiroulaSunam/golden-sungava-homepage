@@ -23,14 +23,13 @@ export { mockNews } from './data/news';
 export { mockEvents } from './data/events';
 export { mockBlogs } from './data/blogs';
 export { mockNotices } from './data/notices';
-export { mockPhotoAlbums } from './data/gallery';
+export { mockGalleryEvents } from './data/gallery';
 export { mockFacilities } from './data/facilities';
 export { mockTestimonials } from './data/testimonials';
 export { mockActivities } from './data/activities';
 export { mockHeroSlides } from './data/hero-slides';
 export { mockNavigation } from './data/navigation';
 export { mockFaqs } from './data/faqs';
-export { mockGalleryVideos } from './data/gallery-videos';
 export { mockAdmissionSteps } from './data/admission-steps';
 export { mockPaymentMethods } from './data/payment-methods';
 
@@ -40,14 +39,13 @@ export type { NewsArticle } from './data/news';
 export type { SchoolEvent } from './data/events';
 export type { BlogPost } from './data/blogs';
 export type { Notice } from './data/notices';
-export type { PhotoAlbum } from './data/gallery';
+export type { GalleryEvent, GalleryPhoto } from './data/gallery';
 export type { Facility } from './data/facilities';
 export type { Testimonial } from './data/testimonials';
 export type { Activity } from './data/activities';
 export type { HeroSlide } from './data/hero-slides';
 export type { NavItem } from './data/navigation';
 export type { FaqItem } from './data/faqs';
-export type { GalleryVideo } from './data/gallery-videos';
 export type { AdmissionStep } from './data/admission-steps';
 export type { PaymentMethod } from './data/payment-methods';
 
@@ -63,7 +61,7 @@ export type { PaymentMethod } from './data/payment-methods';
  * | GET /api/events            | events.ts              | No*       | Mixed en/np from source  |
  * | GET /api/blogs             | blogs.ts               | No*       | Mixed en/np from source  |
  * | GET /api/notices           | notices.ts             | No*       | Mixed en/np from source  |
- * | GET /api/gallery/photos    | gallery.ts             | No*       | Album names only         |
+ * | GET /api/gallery-events    | gallery.ts             | Yes       | Event-based gallery      |
  * | GET /api/facilities        | facilities.ts          | Yes       | Full bilingual           |
  * | GET /api/testimonials      | testimonials.ts        | Yes       | Full bilingual           |
  * | GET /api/activities        | activities.ts          | Yes       | Full bilingual           |
