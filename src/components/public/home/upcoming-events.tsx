@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock, MapPin, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight } from 'lucide-react';
 import type { SchoolEvent } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';

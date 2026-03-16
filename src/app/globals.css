@@ -213,7 +213,7 @@ body {
    Gold Gradient Utilities
    ============================================================ */
 .bg-gold-gradient {
-  background: linear-gradient(160deg, #0F0F0F 0%, #1A180F 30%, #2D2413 60%, var(--cms-primary-dark) 100%);
+  background: linear-gradient(160deg, var(--cms-primary-dark) 0%, #4A3510 30%, #2D2413 65%, #1A1508 100%);
 }
 
 .bg-gold-gradient-subtle {

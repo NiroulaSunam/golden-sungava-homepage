@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { CreditCard, Smartphone, QrCode, type LucideIcon } from 'lucide-react';
+import { QrCode } from 'lucide-react';
+import { EsewaIcon, KhaltiIcon } from '@/components/shared/brand-icons';
 import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
@@ -9,9 +10,9 @@ import { fetchApi } from '@/lib/api/client';
 import type { PaymentMethod as PaymentMethodType } from '@/types/api';
 
 // Icon map for CMS-driven payment methods
-const paymentIconMap: Record<string, LucideIcon> = {
-  smartphone: Smartphone,
-  'credit-card': CreditCard,
+const paymentIconMap: Record<string, React.FC<{ className?: string }>> = {
+  khalti: KhaltiIcon,
+  esewa: EsewaIcon,
 };
 
 // --- Sub-component ---
@@ -21,7 +22,7 @@ interface PaymentMethodCardProps {
 }
 
 const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
-  const Icon = paymentIconMap[method.icon] || CreditCard;
+  const Icon = paymentIconMap[method.icon] || KhaltiIcon;
 
   return (
     <div className="card-gold-accent rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md">

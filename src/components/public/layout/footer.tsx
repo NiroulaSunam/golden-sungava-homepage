@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Clock, Facebook, MessageCircle, ArrowRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Facebook, ArrowRight } from 'lucide-react';
+import { WhatsAppIcon, MessengerIcon } from '@/components/shared/brand-icons';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
@@ -48,7 +49,7 @@ export const Footer = () => {
       {/* Gold gradient top border */}
       <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
 
-      <div className="bg-gradient-to-b from-[#141414] to-[#0A0A0A]">
+      <div className="bg-gradient-to-b from-[#2D2413] to-[#1A1508]">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {/* School Info */}
@@ -83,7 +84,7 @@ export const Footer = () => {
                   className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
                   aria-label="WhatsApp"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsAppIcon className="h-4 w-4" />
                 </a>
                 <a
                   href={config.socialLinks.messenger}
@@ -92,7 +93,7 @@ export const Footer = () => {
                   className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
                   aria-label="Messenger"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <MessengerIcon className="h-4 w-4" />
                 </a>
               </div>
             </div>
@@ -105,7 +106,7 @@ export const Footer = () => {
                   { label: t('nav.admission'), href: '/admission' },
                   { label: t('nav.news'), href: '/news' },
                   { label: t('nav.contact'), href: '/contact' },
-                  { label: t('nav.gallery'), href: '/gallery/photos' },
+                  { label: t('nav.gallery'), href: '/gallery' },
                   { label: t('nav.downloads'), href: '/downloads' },
                 ].map((link) => (
                   <FooterLink key={link.href} href={link.href}>

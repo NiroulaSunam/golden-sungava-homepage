@@ -18,7 +18,7 @@ export type GalleryEvent = {
   date: string;
   coverUrl: string;
   photos: GalleryPhoto[];
-  videos: { videoId: string; title: string }[];
+  videos: { url: string; title: string; thumbnailUrl?: string }[];
 };
 
 export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
@@ -47,7 +47,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 7, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2026-02-27/vWyGsc0LuZqexCDV-1772167231.jpg', caption: 'Stage program' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'Annual Day Celebration 2082' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Annual Day Celebration 2082' },
       ],
     },
     {
@@ -63,7 +63,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 12, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2025-04-04/F2lLaO4okpZ21tKR-1743751397.jpg', caption: 'Team photo' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'Sports Meet Highlights' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'Sports Meet Highlights' },
       ],
     },
     {
@@ -89,7 +89,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 18, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2025-08-15/cfaPMII9vA3J6qTQ-1755256071.jpg', caption: 'Computer demonstrations' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'School Tour - Golden Sungava' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'School Tour - Golden Sungava' },
       ],
     },
     {
@@ -178,7 +178,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 7, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2026-02-27/vWyGsc0LuZqexCDV-1772167231.jpg', caption: 'मञ्च कार्यक्रम' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'वार्षिक दिवस समारोह २०८२' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'वार्षिक दिवस समारोह २०८२' },
       ],
     },
     {
@@ -194,7 +194,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 12, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2025-04-04/F2lLaO4okpZ21tKR-1743751397.jpg', caption: 'टोली तस्बिर' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'खेलकुद दिवसका मुख्य क्षणहरू' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'खेलकुद दिवसका मुख्य क्षणहरू' },
       ],
     },
     {
@@ -220,7 +220,7 @@ export const mockGalleryEvents: Record<string, GalleryEvent[]> = {
         { id: 18, url: 'https://s3.veda-app.com/veda-app/assets/806203/gallery/2025-08-15/cfaPMII9vA3J6qTQ-1755256071.jpg', caption: 'कम्प्युटर प्रदर्शन' },
       ],
       videos: [
-        { videoId: 'dQw4w9WgXcQ', title: 'विद्यालय भ्रमण - गोल्डेन सुनगाभा' },
+        { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', title: 'विद्यालय भ्रमण - गोल्डेन सुनगाभा' },
       ],
     },
     {

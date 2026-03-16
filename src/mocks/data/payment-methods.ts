@@ -18,7 +18,7 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
     {
       id: 1,
       name: 'Khalti',
-      icon: 'smartphone',
+      icon: 'khalti',
       color: 'bg-purple-600',
       steps: [
         'Open the Khalti app on your phone',
@@ -31,7 +31,7 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
     {
       id: 2,
       name: 'eSewa',
-      icon: 'credit-card',
+      icon: 'esewa',
       color: 'bg-green-600',
       steps: [
         'Open the eSewa app on your phone',
@@ -46,7 +46,7 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
     {
       id: 1,
       name: 'खल्ती',
-      icon: 'smartphone',
+      icon: 'khalti',
       color: 'bg-purple-600',
       steps: [
         'आफ्नो फोनमा खल्ती एप खोल्नुहोस्',
@@ -59,7 +59,7 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
     {
       id: 2,
       name: 'इसेवा',
-      icon: 'credit-card',
+      icon: 'esewa',
       color: 'bg-green-600',
       steps: [
         'आफ्नो फोनमा इसेवा एप खोल्नुहोस्',

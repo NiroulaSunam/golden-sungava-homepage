@@ -40,6 +40,8 @@ const StatItem = ({ icon: Icon, value, label, delay, isInView }: StatItemProps) 
   </div>
 );
 
+const STAT_DELAYS = ['delay-100', 'delay-200', 'delay-300', 'delay-400'];
+
 // --- Main Component ---
 
 export const StatsCounter = () => {
@@ -58,7 +60,7 @@ export const StatsCounter = () => {
             icon={iconMap[stat.icon] || Award}
             value={stat.value}
             label={stat.label}
-            delay={`delay-${(i + 1) * 100}`}
+            delay={STAT_DELAYS[i] ?? 'delay-100'}
             isInView={isInView}
           />
         ))}

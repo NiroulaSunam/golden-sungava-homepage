@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Phone, Mail, MapPin, Clock, MessageCircle, CheckCircle } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, CheckCircle } from 'lucide-react';
+import { WhatsAppIcon, MessengerIcon } from '@/components/shared/brand-icons';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { PageHeader } from '@/components/shared/page-header';
@@ -69,10 +70,10 @@ export const ContactClient = () => {
 
             <div className="flex gap-3">
               <a href={`https://wa.me/${config.socialLinks.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
-                <MessageCircle className="h-4 w-4" /> WhatsApp
+                <WhatsAppIcon className="h-4 w-4" /> WhatsApp
               </a>
               <a href={config.socialLinks.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-                <MessageCircle className="h-4 w-4" /> Messenger
+                <MessengerIcon className="h-4 w-4" /> Messenger
               </a>
             </div>
 
