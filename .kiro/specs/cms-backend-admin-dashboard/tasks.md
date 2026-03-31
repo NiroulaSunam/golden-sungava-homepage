@@ -1,14 +1,14 @@
 # Implementation Plan
 
-- [ ] 1. Database schema, enums, and PostgreSQL functions
-- [ ] 1.1 Create enum types and profiles table
+- [x] 1. Database schema, enums, and PostgreSQL functions
+- [x] 1.1 Create enum types and profiles table
   - Define `content_status` enum (draft, published) and `user_role` enum (admin, editor, viewer)
   - Create `profiles` table linked to `auth.users` with role, display_name, avatar_url
   - Add trigger to auto-create profile on new auth user signup with default viewer role
   - Run `pnpm db:reset` to verify migration applies cleanly
   - _Requirements: 1.4, 1.6, 6.6_
 
-- [ ] 1.2 Create all content tables with bilingual JSONB columns
+- [x] 1.2 Create all content tables with bilingual JSONB columns
   - Create tables for all 16 content types: site_config, hero_slides, navigation_items, news, events, blogs, notices, staff, facilities, activities, testimonials, gallery_events, faqs, admission_steps, payment_methods, principal_message
   - Each bilingual text field stored as JSONB with shape `{"en": "...", "np": "..."}`
   - All content tables share common columns: UUID primary key, status (content_status enum), is_active, sort_order, created_at, updated_at, deleted_at
@@ -16,14 +16,14 @@
   - Site_config and principal_message are singleton tables (one row each)
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 1.3 Create gallery child tables and system tables
+- [x] 1.3 Create gallery child tables and system tables
   - Create gallery_photos table with foreign key to gallery_events (cascade delete), url, caption (JSONB), sort_order
   - Create gallery_videos table with foreign key to gallery_events (cascade delete), url, title (JSONB), thumbnail_url, sort_order
   - Create audit_log table (append-only): user_id, action, resource, resource_id, details JSONB
   - Create publish_log table: user_id, published_at, items_count, details JSONB
   - _Requirements: 1.2, 12.1, 12.2, 12.4_
 
-- [ ] 1.4 Create PostgreSQL functions for publish and draft count
+- [x] 1.4 Create PostgreSQL functions for publish and draft count
   - Create `publish_all_drafts(p_user_id UUID)` function that atomically updates all content tables from draft to published in a single transaction, inserts publish_log entry, and returns total count
   - Create `get_draft_count()` function that counts draft rows across all content tables in a single query using UNION ALL
   - Run `pnpm db:reset` to verify all migrations and functions work
