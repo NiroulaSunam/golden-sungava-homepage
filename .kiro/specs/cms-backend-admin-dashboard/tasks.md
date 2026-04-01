@@ -29,7 +29,7 @@
   - Run `pnpm db:reset` to verify all migrations and functions work
   - _Requirements: 2.2, 2.3, 2.5, 2.6_
 
-- [ ] 1.5 Seed database with existing mock data
+- [x] 1.5 Seed database with existing mock data
   - Convert all mock data from `src/mocks/data/*.ts` into SQL INSERT statements
   - Set `status = 'published'` on all seeded content so public site works immediately
   - Create at least one admin user profile for initial access
