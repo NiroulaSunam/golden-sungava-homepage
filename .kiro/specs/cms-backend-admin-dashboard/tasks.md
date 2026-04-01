@@ -113,15 +113,15 @@
   - Test that draft content is excluded from public responses
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 4. Admin API routes
-- [ ] 4.1 Create admin API authentication and authorization middleware
+- [x] 4. Admin API routes
+- [x] 4.1 Create admin API authentication and authorization middleware
   - Build reusable middleware that validates JWT from Authorization header using `getUserFromToken`
   - Check RBAC permissions using `requirePermission` for the requested resource and action
   - Return 401 for missing/invalid auth, 403 for insufficient permissions
   - Fetch user profile from profiles table to get role
   - _Requirements: 4.2, 4.3, 4.4, 7.6_
 
-- [ ] 4.2 (P) Create admin CRUD API routes for all list content types
+- [x] 4.2 (P) Create admin CRUD API routes for all list content types
   - Implement GET (list all including drafts), POST (create as draft), PATCH (update), DELETE (soft delete) for each content type
   - All routes use the auth/permission middleware from task 4.1
   - GET endpoint supports pagination, search, and includeDeleted filter
@@ -130,19 +130,19 @@
   - DELETE sets deleted_at timestamp (soft delete)
   - _Requirements: 4.1, 4.5, 4.6, 4.7_
 
-- [ ] 4.3 (P) Create admin API routes for singletons and publish
+- [x] 4.3 (P) Create admin API routes for singletons and publish
   - Implement GET and PUT (upsert) for site-config and principal-message
   - Implement POST `/api/admin/publish` that calls publish service (requires admin role)
   - Implement GET `/api/admin/publish/count` that returns draft count
   - _Requirements: 4.8, 5.7_
 
-- [ ] 4.4 (P) Create admin gallery API with nested photo/video management
+- [x] 4.4 (P) Create admin gallery API with nested photo/video management
   - Implement CRUD for gallery events plus nested endpoints for adding/removing/reordering photos and videos within an event
   - Photos and videos cascade-delete when parent event is deleted
   - Support sort_order updates for drag-and-drop reordering
   - _Requirements: 9.8_
 
-- [ ] 4.5 Write integration tests for admin API endpoints
+- [x] 4.5 Write integration tests for admin API endpoints
   - Test authentication: requests without JWT return 401
   - Test authorization: editor cannot publish, viewer cannot create
   - Test CRUD cycle: create (status=draft) → update → soft delete → verify deleted_at set
