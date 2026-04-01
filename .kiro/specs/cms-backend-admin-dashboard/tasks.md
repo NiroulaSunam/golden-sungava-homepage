@@ -37,7 +37,7 @@
   - Run `pnpm db:reset` to verify seed applies cleanly, then `pnpm db:gen:types` to generate TypeScript types
   - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5_
 
-- [ ] 1.6 Validate JSONB language extraction with Supabase JS client
+- [x] 1.6 Validate JSONB language extraction with Supabase JS client
   - Write a spike test that queries a seeded content table using `select('field->>en')` syntax via the Supabase JS client
   - Verify that bilingual JSONB fields can be extracted to flat strings in a single query
   - If `->>` syntax fails with Supabase JS select, document the fallback approach (PostgreSQL views or service-layer extraction) and implement it
