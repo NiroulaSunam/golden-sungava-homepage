@@ -84,6 +84,40 @@ describe('RBAC Permissions (expanded)', () => {
     });
   });
 
+  describe('admin manage permission on all CMS resources', () => {
+    it('should have manage permission on all 8 CMS resources', () => {
+      const cmsResources = ['content', 'gallery', 'staff', 'site-config', 'navigation', 'users', 'publish', 'audit-log'] as const;
+
+      for (const resource of cmsResources) {
+        expect(hasPermission('admin', resource, 'manage')).toBe(true);
+      }
+    });
+  });
+
+  describe('editor restrictions', () => {
+    it('should not have publish permission', () => {
+      expect(hasPermission('editor', 'publish', 'create')).toBe(false);
+    });
+
+    it('should not be able to manage users', () => {
+      expect(hasPermission('editor', 'users', 'create')).toBe(false);
+      expect(hasPermission('editor', 'users', 'read')).toBe(false);
+      expect(hasPermission('editor', 'users', 'update')).toBe(false);
+      expect(hasPermission('editor', 'users', 'delete')).toBe(false);
+    });
+  });
+
+  describe('viewer read-only enforcement', () => {
+    it('should have read but not create on all allowed resources', () => {
+      const allowedResources = ['content', 'gallery', 'staff', 'site-config', 'navigation', 'audit-log'] as const;
+
+      for (const resource of allowedResources) {
+        expect(hasPermission('viewer', resource, 'read')).toBe(true);
+        expect(hasPermission('viewer', resource, 'create')).toBe(false);
+      }
+    });
+  });
+
   describe('backward compatibility', () => {
     it('should still work with legacy resources (files, settings)', () => {
       expect(hasPermission('admin', 'files', 'manage')).toBe(true);

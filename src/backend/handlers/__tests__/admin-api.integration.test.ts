@@ -27,8 +27,9 @@ vi.mock('@/backend/services/audit.service', () => ({
 import { createAdminContentHandlers } from '../admin-content.handler';
 import { getUserFromToken } from '@/lib/auth/server-auth';
 import { supabaseAdmin } from '@/backend/db';
+import { setupMockAuth, AUTH_HEADERS } from '@/test-utils/mock-auth';
+import { createMockRequest } from '@/test-utils/mock-request';
 
-// Mock service for testing
 const mockService = {
   list: vi.fn(),
   getById: vi.fn(),
@@ -43,28 +44,13 @@ const handlers = createAdminContentHandlers({
   resourceName: 'content',
 });
 
-const setupAuth = (role: 'admin' | 'editor' | 'viewer') => {
-  vi.mocked(getUserFromToken).mockResolvedValue({ id: 'user-1' } as never);
-  vi.mocked(supabaseAdmin.from).mockReturnValue({
-    select: vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        single: vi.fn().mockResolvedValue({
-          data: { role, user_id: 'user-1' },
-          error: null,
-        }),
-      }),
-    }),
-  } as never);
-};
+const setupAuth = (role: 'admin' | 'editor' | 'viewer') =>
+  setupMockAuth(role, vi.mocked(getUserFromToken), supabaseAdmin);
 
-const authHeaders = { Authorization: 'Bearer valid-token' };
+const authHeaders = AUTH_HEADERS;
 
 const mockRequest = (path: string, init?: { method?: string; headers?: Record<string, string>; body?: unknown }) =>
-  new NextRequest(new URL(path, 'http://localhost:3000'), {
-    method: init?.method || 'GET',
-    headers: new Headers(init?.headers),
-    body: init?.body ? JSON.stringify(init.body) : undefined,
-  });
+  createMockRequest(path, init);
 
 describe('Admin API Integration', () => {
   beforeEach(() => {
@@ -176,7 +162,7 @@ describe('Admin API Integration', () => {
       expect(createResponse.status).toBe(201);
       const created = await createResponse.json();
       expect(created.data.status).toBe('draft');
-      expect(mockService.create).toHaveBeenCalledWith(newItem, 'user-1');
+      expect(mockService.create).toHaveBeenCalledWith(newItem, 'user-admin-1');
     });
 
     it('should update existing content', async () => {
@@ -193,7 +179,7 @@ describe('Admin API Integration', () => {
       );
 
       expect(updateResponse.status).toBe(200);
-      expect(mockService.update).toHaveBeenCalledWith('item-1', updateData, 'user-1');
+      expect(mockService.update).toHaveBeenCalledWith('item-1', updateData, 'user-admin-1');
     });
 
     it('should soft delete content', async () => {
@@ -208,7 +194,7 @@ describe('Admin API Integration', () => {
       );
 
       expect(deleteResponse.status).toBe(200);
-      expect(mockService.remove).toHaveBeenCalledWith('item-1', 'user-1');
+      expect(mockService.remove).toHaveBeenCalledWith('item-1', 'user-admin-1');
     });
   });
 });

@@ -12,5 +12,18 @@ export default defineConfig({
   },
   test: {
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'lcov'],
+      include: [
+        'src/backend/handlers/**',
+        'src/backend/services/**',
+        'src/backend/repositories/**',
+        'src/backend/utils/**',
+        'src/lib/permissions/**',
+        'src/lib/api/**',
+      ],
+      exclude: ['src/**/__tests__/**', 'src/test-utils/**'],
+    },
   },
 });

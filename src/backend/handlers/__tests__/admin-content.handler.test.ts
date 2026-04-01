@@ -21,6 +21,8 @@ vi.mock('@/backend/db', () => ({
 import { createAdminContentHandlers } from '../admin-content.handler';
 import { getUserFromToken } from '@/lib/auth/server-auth';
 import { supabaseAdmin } from '@/backend/db';
+import { setupMockAuth } from '@/test-utils/mock-auth';
+import { createMockRequest } from '@/test-utils/mock-request';
 
 const mockService = {
   list: vi.fn(),
@@ -36,29 +38,10 @@ const handlers = createAdminContentHandlers({
   resourceName: 'content',
 });
 
-// Helper to set up authenticated admin request
-const authSetup = () => {
-  vi.mocked(getUserFromToken).mockResolvedValue({ id: 'user-1' } as never);
-  const mockSingle = vi.fn().mockResolvedValue({
-    data: { role: 'admin', user_id: 'user-1' },
-    error: null,
-  });
-  vi.mocked(supabaseAdmin.from).mockReturnValue({
-    select: vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({ single: mockSingle }),
-    }),
-  } as never);
-};
+const authSetup = () => setupMockAuth('admin', vi.mocked(getUserFromToken), supabaseAdmin);
 
-const mockRequest = (path: string, init?: { method?: string; headers?: Record<string, string>; body?: unknown }) => {
-  const headers = new Headers(init?.headers);
-  const req = new NextRequest(new URL(path, 'http://localhost:3000'), {
-    method: init?.method || 'GET',
-    headers,
-    body: init?.body ? JSON.stringify(init.body) : undefined,
-  });
-  return req;
-};
+const mockRequest = (path: string, init?: { method?: string; headers?: Record<string, string>; body?: unknown }) =>
+  createMockRequest(path, init);
 
 describe('Admin Content Handlers', () => {
   beforeEach(() => {
@@ -107,7 +90,7 @@ describe('Admin Content Handlers', () => {
       expect(response.status).toBe(201);
       const body = await response.json();
       expect(body.data.id).toBe('new-1');
-      expect(mockService.create).toHaveBeenCalledWith(newItem, 'user-1');
+      expect(mockService.create).toHaveBeenCalledWith(newItem, 'user-admin-1');
     });
   });
 
@@ -126,7 +109,7 @@ describe('Admin Content Handlers', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(mockService.update).toHaveBeenCalledWith('item-1', updateData, 'user-1');
+      expect(mockService.update).toHaveBeenCalledWith('item-1', updateData, 'user-admin-1');
     });
 
     it('should return 400 when id is missing', async () => {
@@ -159,7 +142,79 @@ describe('Admin Content Handlers', () => {
     });
   });
 
+  describe('POST (error handling)', () => {
+    it('should return 400 when service.create throws validation error (ZodError)', async () => {
+      authSetup();
+      const zodError = new Error('Invalid fields');
+      zodError.name = 'ZodError';
+      mockService.create.mockRejectedValue(zodError);
+
+      const response = await handlers.POST(
+        mockRequest('/api/admin/news', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer valid', 'Content-Type': 'application/json' },
+          body: { bad: 'data' },
+        })
+      );
+
+      expect(response.status).toBe(400);
+      const body = await response.json();
+      expect(body.error).toBe('Validation failed');
+    });
+
+    it('should return 500 on unexpected service error', async () => {
+      authSetup();
+      mockService.create.mockRejectedValue(new Error('Unexpected DB failure'));
+
+      const response = await handlers.POST(
+        mockRequest('/api/admin/news', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer valid', 'Content-Type': 'application/json' },
+          body: { title: { en: 'Test', np: 'टेस्ट' } },
+        })
+      );
+
+      expect(response.status).toBe(500);
+      const body = await response.json();
+      expect(body.error).toBe('Unexpected DB failure');
+    });
+  });
+
+  describe('GET (empty results)', () => {
+    it('should return empty list when service returns no data', async () => {
+      authSetup();
+      mockService.list.mockResolvedValue({
+        data: [], total: 0, page: 1, limit: 10, totalPages: 0,
+      });
+
+      const response = await handlers.GET(
+        mockRequest('/api/admin/news?page=1&limit=10', {
+          headers: { Authorization: 'Bearer valid' },
+        })
+      );
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.data).toHaveLength(0);
+      expect(body.meta.total).toBe(0);
+      expect(body.meta.totalPages).toBe(0);
+    });
+  });
+
   describe('DELETE (soft delete)', () => {
+    it('should return 400 when id parameter is missing (no query string)', async () => {
+      authSetup();
+
+      const response = await handlers.DELETE(
+        mockRequest('/api/admin/news', {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer valid' },
+        })
+      );
+
+      expect(response.status).toBe(400);
+    });
+
     it('should soft delete by id', async () => {
       authSetup();
       mockService.remove.mockResolvedValue(true);
@@ -172,7 +227,7 @@ describe('Admin Content Handlers', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(mockService.remove).toHaveBeenCalledWith('item-1', 'user-1');
+      expect(mockService.remove).toHaveBeenCalledWith('item-1', 'user-admin-1');
     });
 
     it('should return 400 when id is missing', async () => {
