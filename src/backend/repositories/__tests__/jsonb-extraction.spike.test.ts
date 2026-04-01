@@ -13,9 +13,9 @@
 import { describe, it, expect } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
-// Create test client directly (avoids 'server-only' import from db module)
+// Standard Supabase local demo key — safe to commit, same for all local instances
 const LOCAL_URL = 'http://127.0.0.1:54521';
-const LOCAL_SERVICE_KEY =
+const LOCAL_SERVICE_KEY = // nosemgrep: hardcoded-credentials
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU';
 
 const supabase = createClient(LOCAL_URL, LOCAL_SERVICE_KEY, {

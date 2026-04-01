@@ -6,8 +6,8 @@
 import { z } from 'zod';
 
 // Shared bilingual field schema
-const bilingual = z.object({ en: z.string(), np: z.string() });
-const bilingualOptional = z.object({ en: z.string(), np: z.string() }).optional();
+const bilingual = z.object({ en: z.string().min(1, 'Required'), np: z.string().default('') });
+const bilingualOptional = z.object({ en: z.string().default(''), np: z.string().default('') }).optional();
 
 // ─── News ─────────────────────────────────────────────
 export const newsCreateSchema = z.object({

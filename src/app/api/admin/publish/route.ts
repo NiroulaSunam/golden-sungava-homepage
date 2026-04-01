@@ -12,7 +12,7 @@ const handlePublish = async (_request: NextRequest, ctx: AdminContext): Promise<
       userId: ctx.userId,
       action: AUDIT_ACTION.PUBLISH,
       resource: 'publish',
-      resourceId: '',
+      resourceId: null,
       details: { itemsPublished: result.itemsPublished },
     });
 

@@ -10,7 +10,7 @@ export interface AuditEntry {
   userId: string;
   action: AuditAction;
   resource: string;
-  resourceId: string;
+  resourceId: string | null;
   details: Record<string, unknown>;
 }
 
