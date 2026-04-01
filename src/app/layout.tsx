@@ -4,13 +4,10 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from '@frontend/providers';
-import { Header, Footer, FloatingCTA } from '@/components/public/layout';
-import { SwRegister } from '@/components/shared/sw-register';
-import { InstallPrompt } from '@/components/shared/install-prompt';
 import { fetchApi } from '@/lib/api/client';
 import type { SiteConfig } from '@/types/api';
+import { Toaster } from '@/components/ui/sonner';
 
-// Primary body font - clean, modern sans-serif
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
@@ -19,7 +16,6 @@ const dmSans = DM_Sans({
   variable: '--font-dm-sans',
 });
 
-// Devanagari fallback for Nepali text
 const notoDevanagari = Noto_Sans_Devanagari({
   subsets: ['devanagari'],
   weight: ['400', '500', '600', '700'],
@@ -27,7 +23,6 @@ const notoDevanagari = Noto_Sans_Devanagari({
   variable: '--font-devanagari',
 });
 
-// Display/heading font - elegant serif
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -38,11 +33,6 @@ const cormorant = Cormorant_Garamond({
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://goldensungava.edu.np';
 
-/**
- * Dynamic metadata fetched from CMS site-config via ISR.
- * Runs at build time, revalidates when ISR triggers.
- * Always uses default language (English) for SEO — search engines index the ISR shell.
- */
 export const generateMetadata = async (): Promise<Metadata> => {
   const { data: config } = await fetchApi<SiteConfig>('site-config', { lang: 'en' });
 
@@ -85,12 +75,8 @@ const RootLayout = ({
     <html lang="en" suppressHydrationWarning className={`${dmSans.variable} ${cormorant.variable} ${notoDevanagari.variable}`}>
       <body className="flex min-h-screen flex-col">
         <Providers>
-          <SwRegister />
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <FloatingCTA />
-          <InstallPrompt />
+          {children}
+          <Toaster />
         </Providers>
         <Analytics />
         <SpeedInsights />

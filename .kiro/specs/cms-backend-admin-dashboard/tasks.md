@@ -149,8 +149,8 @@
   - Test publish flow: create draft → publish → verify status=published
   - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.6, 7.6_
 
-- [ ] 5. Route group refactoring and admin layout
-- [ ] 5.1 Refactor app layout into public and admin route groups
+- [x] 5. Route group refactoring and admin layout
+- [x] 5.1 Refactor app layout into public and admin route groups
   - Move all existing public page routes into a `(public)` route group
   - Create `(public)/layout.tsx` with the Header, Footer, FloatingCTA, InstallPrompt, and SwRegister that currently live in root layout
   - Slim down root layout to only contain global providers (Theme, Language, SiteConfig, Auth, Install)
@@ -158,7 +158,7 @@
   - Verify all existing public page URLs still work after the move
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 6.1, 6.2, 6.3_
 
-- [ ] 5.2 Build admin layout shell with responsive topbar and sidebar
+- [x] 5.2 Build admin layout shell with responsive topbar and sidebar
   - Create `(admin)/admin/layout.tsx` wrapped with RequireAuth guard
   - Build topbar with school logo, Publish button with draft count badge, and user menu (avatar dropdown with logout)
   - Build collapsible sidebar with navigation links to all content management sections
@@ -167,7 +167,7 @@
   - Preserve current gold theme — use existing CSS custom properties and Tailwind tokens
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6, 6.4, 6.5_
 
-- [ ] 5.3 Install required shadcn/ui components
+- [x] 5.3 Install required shadcn/ui components
   - Install shadcn/ui components needed for admin: button, input, textarea, label, dialog, select, tabs, table, badge, dropdown-menu, sheet, separator, toast, form
   - Verify components work with existing Tailwind 4 configuration and gold theme tokens
   - _Requirements: 8.5_
