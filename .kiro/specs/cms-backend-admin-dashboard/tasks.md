@@ -84,15 +84,15 @@
   - Keep existing `hasPermission` and `requirePermission` function signatures
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 3. Public API routes
-- [ ] 3.1 (P) Create public API routes for singleton content (site-config, principal-message)
+- [x] 3. Public API routes
+- [x] 3.1 (P) Create public API routes for singleton content (site-config, principal-message)
   - Implement GET-only routes at existing endpoint URLs from the API registry
   - Return only published, active, non-deleted content with language extraction based on `lang` query parameter
   - Follow existing `ApiResponse<T>` wrapper format
   - Flip `implemented: true` in the API registry for each endpoint
   - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6_
 
-- [ ] 3.2 (P) Create public API routes for paginated list content (news, events, blogs, notices, staff, gallery-events)
+- [x] 3.2 (P) Create public API routes for paginated list content (news, events, blogs, notices, staff, gallery-events)
   - Implement GET-only routes with pagination support using existing `parsePaginationParams` utility
   - Support `page`, `limit`, `sortBy`, `search` query parameters
   - Filter by status=published, deleted_at IS NULL, is_active=true
@@ -100,13 +100,13 @@
   - Flip `implemented: true` in the API registry for each endpoint
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [ ] 3.3 (P) Create public API routes for remaining content (hero-slides, navigation, facilities, activities, testimonials, faqs, admission-steps, payment-methods)
+- [x] 3.3 (P) Create public API routes for remaining content (hero-slides, navigation, facilities, activities, testimonials, faqs, admission-steps, payment-methods)
   - Implement GET-only routes for non-paginated list content
   - Same published/active/non-deleted filtering and language extraction
   - Flip `implemented: true` in the API registry for each endpoint
   - _Requirements: 3.1, 3.2, 3.3, 3.5, 3.6_
 
-- [ ] 3.4 Write integration tests for public API endpoints
+- [x] 3.4 Write integration tests for public API endpoints
   - Test that GET endpoints return only published, active, non-deleted content
   - Test language extraction: `?lang=en` returns English strings, `?lang=np` returns Nepali
   - Test pagination parameters work correctly

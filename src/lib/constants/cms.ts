@@ -31,6 +31,13 @@ export type AuditAction = (typeof AUDIT_ACTION)[keyof typeof AUDIT_ACTION];
  * PostgREST error codes used in repository error handling.
  */
 export const POSTGREST_ERROR = {
-  /** Row not found — returned by .single() when no row matches */
   NOT_FOUND: 'PGRST116',
+} as const;
+
+/**
+ * Default sort configuration for public content lists.
+ */
+export const SORT_DEFAULTS = {
+  COLUMN: 'sort_order',
+  ORDER: 'asc',
 } as const;

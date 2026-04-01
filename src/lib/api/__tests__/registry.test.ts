@@ -6,16 +6,16 @@ describe('apiRegistry', () => {
     expect(Object.keys(apiRegistry).length).toBe(16);
   });
 
-  it('should have all endpoints marked as not implemented initially', () => {
+  it('should have all 16 endpoints implemented', () => {
     Object.values(apiRegistry).forEach((config) => {
-      expect(config.implemented).toBe(false);
+      expect(config.implemented).toBe(true);
     });
   });
 
   it('should return correct implementation status', () => {
-    expect(isImplemented('site-config')).toBe(false);
-    expect(isImplemented('hero-slides')).toBe(false);
-    expect(isImplemented('faqs')).toBe(false);
+    expect(isImplemented('site-config')).toBe(true);
+    expect(isImplemented('hero-slides')).toBe(true);
+    expect(isImplemented('faqs')).toBe(true);
   });
 
   it('should return correct API URLs', () => {
