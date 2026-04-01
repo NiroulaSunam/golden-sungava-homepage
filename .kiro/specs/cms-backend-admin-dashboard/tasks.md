@@ -172,8 +172,8 @@
   - Verify components work with existing Tailwind 4 configuration and gold theme tokens
   - _Requirements: 8.5_
 
-- [ ] 6. Admin dashboard and shared admin components
-- [ ] 6.1 Build bilingual input components for React Hook Form
+- [x] 6. Admin dashboard and shared admin components
+- [x] 6.1 Build bilingual input components for React Hook Form
   - Create tabbed EN/NP text input component integrated with React Hook Form field registration
   - Create bilingual textarea variant for multi-line content
   - Create bilingual rich-text variant for markdown content (blog posts, news articles, principal's message)
@@ -181,7 +181,7 @@
   - Store values as `{"en": "...", "np": "..."}` matching database JSONB column format
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
 
-- [ ] 6.2 Build generic content list page component
+- [x] 6.2 Build generic content list page component
   - Create reusable data table page parameterized by resource name, column definitions, and API endpoint
   - Support server-side pagination, sort-by-column, and text search
   - Display status badges (draft/published), dates, and action buttons (edit, delete)
@@ -189,14 +189,14 @@
   - "Add New" button opens the content form dialog
   - _Requirements: 9.1, 9.2, 9.6_
 
-- [ ] 6.3 Build generic content form dialog component
+- [x] 6.3 Build generic content form dialog component
   - Create reusable form dialog parameterized by Zod schema, field config array, and optional initial values (for editing)
   - Render fields dynamically: bilingual-input, bilingual-textarea, bilingual-rich-text, image URL input with preview, select dropdown, date picker
   - Validate all fields with Zod on submit, display field-level errors
   - On success: close dialog, refresh content list
   - _Requirements: 9.3, 9.4, 9.5_
 
-- [ ] 6.4 Build publish button component with draft count badge
+- [x] 6.4 Build publish button component with draft count badge
   - Create topbar button that displays current draft count as a numeric badge
   - Fetch count on mount from publish count endpoint, refresh after CRUD operations
   - Disabled when count is 0
@@ -206,15 +206,15 @@
   - Only visible to users with admin role (publish permission)
   - _Requirements: 2.2, 2.3, 2.6, 7.6_
 
-- [ ] 6.5 Build admin dashboard home page
+- [x] 6.5 Build admin dashboard home page
   - Create dashboard landing page showing content overview: count of each content type, count of drafts pending publish, recent audit log entries
   - Display stats in a card grid layout
   - Show recent changes list from audit log (last 10 entries)
   - Link each stat card to its corresponding content management page
   - _Requirements: 8.1_
 
-- [ ] 7. Content management pages
-- [ ] 7.1 (P) Create CRUD pages for news, events, blogs, and notices
+- [x] 7. Content management pages
+- [x] 7.1 (P) Create CRUD pages for news, events, blogs, and notices
   - Wire the generic content list page and form dialog for each content type
   - Define column configurations and Zod schemas specific to each type
   - News: title, date, excerpt, imageUrl, category, content
@@ -223,7 +223,7 @@
   - Notices: title, date, excerpt, pdfUrl
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 7.2 (P) Create CRUD pages for facilities, activities, testimonials, and FAQs
+- [x] 7.2 (P) Create CRUD pages for facilities, activities, testimonials, and FAQs
   - Wire the generic content list and form dialog for each type
   - Facilities: name, description, imageUrl, icon
   - Activities: name, description, imageUrl
@@ -231,7 +231,7 @@
   - FAQs: question, answer
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 7.3 (P) Create CRUD pages for hero slides, admission steps, payment methods, and staff
+- [x] 7.3 (P) Create CRUD pages for hero slides, admission steps, payment methods, and staff
   - Wire the generic content list and form dialog for each type
   - Hero slides: heading, subheading, imageUrl, ctaText, ctaLink
   - Admission steps: icon, title, description
@@ -239,14 +239,14 @@
   - Staff: name, designation, department, email, photoUrl (non-bilingual)
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
 
-- [ ] 7.4 Create singleton editor pages for site config and principal message
+- [x] 7.4 Create singleton editor pages for site config and principal message
   - Build dedicated editor pages (not list+dialog pattern) that load current values and save via upsert
   - Site config: school name, tagline, logoUrl, address, phones, emails, office hours, social links, theme colors, SEO settings, stats, section subtitles, page descriptions, footer content
   - Principal message: name, title, photoUrl, signatureUrl, message (rich text)
   - All bilingual fields use tabbed EN/NP inputs
   - _Requirements: 9.7_
 
-- [ ] 7.5 Create gallery management page with nested photo/video CRUD
+- [x] 7.5 Create gallery management page with nested photo/video CRUD
   - Build gallery events list with the generic content list component
   - When editing an event, show nested sections for managing photos and videos
   - Photos: add/remove/reorder with URL input and caption (bilingual)
@@ -254,22 +254,22 @@
   - Support drag-and-drop or manual sort-order adjustment
   - _Requirements: 9.8_
 
-- [ ] 7.6 Create navigation tree editor page
+- [x] 7.6 Create navigation tree editor page
   - Build a tree-structured editor for navigation items
   - Support parent-child relationships (top-level items with nested children)
   - Each item: label (bilingual), href, sort order
   - Add, edit, delete, and reorder navigation items
   - _Requirements: 9.1_
 
-- [ ] 8. Audit log viewer and E2E testing
-- [ ] 8.1 Build read-only audit log viewer page
+- [x] 8. Audit log viewer and E2E testing
+- [x] 8.1 Build read-only audit log viewer page
   - Display paginated list of audit log entries with filters for action type and resource
   - Show: timestamp, user display name, action, resource type, resource ID
   - Expand row to see change details (JSONB)
   - Only visible to users with admin role
   - _Requirements: 12.3, 12.4_
 
-- [ ] 8.2* Write E2E tests for critical admin workflows
+- [x] 8.2* Write E2E tests for critical admin workflows
   - Login flow: navigate to /admin → redirected to /login → enter credentials → land on dashboard
   - Content creation: create bilingual news article → verify appears in list as draft
   - Publish: click publish button → verify draft count resets → verify article appears on public page

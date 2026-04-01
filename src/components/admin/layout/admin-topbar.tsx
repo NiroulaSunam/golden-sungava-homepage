@@ -21,6 +21,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { AdminSidebar } from './admin-sidebar';
+import { PublishButton } from '@/components/admin/publish-button';
 
 export const AdminTopbar = () => {
   const { logout, supabaseUser } = useAuth();
@@ -60,6 +61,8 @@ export const AdminTopbar = () => {
       </div>
 
       <div className="flex-1" />
+
+      <PublishButton />
 
       {/* User menu */}
       <DropdownMenu>
