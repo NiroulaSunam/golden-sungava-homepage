@@ -19,6 +19,7 @@ const ActivitiesPage = () => (
     title="Activities"
     apiPath="/api/admin/activities"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

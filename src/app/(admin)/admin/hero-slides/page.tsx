@@ -21,6 +21,7 @@ const HeroSlidesPage = () => (
     title="Hero Slides"
     apiPath="/api/admin/hero-slides"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

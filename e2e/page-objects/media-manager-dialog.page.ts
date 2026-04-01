@@ -54,9 +54,44 @@ export class MediaManagerDialogPage extends BasePage {
     if (await closeBtn.isVisible().catch(() => false)) {
       await closeBtn.click();
     } else {
-      // Fallback: press Escape
       await this.page.keyboard.press('Escape');
     }
     await expect(this.dialog).not.toBeVisible();
+  }
+
+  // Preview features
+
+  async expectPhotoThumbnails() {
+    await this.switchToPhotos();
+    const images = this.dialog.locator('img[alt="Photo"]');
+    await expect(images.first()).toBeVisible();
+  }
+
+  async expectVideoThumbnails() {
+    await this.switchToVideos();
+    const thumbnails = this.dialog.locator('img[alt="Video thumbnail"]');
+    await expect(thumbnails.first()).toBeVisible();
+  }
+
+  async clickPhotoPreview(index: number) {
+    await this.switchToPhotos();
+    const previewButtons = this.dialog.getByRole('button', { name: /preview/i });
+    await previewButtons.nth(index).click();
+  }
+
+  async clickVideoPreview(index: number) {
+    await this.switchToVideos();
+    const previewButtons = this.dialog.getByRole('button', { name: /preview/i });
+    await previewButtons.nth(index).click();
+  }
+
+  async expectVideoEmbedDialog() {
+    const dialog = this.page.getByRole('dialog').filter({ hasText: 'Video Preview' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('iframe')).toBeVisible();
+  }
+
+  async closeVideoPreview() {
+    await this.page.getByRole('dialog').filter({ hasText: 'Video Preview' }).getByRole('button', { name: 'Close' }).click();
   }
 }

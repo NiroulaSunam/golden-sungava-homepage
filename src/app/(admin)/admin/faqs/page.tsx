@@ -18,6 +18,7 @@ const FaqsPage = () => (
     title="FAQs"
     apiPath="/api/admin/faqs"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

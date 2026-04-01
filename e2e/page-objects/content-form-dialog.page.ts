@@ -54,4 +54,39 @@ export class ContentFormDialogPage extends BasePage {
   async expectClosed() {
     await expect(this.dialog).not.toBeVisible();
   }
+
+  // Preview features
+
+  get previewButton() {
+    return this.dialog.getByRole('button', { name: 'Preview' });
+  }
+
+  get editButton() {
+    return this.dialog.getByRole('button', { name: 'Edit' });
+  }
+
+  async togglePreview() {
+    const previewBtn = this.previewButton;
+    if (await previewBtn.isVisible().catch(() => false)) {
+      await previewBtn.click();
+    } else {
+      await this.editButton.click();
+    }
+  }
+
+  async expectPreviewMode() {
+    await expect(this.editButton).toBeVisible();
+  }
+
+  async expectEditMode() {
+    await expect(this.previewButton).toBeVisible();
+  }
+
+  async expectImageLightbox() {
+    await expect(this.page.locator('[role="dialog"][aria-label="Image preview"]')).toBeVisible();
+  }
+
+  async closeLightbox() {
+    await this.page.locator('[aria-label="Close"]').click();
+  }
 }

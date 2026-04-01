@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, Search } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,8 @@ import {
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
 import { toast } from 'sonner';
 import { CONTENT_STATUS, PAGINATION_CONFIG } from '@/lib/constants';
+import { ContentPreview } from '@/components/admin/content-preview';
+import type { FieldConfig } from '@/components/admin/content-form-dialog';
 
 export interface ColumnDef {
   key: string;
@@ -25,6 +27,8 @@ interface ContentListPageProps {
   title: string;
   apiPath: string;
   columns: ColumnDef[];
+  /** Field configs for the preview dialog — when provided, shows a view (eye) button */
+  previewFields?: FieldConfig[];
   renderForm: (props: {
     open: boolean;
     onClose: () => void;
@@ -38,7 +42,7 @@ interface ListResponse {
   meta: { total: number; page: number; limit: number; totalPages: number };
 }
 
-export const ContentListPage = ({ title, apiPath, columns, renderForm }: ContentListPageProps) => {
+export const ContentListPage = ({ title, apiPath, columns, previewFields, renderForm }: ContentListPageProps) => {
   const { adminFetch } = useAdminApi();
   const [items, setItems] = useState<Record<string, unknown>[]>([]);
   const [meta, setMeta] = useState({ total: 0, page: 1, limit: PAGINATION_CONFIG.DEFAULT_PAGE_SIZE as number, totalPages: 0 });
@@ -47,6 +51,7 @@ export const ContentListPage = ({ title, apiPath, columns, renderForm }: Content
   const [formOpen, setFormOpen] = useState(false);
   const [editItem, setEditItem] = useState<Record<string, unknown> | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Record<string, unknown> | null>(null);
+  const [previewItem, setPreviewItem] = useState<Record<string, unknown> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchItems = useCallback(async () => {
@@ -135,7 +140,7 @@ export const ContentListPage = ({ title, apiPath, columns, renderForm }: Content
                 <TableHead key={col.key}>{col.label}</TableHead>
               ))}
               <TableHead className="w-16">Status</TableHead>
-              <TableHead className="w-24">Actions</TableHead>
+              <TableHead className="w-28">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -163,6 +168,11 @@ export const ContentListPage = ({ title, apiPath, columns, renderForm }: Content
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
+                      {previewFields && (
+                        <Button variant="ghost" size="icon" onClick={() => setPreviewItem(item)} title="Preview">
+                          <Eye className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
                         <Pencil className="h-3.5 w-3.5" />
                       </Button>
@@ -210,6 +220,23 @@ export const ContentListPage = ({ title, apiPath, columns, renderForm }: Content
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Preview dialog */}
+      {previewFields && (
+        <Dialog open={!!previewItem} onOpenChange={(open) => !open && setPreviewItem(null)}>
+          <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Preview</DialogTitle>
+            </DialogHeader>
+            {previewItem && (
+              <ContentPreview fields={previewFields} values={previewItem} />
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setPreviewItem(null)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Form dialog (render prop) */}
       {renderForm({

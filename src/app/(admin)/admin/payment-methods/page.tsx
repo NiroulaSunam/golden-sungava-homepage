@@ -20,6 +20,7 @@ const PaymentMethodsPage = () => (
     title="Payment Methods"
     apiPath="/api/admin/payment-methods"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

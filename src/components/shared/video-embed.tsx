@@ -13,7 +13,7 @@ const YOUTUBE_PATTERNS = [
   /youtube\.com\/shorts\/([^?]+)/,
 ];
 
-const parseYouTubeId = (url: string): string | null => {
+export const parseYouTubeId = (url: string): string | null => {
   for (const pattern of YOUTUBE_PATTERNS) {
     const match = url.match(pattern);
     if (match) return match[1];
@@ -21,10 +21,10 @@ const parseYouTubeId = (url: string): string | null => {
   return null;
 };
 
-const getYouTubeThumbnail = (id: string): string =>
+export const getYouTubeThumbnail = (id: string): string =>
   `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-const getYouTubeEmbedUrl = (id: string): string =>
+export const getYouTubeEmbedUrl = (id: string): string =>
   `https://www.youtube.com/embed/${id}?autoplay=1`;
 
 const IS_DIRECT_VIDEO = /\.(mp4|webm|ogg|mov)(\?|$)/i;

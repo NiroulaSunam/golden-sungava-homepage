@@ -24,6 +24,7 @@ const NewsPage = () => (
     title="News"
     apiPath="/api/admin/news"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

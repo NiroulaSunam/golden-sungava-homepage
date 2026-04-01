@@ -23,6 +23,7 @@ const StaffPage = () => (
     title="Staff"
     apiPath="/api/admin/staff"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

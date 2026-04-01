@@ -21,6 +21,7 @@ const FacilitiesPage = () => (
     title="Facilities"
     apiPath="/api/admin/facilities"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

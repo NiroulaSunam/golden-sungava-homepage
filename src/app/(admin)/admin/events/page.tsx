@@ -24,6 +24,7 @@ const EventsPage = () => (
     title="Events"
     apiPath="/api/admin/events"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

@@ -25,6 +25,7 @@ const BlogsPage = () => (
     title="Blogs"
     apiPath="/api/admin/blogs"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

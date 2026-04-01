@@ -1,17 +1,19 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Plus, Trash2, GripVertical } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Eye } from 'lucide-react';
 import { ContentListPage, type ColumnDef } from '@/components/admin/content-list-page';
 import { ContentFormDialog, type FieldConfig } from '@/components/admin/content-form-dialog';
 import { galleryEventsCreateSchema, galleryEventsUpdateSchema, galleryPhotosCreateSchema, galleryVideosCreateSchema } from '@/backend/services/schemas';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
 import { toast } from 'sonner';
+import { ImageLightbox } from '@/components/shared/image-lightbox';
+import { ImageWithFallback } from '@/components/shared/image-with-fallback';
+import { parseYouTubeId, getYouTubeThumbnail, getYouTubeEmbedUrl } from '@/components/shared/video-embed';
 
 const COLUMNS: ColumnDef[] = [
   { key: 'name', label: 'Event Name' },
@@ -23,6 +25,99 @@ const FIELDS: FieldConfig[] = [
   { name: 'date', label: 'Date', type: 'date', required: true },
   { name: 'cover_url', label: 'Cover Image URL', type: 'image-url' },
 ];
+
+// ─── Photo Item with Thumbnail + Lightbox ────────────────
+
+interface PhotoItemProps {
+  photo: MediaItem;
+  onDelete: (id: string) => void;
+}
+
+const PhotoItem = ({ photo, onDelete }: PhotoItemProps) => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  return (
+    <div className="flex items-center gap-2 rounded border p-2 text-sm">
+      <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
+      <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded border">
+        <ImageWithFallback src={photo.url} alt="Photo" fill className="object-cover" />
+      </div>
+      <span className="flex-1 truncate">{photo.url}</span>
+      <Button variant="ghost" size="icon" onClick={() => setLightboxOpen(true)} title="Preview">
+        <Eye className="h-3.5 w-3.5" />
+      </Button>
+      <Button variant="ghost" size="icon" onClick={() => onDelete(photo.id)}>
+        <Trash2 className="h-3.5 w-3.5 text-destructive" />
+      </Button>
+      {lightboxOpen && (
+        <ImageLightbox src={photo.url} alt="Gallery photo" onClose={() => setLightboxOpen(false)} />
+      )}
+    </div>
+  );
+};
+
+// ─── Video Item with YouTube Thumbnail + Preview ─────────
+
+interface VideoItemProps {
+  video: MediaItem;
+  onDelete: (id: string) => void;
+}
+
+const VideoItem = ({ video, onDelete }: VideoItemProps) => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const ytId = parseYouTubeId(video.url);
+  const thumbnail = ytId ? getYouTubeThumbnail(ytId) : null;
+
+  return (
+    <>
+      <div className="flex items-center gap-2 rounded border p-2 text-sm">
+        <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
+        {thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={thumbnail} alt="Video thumbnail" className="h-12 w-16 shrink-0 rounded border object-cover" />
+        ) : (
+          <div className="flex h-12 w-16 shrink-0 items-center justify-center rounded border bg-muted text-xs text-muted-foreground">
+            Video
+          </div>
+        )}
+        <span className="flex-1 truncate">{video.url}</span>
+        <Button variant="ghost" size="icon" onClick={() => setPreviewOpen(true)} title="Preview">
+          <Eye className="h-3.5 w-3.5" />
+        </Button>
+        <Button variant="ghost" size="icon" onClick={() => onDelete(video.id)}>
+          <Trash2 className="h-3.5 w-3.5 text-destructive" />
+        </Button>
+      </div>
+
+      {/* Video preview dialog */}
+      <Dialog open={previewOpen} onOpenChange={(open) => !open && setPreviewOpen(false)}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Video Preview</DialogTitle>
+          </DialogHeader>
+          {ytId ? (
+            <div className="aspect-video overflow-hidden rounded-lg">
+              <iframe
+                src={getYouTubeEmbedUrl(ytId)}
+                title="Video preview"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="h-full w-full"
+              />
+            </div>
+          ) : (
+            <p className="py-4 text-center text-muted-foreground">
+              Preview not available for this video URL
+            </p>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPreviewOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
 
 // ─── Media Manager Dialog ─────────────────────────────
 
@@ -123,13 +218,7 @@ const MediaManager = ({ open, onClose, eventId }: MediaManagerProps) => {
               <Button size="sm" onClick={addPhoto}><Plus className="h-4 w-4" /></Button>
             </div>
             {photos.map((photo) => (
-              <div key={photo.id} className="flex items-center gap-2 rounded border p-2 text-sm">
-                <GripVertical className="h-4 w-4 text-muted-foreground" />
-                <span className="flex-1 truncate">{photo.url}</span>
-                <Button variant="ghost" size="icon" onClick={() => deletePhoto(photo.id)}>
-                  <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                </Button>
-              </div>
+              <PhotoItem key={photo.id} photo={photo} onDelete={deletePhoto} />
             ))}
           </TabsContent>
 
@@ -143,13 +232,7 @@ const MediaManager = ({ open, onClose, eventId }: MediaManagerProps) => {
               <Button size="sm" onClick={addVideo}><Plus className="h-4 w-4" /></Button>
             </div>
             {videos.map((video) => (
-              <div key={video.id} className="flex items-center gap-2 rounded border p-2 text-sm">
-                <GripVertical className="h-4 w-4 text-muted-foreground" />
-                <span className="flex-1 truncate">{video.url}</span>
-                <Button variant="ghost" size="icon" onClick={() => deleteVideo(video.id)}>
-                  <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                </Button>
-              </div>
+              <VideoItem key={video.id} video={video} onDelete={deleteVideo} />
             ))}
           </TabsContent>
         </Tabs>

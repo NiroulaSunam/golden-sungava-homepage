@@ -20,6 +20,7 @@ const AdmissionStepsPage = () => (
     title="Admission Steps"
     apiPath="/api/admin/admission-steps"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

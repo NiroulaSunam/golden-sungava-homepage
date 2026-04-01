@@ -71,4 +71,19 @@ export class ContentListPage extends BasePage {
   async expectHeading() {
     await expect(this.heading).toBeVisible();
   }
+
+  // Preview features
+
+  async clickViewOnRow(index: number) {
+    const rows = await this.getRows();
+    await rows[index].getByRole('button', { name: /preview/i }).click();
+  }
+
+  async expectPreviewDialogOpen() {
+    await expect(this.page.getByRole('dialog').getByRole('heading', { name: 'Preview' })).toBeVisible();
+  }
+
+  async closePreviewDialog() {
+    await this.page.getByRole('dialog').getByRole('button', { name: 'Close' }).click();
+  }
 }

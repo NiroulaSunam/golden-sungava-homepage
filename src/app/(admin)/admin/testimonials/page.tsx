@@ -21,6 +21,7 @@ const TestimonialsPage = () => (
     title="Testimonials"
     apiPath="/api/admin/testimonials"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}

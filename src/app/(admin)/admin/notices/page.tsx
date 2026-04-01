@@ -21,6 +21,7 @@ const NoticesPage = () => (
     title="Notices"
     apiPath="/api/admin/notices"
     columns={COLUMNS}
+    previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog
         open={open}
