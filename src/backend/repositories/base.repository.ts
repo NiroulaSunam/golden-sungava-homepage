@@ -4,6 +4,7 @@
  */
 
 import { supabaseAdmin } from '../db';
+import { POSTGREST_ERROR } from '@/lib/constants';
 
 export interface PaginationOptions {
   page?: number;
@@ -123,7 +124,7 @@ export abstract class BaseRepository<TInsert, TSelect> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === POSTGREST_ERROR.NOT_FOUND) {
         return null;
       }
       throw new Error(`Failed to fetch ${this.tableName} by ID: ${error.message}`);
@@ -182,7 +183,7 @@ export abstract class BaseRepository<TInsert, TSelect> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === POSTGREST_ERROR.NOT_FOUND) {
         return null;
       }
       throw new Error(`Failed to update ${this.tableName}: ${error.message}`);
@@ -242,7 +243,7 @@ export abstract class BaseRepository<TInsert, TSelect> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
+      if (error.code === POSTGREST_ERROR.NOT_FOUND) {
         return null;
       }
       throw new Error(`Failed to restore ${this.tableName}: ${error.message}`);

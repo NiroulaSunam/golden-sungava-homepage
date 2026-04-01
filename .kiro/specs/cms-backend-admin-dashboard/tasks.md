@@ -44,8 +44,8 @@
   - This spike must pass before building the repository layer
   - _Requirements: 3.3, 5.2_
 
-- [ ] 2. Backend service layer — repositories, services, and permissions
-- [ ] 2.1 Extend BaseRepository with bilingual and published-content support
+- [x] 2. Backend service layer — repositories, services, and permissions
+- [x] 2.1 Extend BaseRepository with bilingual and published-content support
   - Add `findPublished(lang, options)` method that filters by status=published, deleted_at IS NULL, is_active=true, and extracts the requested language from JSONB columns
   - Add `findDrafts(options)` method that returns only draft rows
   - Add `countDrafts()` method
@@ -53,7 +53,7 @@
   - Depends on spike from task 1.6 to confirm JSONB extraction approach
   - _Requirements: 5.1, 5.2_
 
-- [ ] 2.2 (P) Create content repositories for all 16 content types
+- [x] 2.2 (P) Create content repositories for all 16 content types
   - Create generic ContentRepository class that extends the enhanced BaseRepository with bilingual support
   - Instantiate one repository per content type, each declaring its table name and bilingual column list
   - Gallery repository includes methods for managing child photos and videos
@@ -62,13 +62,13 @@
   - Navigation repository supports parent-child tree queries
   - _Requirements: 5.1, 5.2, 5.7_
 
-- [ ] 2.3 (P) Create audit service and publish service
+- [x] 2.3 (P) Create audit service and publish service
   - Build audit service that inserts append-only entries to audit_log with user_id, action, resource, resource_id, and details
   - Build publish service that calls `publish_all_drafts` PostgreSQL function via `supabase.rpc()` and returns items count
   - Build draft count method that calls `get_draft_count()` via `supabase.rpc()`
   - _Requirements: 2.2, 2.3, 2.5, 2.6, 5.6, 12.1, 12.2_
 
-- [ ] 2.4 (P) Create content services with Zod validation for all content types
+- [x] 2.4 (P) Create content services with Zod validation for all content types
   - Build generic ContentService that validates input with Zod schemas, delegates to repository, and logs mutations to audit service
   - New content created with status=draft; updates to published content stay published
   - Soft delete sets deleted_at timestamp
@@ -76,7 +76,7 @@
   - Singleton services (site_config, principal_message) use upsert instead of create/delete
   - _Requirements: 5.3, 5.4, 5.7, 2.1_
 
-- [ ] 2.5 (P) Expand RBAC permissions to cover all CMS resources
+- [x] 2.5 (P) Expand RBAC permissions to cover all CMS resources
   - Expand resource list from 2 (files, settings) to 8: content, gallery, staff, site-config, navigation, users, publish, audit-log
   - Admin role: full CRUD + manage on all resources
   - Editor role: CRUD on content, gallery, staff; read-only on site-config, navigation, audit-log; no access to users or publish
