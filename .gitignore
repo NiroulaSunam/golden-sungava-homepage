@@ -39,6 +39,7 @@ yarn-error.log*
 
 # supabase
 supabase/.temp
+supabase/.branches/
 supabase/backups/
 
 # typescript
@@ -51,5 +52,7 @@ next-env.d.ts
 # playwright
 e2e/.results/
 e2e/.report/
+e2e/.auth/
+e2e/screenshots/
 /test-results/
 /playwright-report/

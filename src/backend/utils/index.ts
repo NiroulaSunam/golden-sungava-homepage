@@ -4,3 +4,4 @@
  */
 
 export * from './pagination';
+export * from './lang';

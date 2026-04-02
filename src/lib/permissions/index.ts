@@ -1,49 +1,95 @@
-// Application-Layer Permissions
-// Simple role-based access control
-// Define resources and roles as the project develops
+/**
+ * Application-Layer Permissions
+ * Role-based access control for CMS resources.
+ * Expanded from 2 resources (files, settings) to 10 for full CMS coverage.
+ */
+
+import type { Enums } from '@/types/database.gen';
 
 type ResourceAction = 'read' | 'create' | 'update' | 'delete' | 'manage';
-type Resource = 'files' | 'settings';
 
-// Define role types as needed
-type UserRole = 'admin' | 'editor' | 'viewer';
+type CmsResource =
+  | 'content'
+  | 'gallery'
+  | 'staff'
+  | 'site-config'
+  | 'navigation'
+  | 'users'
+  | 'publish'
+  | 'audit-log';
 
-// Permission definitions per role — expand as domain develops
+// Legacy resources kept for backward compatibility
+type LegacyResource = 'files' | 'settings';
+
+type Resource = CmsResource | LegacyResource;
+
+type UserRole = Enums<'user_role'>;
+
+// Permission definitions per role
 const ROLE_PERMISSIONS: Record<UserRole, Partial<Record<Resource, ResourceAction[]>>> = {
   admin: {
+    // CMS resources — full access
+    content: ['read', 'create', 'update', 'delete', 'manage'],
+    gallery: ['read', 'create', 'update', 'delete', 'manage'],
+    staff: ['read', 'create', 'update', 'delete', 'manage'],
+    'site-config': ['read', 'create', 'update', 'delete', 'manage'],
+    navigation: ['read', 'create', 'update', 'delete', 'manage'],
+    users: ['read', 'create', 'update', 'delete', 'manage'],
+    publish: ['read', 'create', 'update', 'delete', 'manage'],
+    'audit-log': ['read', 'create', 'update', 'delete', 'manage'],
+    // Legacy resources
     files: ['read', 'create', 'update', 'delete', 'manage'],
     settings: ['read', 'create', 'update', 'delete', 'manage'],
   },
   editor: {
+    // CRUD on content, gallery, staff
+    content: ['read', 'create', 'update', 'delete'],
+    gallery: ['read', 'create', 'update', 'delete'],
+    staff: ['read', 'create', 'update', 'delete'],
+    // Read-only on others
+    'site-config': ['read'],
+    navigation: ['read'],
+    'audit-log': ['read'],
+    // No access to users, publish
+    // Legacy resources
     files: ['read', 'create', 'update'],
     settings: ['read'],
   },
   viewer: {
+    // Read-only on most resources
+    content: ['read'],
+    gallery: ['read'],
+    staff: ['read'],
+    'site-config': ['read'],
+    navigation: ['read'],
+    'audit-log': ['read'],
+    // No access to users, publish
+    // Legacy resources
     files: ['read'],
     settings: ['read'],
   },
 };
 
 // Check if a role has permission for a resource action
-export function hasPermission(
+export const hasPermission = (
   role: UserRole | undefined,
   resource: Resource,
   action: ResourceAction
-): boolean {
+): boolean => {
   if (!role) return false;
   const permissions = ROLE_PERMISSIONS[role];
   if (!permissions) return false;
   const resourcePermissions = permissions[resource];
   if (!resourcePermissions) return false;
   return resourcePermissions.includes(action) || resourcePermissions.includes('manage');
-}
+};
 
 // Middleware helper for requiring permission
-export function requirePermission(
+export const requirePermission = (
   userRole: UserRole | undefined,
   resource: Resource,
   action: ResourceAction
-): { allowed: boolean; error?: string } {
+): { allowed: boolean; error?: string } => {
   if (!userRole) {
     return { allowed: false, error: 'Authentication required' };
   }
@@ -53,6 +99,6 @@ export function requirePermission(
   }
 
   return { allowed: true };
-}
+};
 
-export type { Resource, ResourceAction, UserRole };
+export type { CmsResource, LegacyResource, Resource, ResourceAction, UserRole };
