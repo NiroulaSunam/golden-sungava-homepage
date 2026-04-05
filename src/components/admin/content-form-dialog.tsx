@@ -96,17 +96,49 @@ export const ContentFormDialog = ({
   const isEdit = !!editItem;
   const [showPreview, setShowPreview] = useState(false);
 
+  const normalizeBilingualValue = (value: unknown) => {
+    if (value === null || value === undefined) {
+      return { en: '', np: '' };
+    }
+
+    if (typeof value === 'string') {
+      return { en: value, np: '' };
+    }
+
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      return {
+        en: typeof obj.en === 'string' ? obj.en : '',
+        np: typeof obj.np === 'string' ? obj.np : '',
+      };
+    }
+
+    return { en: String(value), np: '' };
+  };
+
+  const normalizedEditItem = editItem ? fields.reduce((acc, field) => {
+    const rawValue = editItem[field.name];
+
+    if (field.type.startsWith('bilingual')) {
+      acc[field.name] = normalizeBilingualValue(rawValue);
+    } else {
+      acc[field.name] = rawValue;
+    }
+
+    return acc;
+  }, { ...editItem } as Record<string, unknown>) : null;
+
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
-    defaultValues: editItem ?? {},
+    defaultValues: normalizedEditItem ?? {},
   });
 
   // Sync form values when edit target changes
   useEffect(() => {
-    form.reset(editItem ?? {});
+    form.reset(normalizedEditItem ?? {});
     setShowPreview(false);
-  }, [editItem, form]);
+  }, [normalizedEditItem, form]);
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const url = isEdit ? `${apiPath}?id=${editItem?.id}` : apiPath;
