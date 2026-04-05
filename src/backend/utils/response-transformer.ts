@@ -82,14 +82,14 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
   return {
     schoolName: extractBilingualField(row.school_name, lang) as string,
     tagline: extractBilingualField(row.tagline, lang) as string,
-    logoUrl: row.logo_url,
+    logoUrl: row.logo_url ?? '',
     establishedYear: row.established_year,
     address: extractBilingualField(row.address, lang) as string,
     phones: row.phones || [],
     emails: row.emails || [],
     officeHours: extractBilingualField(row.office_hours, lang) as string,
     socialLinks: parseJsonField(row.social_links, { facebook: '', whatsapp: '', messenger: '' }),
-    googleMapsEmbed: row.google_maps_embed,
+    googleMapsEmbed: row.google_maps_embed ?? '',
     theme: parseJsonField(row.theme, {
       primaryColor: '',
       primaryLight: '',
@@ -102,9 +102,9 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
       accentForeground: '',
     }),
     seo: parseJsonField(row.seo, { defaultTitle: '', defaultDescription: '', ogImage: '', keywords: [] }),
-    currency: row.currency,
+    currency: row.currency ?? '',
     languages: row.languages || ['en', 'np'],
-    defaultLanguage: row.default_language,
+    defaultLanguage: row.default_language ?? '',
     stats: parseJsonField(row.stats, []),
     heroAccentText: extractBilingualField(row.hero_accent_text, lang) as string,
     sectionSubtitles: parseJsonField(row.section_subtitles, {
