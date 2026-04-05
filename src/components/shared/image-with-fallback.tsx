@@ -22,11 +22,23 @@ export const ImageWithFallback = ({
     }
   };
 
+  const resolvedSrc = hasError
+    ? fallbackSrc
+    : props.src && props.src !== ''
+    ? props.src
+    : fallbackSrc;
+
+  if (!resolvedSrc) {
+    return null;
+  }
+
+  const safeAlt = typeof alt === 'string' && alt.trim().length > 0 ? alt : '';
+
   return (
     <Image
       {...props}
-      alt={alt}
-      src={hasError ? fallbackSrc : props.src}
+      alt={safeAlt}
+      src={resolvedSrc}
       onError={handleError}
     />
   );

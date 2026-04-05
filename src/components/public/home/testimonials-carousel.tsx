@@ -42,21 +42,22 @@ interface TestimonialsCarouselProps {
 
 export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps) => {
   const { t } = useLanguage();
+  const testimonialsList = Array.isArray(testimonials) ? testimonials : [];
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
   const goNext = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  }, [testimonials.length]);
+    setCurrent((prev) => (prev + 1) % testimonialsList.length);
+  }, [testimonialsList.length]);
 
   // Auto-advance
   useEffect(() => {
-    if (isPaused || testimonials.length <= 1) return;
+    if (isPaused || testimonialsList.length <= 1) return;
     const timer = setInterval(goNext, 6000);
     return () => clearInterval(timer);
-  }, [goNext, isPaused, testimonials.length]);
+  }, [goNext, isPaused, testimonialsList.length]);
 
-  if (testimonials.length === 0) return null;
+  if (testimonialsList.length === 0) return null;
 
   return (
     <section
@@ -75,7 +76,7 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
         </div>
 
         <div className="relative min-h-[260px] md:min-h-[300px]">
-          {testimonials.map((testimonial, index) => (
+          {testimonialsList.map((testimonial, index) => (
             <TestimonialCard
               key={testimonial.id}
               testimonial={testimonial}
@@ -86,7 +87,7 @@ export const TestimonialsCarousel = ({ testimonials }: TestimonialsCarouselProps
 
         {/* Indicators */}
         <div className="mt-8 flex justify-center gap-2">
-          {testimonials.map((_, i) => (
+          {testimonialsList.map((_, i) => (
             <button
               key={i}
               type="button"

@@ -69,7 +69,7 @@ export const PaymentInfoClient = () => {
     <>
       <PageHeader
         title={t('heading.paymentInfo')}
-        subtitle={config.pageDescriptions.paymentInfo}
+        subtitle={config?.pageDescriptions?.paymentInfo || ''}
         breadcrumbs={[{ label: t('heading.paymentInfo'), href: '/payment-info' }]}
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">

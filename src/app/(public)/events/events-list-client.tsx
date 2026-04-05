@@ -21,7 +21,8 @@ export const EventsListClient = () => {
     load();
   }, [lang]);
 
-  const items = events.map((e) => ({
+  const safeEvents = Array.isArray(events) ? events : [];
+  const items = safeEvents.map((e) => ({
     id: e.id,
     title: e.title,
     date: e.date,

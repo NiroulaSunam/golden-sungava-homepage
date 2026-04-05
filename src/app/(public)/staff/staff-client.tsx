@@ -76,15 +76,19 @@ export const StaffDirectoryClient = () => {
     load();
   }, [lang]);
 
+  const staffList = Array.isArray(staff) ? staff : [];
+
   const filtered = activeDept === 'all'
-    ? staff
-    : staff.filter((m) => m.department === activeDept);
+    ? staffList
+    : staffList.filter((m) => m.department === activeDept);
+
+  const staffDescription = config?.pageDescriptions?.staff || '';
 
   return (
     <>
       <PageHeader
         title={t('heading.staff')}
-        subtitle={config.pageDescriptions.staff}
+        subtitle={staffDescription}
         breadcrumbs={[{ label: t('heading.staff'), href: '/staff' }]}
       />
 

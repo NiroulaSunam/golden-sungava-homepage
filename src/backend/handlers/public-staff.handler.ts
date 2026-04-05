@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { staffRepository } from '@/backend/repositories/content';
+import { transformContentRows } from '@/backend/utils/response-transformer';
 import { PAGINATION_CONFIG, SORT_DEFAULTS } from '@/lib/constants';
 
 export const handleGetStaff = async (request: NextRequest): Promise<NextResponse> => {
@@ -18,8 +19,10 @@ export const handleGetStaff = async (request: NextRequest): Promise<NextResponse
       { is_active: true }
     );
 
+    // Transform all rows from snake_case to camelCase
+    const transformed = transformContentRows(result.data);
     return NextResponse.json({
-      data: result.data,
+      data: transformed,
       meta: {
         total: result.total,
         page: result.page,

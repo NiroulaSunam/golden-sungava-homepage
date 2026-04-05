@@ -95,6 +95,13 @@ const fetchFromApi = async <T>(
     }
 
     const json = await response.json();
+
+    // Unwrap paginated API payloads that return { data, meta }
+    if (json && typeof json === 'object' && !Array.isArray(json) && 'data' in json) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { data: (json as any).data as T, error: null };
+    }
+
     return { data: json as T, error: null };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown fetch error';

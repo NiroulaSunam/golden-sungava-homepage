@@ -7,16 +7,20 @@ export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
  * Get acronym/short name from a full name.
  * e.g., "Golden Sungava English Boarding School" → "GSEBS"
  */
-export const getAcronym = (name: string): string =>
-  name
+export const getAcronym = (name?: string): string => {
+  if (!name) return '';
+  return name
     .split(/\s+/)
     .filter((word) => word.length > 0)
     .map((word) => word[0].toUpperCase())
     .join('');
+};
 
 /**
  * Get a shortened display name — first two words.
  * e.g., "Golden Sungava English Boarding School" → "Golden Sungava"
  */
-export const getShortName = (name: string, wordCount = 2): string =>
-  name.split(/\s+/).slice(0, wordCount).join(' ');
+export const getShortName = (name?: string, wordCount = 2): string => {
+  if (!name) return '';
+  return name.split(/\s+/).slice(0, wordCount).join(' ');
+};

@@ -52,13 +52,15 @@ const HeroSlideItem = ({ slide, isActive, accentText }: HeroSlideProps) => (
 
           {/* CTA area */}
           <div className="hero-stagger-3 mt-8 flex flex-wrap items-center gap-4 opacity-0">
-            <Link
-              href={slide.ctaLink}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 md:px-8 md:py-4 md:text-base"
-            >
-              {slide.ctaText}
-              <ChevronRight className="h-4 w-4" />
-            </Link>
+            {slide.ctaLink ? (
+              <Link
+                href={slide.ctaLink}
+                className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 md:px-8 md:py-4 md:text-base"
+              >
+                {slide.ctaText || 'Learn More'}
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            ) : null}
             <Link
               href="/about"
               className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-6 py-3.5 text-sm font-medium text-white transition-all hover:border-white/40 hover:bg-white/10 md:px-7 md:py-4 md:text-base"
@@ -131,23 +133,24 @@ interface HeroCarouselProps {
 }
 
 export const HeroCarousel = ({ slides, accentText = 'Golden Sungava' }: HeroCarouselProps) => {
+  const slidesList = Array.isArray(slides) ? slides : [];
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef(0);
 
   const goTo = useCallback((index: number) => {
-    setCurrent(((index % slides.length) + slides.length) % slides.length);
-  }, [slides.length]);
+    setCurrent(((index % slidesList.length) + slidesList.length) % slidesList.length);
+  }, [slidesList.length]);
 
   const goNext = useCallback(() => goTo(current + 1), [current, goTo]);
   const goPrev = useCallback(() => goTo(current - 1), [current, goTo]);
 
   // Auto-advance every 6 seconds
   useEffect(() => {
-    if (isPaused || slides.length <= 1) return;
+    if (isPaused || slidesList.length <= 1) return;
     const timer = setInterval(goNext, 6000);
     return () => clearInterval(timer);
-  }, [goNext, isPaused, slides.length]);
+  }, [goNext, isPaused, slidesList.length]);
 
   // Touch swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -161,7 +164,7 @@ export const HeroCarousel = ({ slides, accentText = 'Golden Sungava' }: HeroCaro
     }
   };
 
-  if (slides.length === 0) return null;
+  if (slidesList.length === 0) return null;
 
   return (
     <section
@@ -171,7 +174,7 @@ export const HeroCarousel = ({ slides, accentText = 'Golden Sungava' }: HeroCaro
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {slides.map((slide, index) => (
+      {slidesList.map((slide, index) => (
         <HeroSlideItem
           key={slide.id}
           slide={slide}
@@ -179,7 +182,7 @@ export const HeroCarousel = ({ slides, accentText = 'Golden Sungava' }: HeroCaro
           accentText={accentText}
         />
       ))}
-      {slides.length > 1 && (
+      {slidesList.length > 1 && (
         <>
           <HeroControls onPrev={goPrev} onNext={goNext} />
           <HeroIndicators count={slides.length} active={current} onSelect={goTo} />

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { galleryEventsRepository } from '@/backend/repositories/content';
 import { parseLang } from '@/backend/utils';
+import { transformGalleryEvents } from '@/backend/utils/response-transformer';
 import { PAGINATION_CONFIG, SORT_DEFAULTS } from '@/lib/constants';
 
 export const handleGetGalleryEvents = async (request: NextRequest): Promise<NextResponse> => {
@@ -22,8 +23,10 @@ export const handleGetGalleryEvents = async (request: NextRequest): Promise<Next
       sortOrder: SORT_DEFAULTS.ORDER,
     });
 
+    // Transform all rows from snake_case to camelCase, rename gallery_photos/videos to photos/videos
+    const transformed = transformGalleryEvents(result.data, lang);
     return NextResponse.json({
-      data: result.data,
+      data: transformed,
       meta: {
         total: result.total,
         page: result.page,

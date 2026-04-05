@@ -59,15 +59,16 @@ export const NoticesListClient = () => {
     load();
   }, [lang]);
 
+  const baseNotices = Array.isArray(notices) ? notices : [];
   const filtered = search
-    ? notices.filter((n) => n.title.toLowerCase().includes(search.toLowerCase()) || n.excerpt.toLowerCase().includes(search.toLowerCase()))
-    : notices;
+    ? baseNotices.filter((n) => n.title.toLowerCase().includes(search.toLowerCase()) || n.excerpt.toLowerCase().includes(search.toLowerCase()))
+    : baseNotices;
 
   return (
     <>
       <PageHeader
         title={t('heading.notices')}
-        subtitle={config.pageDescriptions.notices}
+        subtitle={config?.pageDescriptions?.notices || ''}
         breadcrumbs={[{ label: t('heading.notices'), href: '/notices' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">

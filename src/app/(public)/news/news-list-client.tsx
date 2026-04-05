@@ -21,7 +21,8 @@ export const NewsListClient = () => {
     load();
   }, [lang]);
 
-  const categories = [...new Set(news.map((n) => n.category).filter(Boolean))];
+  const safeNews = Array.isArray(news) ? news : [];
+  const categories = [...new Set(safeNews.map((n) => n.category).filter(Boolean))];
 
   return (
     <>

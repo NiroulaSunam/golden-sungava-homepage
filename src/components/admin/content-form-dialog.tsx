@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -101,6 +101,12 @@ export const ContentFormDialog = ({
     resolver: zodResolver(schema as any),
     defaultValues: editItem ?? {},
   });
+
+  // Sync form values when edit target changes
+  useEffect(() => {
+    form.reset(editItem ?? {});
+    setShowPreview(false);
+  }, [editItem, form]);
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const url = isEdit ? `${apiPath}?id=${editItem?.id}` : apiPath;
@@ -213,14 +219,15 @@ export const ContentFormDialog = ({
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <DialogTitle>{isEdit ? `Edit ${title}` : `Add ${title}`}</DialogTitle>
             <Button
               type="button"
               variant={showPreview ? 'default' : 'outline'}
               size="sm"
               onClick={() => setShowPreview(!showPreview)}
-              className="gap-1.5"
+              aria-label={showPreview ? 'Switch to edit mode' : 'Preview form values'}
+              className="gap-1.5 mr-8 whitespace-nowrap"
             >
               {showPreview ? <PenLine className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
               {showPreview ? 'Edit' : 'Preview'}
@@ -229,7 +236,7 @@ export const ContentFormDialog = ({
         </DialogHeader>
 
         {showPreview ? (
-          <div className="py-2">
+          <div className="py-4">
             <ContentPreview fields={fields} values={form.watch()} />
           </div>
         ) : (
@@ -247,10 +254,15 @@ export const ContentFormDialog = ({
         )}
 
         {showPreview && (
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setShowPreview(false)}>
-              Back to Edit
-            </Button>
+          <DialogFooter className="justify-between">
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={() => setShowPreview(false)}>
+                Back to Edit
+              </Button>
+              <Button type="button" variant="ghost" onClick={handleClose}>
+                Cancel
+              </Button>
+            </div>
           </DialogFooter>
         )}
       </DialogContent>

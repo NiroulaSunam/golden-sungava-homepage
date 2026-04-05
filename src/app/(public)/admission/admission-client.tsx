@@ -131,7 +131,7 @@ export const AdmissionClient = () => {
     <>
       <PageHeader
         title={t('heading.admission')}
-        subtitle={config.pageDescriptions.admission}
+        subtitle={config?.pageDescriptions?.admission || ''}
         breadcrumbs={[{ label: t('heading.admission'), href: '/admission' }]}
       />
 

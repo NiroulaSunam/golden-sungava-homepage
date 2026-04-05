@@ -55,7 +55,7 @@ export const ContactClient = () => {
     <>
       <PageHeader
         title={t('heading.contactUs')}
-        subtitle={config.pageDescriptions.contact}
+        subtitle={config?.pageDescriptions?.contact || ''}
         breadcrumbs={[{ label: t('heading.contactUs'), href: '/contact' }]}
       />
 
@@ -68,14 +68,21 @@ export const ContactClient = () => {
             <ContactInfoItem icon={Mail} label="Email">{config.emails[0]}</ContactInfoItem>
             <ContactInfoItem icon={Clock} label={t('footer.officeHours')}>{config.officeHours}</ContactInfoItem>
 
-            <div className="flex gap-3">
-              <a href={`https://wa.me/${config.socialLinks.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
-                <WhatsAppIcon className="h-4 w-4" /> WhatsApp
-              </a>
-              <a href={config.socialLinks.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
-                <MessengerIcon className="h-4 w-4" /> Messenger
-              </a>
-            </div>
+            {config?.socialLinks && ( 
+              <div className="flex gap-3">
+                {config.socialLinks.whatsapp && (
+                  <a href={`https://wa.me/${config.socialLinks.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
+                    <WhatsAppIcon className="h-4 w-4" /> WhatsApp
+                  </a>
+                )}
+
+                {config.socialLinks.messenger && (
+                  <a href={config.socialLinks.messenger} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+                    <MessengerIcon className="h-4 w-4" /> Messenger
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* Google Maps */}
             <div className="aspect-[4/3] overflow-hidden rounded-xl border border-border">

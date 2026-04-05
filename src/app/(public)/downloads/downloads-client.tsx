@@ -22,7 +22,7 @@ export const DownloadsClient = () => {
     <>
       <PageHeader
         title={t('heading.downloads')}
-        subtitle={config.pageDescriptions.downloads}
+        subtitle={config?.pageDescriptions?.downloads || ''}
         breadcrumbs={[{ label: t('heading.downloads'), href: '/downloads' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">

@@ -21,19 +21,23 @@ export const CalendarClient = () => {
     load();
   }, [lang]);
 
+  const eventsList = Array.isArray(events) ? events : [];
+
   // Group events by month
-  const grouped = events.reduce<Record<string, SchoolEvent[]>>((acc, event) => {
+  const grouped = eventsList.reduce<Record<string, SchoolEvent[]>>((acc, event) => {
     const month = event.date.substring(0, 7); // YYYY-MM
     if (!acc[month]) acc[month] = [];
     acc[month].push(event);
     return acc;
   }, {});
 
+  const calendarDescription = config?.pageDescriptions?.calendar || '';
+
   return (
     <>
       <PageHeader
         title={t('heading.calendar')}
-        subtitle={config.pageDescriptions.calendar}
+        subtitle={calendarDescription}
         breadcrumbs={[{ label: t('heading.calendar'), href: '/calendar' }]}
       />
       <div className="mx-auto max-w-4xl px-4 py-12 md:px-6 md:py-16">
