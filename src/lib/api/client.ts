@@ -71,6 +71,22 @@ const resolveMockData = <T>(endpoint: ApiEndpoint, lang: string): T => {
   return data as T;
 };
 
+const getApiBaseUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return 'http://localhost:3000';
+};
+
 /**
  * Fetch data from real API endpoint.
  * Appends lang query parameter. Returns null on failure.
@@ -79,7 +95,10 @@ const fetchFromApi = async <T>(
   endpoint: ApiEndpoint,
   options: FetchOptions = {},
 ): Promise<{ data: T | null; error: string | null }> => {
-  const url = new URL(getApiUrl(endpoint), process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
+  const baseUrl = getApiBaseUrl();
+  const url = baseUrl
+    ? new URL(getApiUrl(endpoint), baseUrl)
+    : new URL(getApiUrl(endpoint), 'http://localhost');
 
   if (options.lang) url.searchParams.set('lang', options.lang);
   if (options.page) url.searchParams.set('page', String(options.page));
@@ -88,7 +107,9 @@ const fetchFromApi = async <T>(
   if (options.category) url.searchParams.set('category', options.category);
 
   try {
-    const response = await fetch(url.toString(), {
+    const requestUrl = baseUrl ? url.toString() : `${url.pathname}${url.search}`;
+
+    const response = await fetch(requestUrl, {
       cache: 'no-store',
       next: { tags: [endpoint] },
     });
