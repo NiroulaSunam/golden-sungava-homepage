@@ -173,7 +173,7 @@ export const Header = () => {
                 {getAcronym(config.schoolName)}
               </span>
               <span className="hidden text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/70 xl:inline">
-                {config.schoolName.split(/\s+/).slice(2).join(' ')}
+                {(config.schoolName ?? '').split(/\s+/).slice(2).join(' ')}
               </span>
             </div>
           </Link>

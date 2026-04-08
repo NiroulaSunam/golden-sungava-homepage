@@ -10,7 +10,7 @@ const COLUMNS: ColumnDef[] = [
 ];
 
 const FIELDS: FieldConfig[] = [
-  { name: 'icon', label: 'Icon', type: 'text' },
+  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'file-text, users, graduation-cap' },
   { name: 'title', label: 'Title', type: 'bilingual-input', required: true },
   { name: 'description', label: 'Description', type: 'bilingual-textarea' },
 ];

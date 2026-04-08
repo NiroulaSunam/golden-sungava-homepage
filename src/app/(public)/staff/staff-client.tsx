@@ -12,8 +12,6 @@ import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 import { cn } from '@/lib/utils';
 
-const DEPARTMENTS = ['Administration', 'Teaching', 'Co-curricular', 'Support'] as const;
-
 // --- Sub-component ---
 
 interface StaffCardProps {
@@ -76,15 +74,24 @@ export const StaffDirectoryClient = () => {
     load();
   }, [lang]);
 
+  const staffList = Array.isArray(staff) ? staff : [];
+  const departments = Array.from(new Set(
+    staffList
+      .map((member) => member.department)
+      .filter((department): department is string => typeof department === 'string' && department.trim().length > 0),
+  ));
+
   const filtered = activeDept === 'all'
-    ? staff
-    : staff.filter((m) => m.department === activeDept);
+    ? staffList
+    : staffList.filter((m) => m.department === activeDept);
+
+  const staffDescription = config?.pageDescriptions?.staff || '';
 
   return (
     <>
       <PageHeader
         title={t('heading.staff')}
-        subtitle={config.pageDescriptions.staff}
+        subtitle={staffDescription}
         breadcrumbs={[{ label: t('heading.staff'), href: '/staff' }]}
       />
 
@@ -101,7 +108,7 @@ export const StaffDirectoryClient = () => {
           >
             {t('misc.all')}
           </button>
-          {DEPARTMENTS.map((dept) => {
+          {departments.map((dept) => {
             const label = lang === 'np' ? departmentLabels.np[dept] || dept : dept;
             return (
               <button

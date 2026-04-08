@@ -196,19 +196,22 @@ export abstract class BaseRepository<TInsert, TSelect> {
    * Soft delete a record
    */
   async softDelete(id: string): Promise<boolean> {
-    const { error, count } = await this.db
+    const { data, error } = await this.db
       .from(this.tableName)
       .update({
         deleted_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq(this.idColumn, id);
+      .eq(this.idColumn, id)
+      .is('deleted_at', null)
+      .select(this.idColumn)
+      .maybeSingle();
 
     if (error) {
       throw new Error(`Failed to soft delete ${this.tableName}: ${error.message}`);
     }
 
-    return (count ?? 0) > 0;
+    return !!data;
   }
 
   /**
@@ -216,7 +219,7 @@ export abstract class BaseRepository<TInsert, TSelect> {
    * Only use for Category 3 tables (disposable data)
    */
   async hardDelete(id: string): Promise<boolean> {
-    const { error, count } = await this.db
+    const { data, error } = await this.db
       .from(this.tableName)
       .delete()
       .eq(this.idColumn, id);
@@ -225,7 +228,7 @@ export abstract class BaseRepository<TInsert, TSelect> {
       throw error;
     }
 
-    return (count ?? 0) > 0;
+    return Array.isArray(data) ? data.length > 0 : true;
   }
 
   /**

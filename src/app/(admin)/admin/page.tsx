@@ -5,7 +5,7 @@ import Link from 'next/link';
 import {
   Newspaper, CalendarDays, BookOpen, Bell, Users, Building2,
   Trophy, MessageSquareQuote, HelpCircle, Image, SlidersHorizontal,
-  Navigation, GraduationCap, CreditCard, Upload,
+  Navigation, GraduationCap, CreditCard, Upload, Inbox, ClipboardList,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
@@ -32,6 +32,8 @@ const CONTENT_SECTIONS: Omit<ContentStat, 'count'>[] = [
   { label: 'Navigation', href: '/admin/navigation', icon: <Navigation className="h-5 w-5" /> },
   { label: 'Admission Steps', href: '/admin/admission-steps', icon: <GraduationCap className="h-5 w-5" /> },
   { label: 'Payment Methods', href: '/admin/payment-methods', icon: <CreditCard className="h-5 w-5" /> },
+  { label: 'Contact Messages', href: '/admin/contact-submissions', icon: <Inbox className="h-5 w-5" /> },
+  { label: 'Admission Applications', href: '/admin/admission-applications', icon: <ClipboardList className="h-5 w-5" /> },
 ];
 
 interface DraftCountResponse {
@@ -48,7 +50,11 @@ const AdminDashboard = () => {
   }, [adminFetch]);
 
   useEffect(() => {
-    fetchDraftCount();
+    const run = async () => {
+      await fetchDraftCount();
+    };
+
+    void run();
   }, [fetchDraftCount]);
 
   return (

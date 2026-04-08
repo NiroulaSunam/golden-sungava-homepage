@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { useAuth } from '@/lib/auth/provider';
 
 /**
  * Shared hook for admin API calls with auth token injection.
@@ -9,6 +10,20 @@ import { getSupabaseClient } from '@/lib/supabase/client';
  */
 export const useAdminApi = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuth();
+
+  const parseResponse = useCallback(async (response: Response) => {
+    const text = await response.text();
+    if (!text) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(text) as Record<string, unknown>;
+    } catch {
+      return { error: text };
+    }
+  }, []);
 
   const getAuthHeaders = useCallback(async (): Promise<Record<string, string>> => {
     const client = getSupabaseClient();
@@ -23,6 +38,14 @@ export const useAdminApi = () => {
     url: string,
     options?: RequestInit
   ): Promise<{ data: T | null; error: string | null }> => {
+    if (isAuthLoading) {
+      return { data: null, error: null };
+    }
+
+    if (!isAuthenticated) {
+      return { data: null, error: 'Authentication required' };
+    }
+
     setIsLoading(true);
     try {
       const authHeaders = await getAuthHeaders();
@@ -35,10 +58,13 @@ export const useAdminApi = () => {
         },
       });
 
-      const json = await response.json();
+      const json = await parseResponse(response);
 
       if (!response.ok) {
-        return { data: null, error: json.error || `Request failed (${response.status})` };
+        const message = typeof json?.error === 'string'
+          ? json.error
+          : `Request failed (${response.status})`;
+        return { data: null, error: message };
       }
 
       return { data: json as T, error: null };
@@ -47,7 +73,7 @@ export const useAdminApi = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [getAuthHeaders]);
+  }, [getAuthHeaders, isAuthLoading, isAuthenticated, parseResponse]);
 
   return { adminFetch, isLoading };
 };

@@ -12,8 +12,9 @@ interface BlogPreviewProps {
 
 export const BlogPreview = ({ blogs, subtitle }: BlogPreviewProps) => {
   const { t } = useLanguage();
+  const blogsList = Array.isArray(blogs) ? blogs : [];
 
-  if (blogs.length === 0) {
+  if (blogsList.length === 0) {
     return null;
   }
 
@@ -27,7 +28,7 @@ export const BlogPreview = ({ blogs, subtitle }: BlogPreviewProps) => {
           viewAllLabel={t('action.readMore')}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {blogs.slice(0, 3).map((blog) => (
+          {blogsList.slice(0, 3).map((blog) => (
             <ContentCard
               key={blog.id}
               title={blog.title}

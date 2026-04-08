@@ -31,6 +31,40 @@ interface SiteConfigProviderProps {
   children: ReactNode;
 }
 
+const mergeSiteConfig = (config: SiteConfig): SiteConfig => ({
+  ...SITE_DEFAULTS,
+  ...config,
+  socialLinks: {
+    ...SITE_DEFAULTS.socialLinks,
+    ...(config.socialLinks || {}),
+  },
+  theme: {
+    ...SITE_DEFAULTS.theme,
+    ...(config.theme || {}),
+  },
+  seo: {
+    ...SITE_DEFAULTS.seo,
+    ...(config.seo || {}),
+    keywords: config.seo?.keywords || SITE_DEFAULTS.seo.keywords,
+  },
+  sectionSubtitles: {
+    ...SITE_DEFAULTS.sectionSubtitles,
+    ...(config.sectionSubtitles || {}),
+  },
+  pageDescriptions: {
+    ...SITE_DEFAULTS.pageDescriptions,
+    ...(config.pageDescriptions || {}),
+  },
+  footer: {
+    ...SITE_DEFAULTS.footer,
+    ...(config.footer || {}),
+  },
+  phones: config.phones?.length ? config.phones : SITE_DEFAULTS.phones,
+  emails: config.emails?.length ? config.emails : SITE_DEFAULTS.emails,
+  languages: config.languages?.length ? config.languages : SITE_DEFAULTS.languages,
+  stats: config.stats?.length ? config.stats : SITE_DEFAULTS.stats,
+});
+
 export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
   const { lang } = useLanguage();
   const [config, setConfig] = useState<SiteConfig>(SITE_DEFAULTS);
@@ -44,7 +78,7 @@ export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
 
       if (!cancelled) {
         if (!error && data) {
-          setConfig(data);
+          setConfig(mergeSiteConfig(data));
         }
         // If error, keep SITE_DEFAULTS (already set as initial state)
         setIsLoading(false);

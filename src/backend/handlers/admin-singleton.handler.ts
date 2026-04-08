@@ -21,11 +21,7 @@ export const createAdminSingletonHandlers = <TInsert, TSelect>({
   const handleGet = async (_request: NextRequest, _ctx: AdminContext): Promise<NextResponse> => {
     try {
       const items = await repository.findAll({ limit: 1 });
-      const data = items[0] ?? null;
-
-      if (!data) {
-        return NextResponse.json({ error: 'Not found' }, { status: 404 });
-      }
+      const data = items[0] ?? {};
 
       return NextResponse.json({ data });
     } catch (error) {

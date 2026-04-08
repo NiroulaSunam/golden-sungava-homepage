@@ -35,9 +35,25 @@ INSERT INTO auth.identities (
   gen_random_uuid(),
   'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   'admin@goldensungava.edu.np', 'email',
-  '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","email":"admin@goldensungava.edu.np"}',
+  '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","email":"admin@goldensungava.edu.np","email_verified":true,"phone_verified":false}',
   now(), now(), now()
 );
+
+-- Ensure nullable auth columns are set to defaults (avoids GoTrue scan errors)
+UPDATE auth.users
+SET
+  email_change = COALESCE(email_change, ''),
+  phone_change = COALESCE(phone_change, ''),
+  phone_change_token = COALESCE(phone_change_token, ''),
+  email_change_token_current = COALESCE(email_change_token_current, ''),
+  email_change_token_new = COALESCE(email_change_token_new, ''),
+  reauthentication_token = COALESCE(reauthentication_token, ''),
+  confirmation_token = COALESCE(confirmation_token, ''),
+  recovery_token = COALESCE(recovery_token, ''),
+  phone = COALESCE(phone, ''),
+  email_change_confirm_status = COALESCE(email_change_confirm_status, 0)
+WHERE
+  email = 'admin@goldensungava.edu.np';
 
 -- The trigger auto-creates a profile with 'viewer' role; upgrade to admin
 UPDATE profiles SET role = 'admin', display_name = 'Admin User'

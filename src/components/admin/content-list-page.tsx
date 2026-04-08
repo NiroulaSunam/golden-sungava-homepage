@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, Search, Eye } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Eye, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +27,7 @@ interface ContentListPageProps {
   title: string;
   apiPath: string;
   columns: ColumnDef[];
+  showStatus?: boolean;
   /** Field configs for the preview dialog — when provided, shows a view (eye) button */
   previewFields?: FieldConfig[];
   renderForm: (props: {
@@ -42,7 +43,14 @@ interface ListResponse {
   meta: { total: number; page: number; limit: number; totalPages: number };
 }
 
-export const ContentListPage = ({ title, apiPath, columns, previewFields, renderForm }: ContentListPageProps) => {
+export const ContentListPage = ({
+  title,
+  apiPath,
+  columns,
+  showStatus = true,
+  previewFields,
+  renderForm,
+}: ContentListPageProps) => {
   const { adminFetch } = useAdminApi();
   const [items, setItems] = useState<Record<string, unknown>[]>([]);
   const [meta, setMeta] = useState({ total: 0, page: 1, limit: PAGINATION_CONFIG.DEFAULT_PAGE_SIZE as number, totalPages: 0 });
@@ -53,20 +61,39 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
   const [deleteTarget, setDeleteTarget] = useState<Record<string, unknown> | null>(null);
   const [previewItem, setPreviewItem] = useState<Record<string, unknown> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [showDeleted, setShowDeleted] = useState(false);
+  const [isRestoringId, setIsRestoringId] = useState<string | null>(null);
 
   const fetchItems = useCallback(async () => {
     const params = new URLSearchParams({ page: String(page), limit: String(PAGINATION_CONFIG.DEFAULT_PAGE_SIZE) });
     if (search) params.set('search', search);
+    if (showDeleted) params.set('includeDeleted', 'true');
 
-    const { data } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
+    const { data, error } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
     if (data) {
       setItems(data.data);
       setMeta(data.meta);
+      setLoadError(null);
+      return;
     }
-  }, [adminFetch, apiPath, page, search]);
+
+    if (error) {
+      setLoadError(error);
+    }
+  }, [adminFetch, apiPath, page, search, showDeleted]);
 
   useEffect(() => {
     fetchItems();
+  }, [fetchItems]);
+
+  useEffect(() => {
+    const handlePublished = () => {
+      fetchItems();
+    };
+
+    window.addEventListener('content-published', handlePublished);
+    return () => window.removeEventListener('content-published', handlePublished);
   }, [fetchItems]);
 
   const handleDelete = async () => {
@@ -79,11 +106,27 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
       toast.error(error);
     } else {
       toast.success('Deleted successfully');
+      window.dispatchEvent(new Event('content-changed'));
       fetchItems();
     }
 
     setDeleteTarget(null);
     setIsDeleting(false);
+  };
+
+  const handleRestore = async (id: string) => {
+    setIsRestoringId(id);
+    const { error } = await adminFetch(`${apiPath}?id=${id}&restore=true`, { method: 'PATCH' });
+
+    if (error) {
+      toast.error(error);
+    } else {
+      toast.success('Restored successfully');
+      window.dispatchEvent(new Event('content-changed'));
+      fetchItems();
+    }
+
+    setIsRestoringId(null);
   };
 
   const handleFormSuccess = () => {
@@ -131,6 +174,18 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
         />
       </div>
 
+      <div className="flex items-center justify-end">
+        <Button variant={showDeleted ? 'default' : 'outline'} size="sm" onClick={() => setShowDeleted(!showDeleted)}>
+          {showDeleted ? 'Showing Deleted' : 'Show Deleted'}
+        </Button>
+      </div>
+
+      {loadError && (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          Failed to load {title.toLowerCase()}: {loadError}
+        </div>
+      )}
+
       {/* Table */}
       <div className="rounded-md border">
         <Table>
@@ -139,14 +194,14 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
               {columns.map((col) => (
                 <TableHead key={col.key}>{col.label}</TableHead>
               ))}
-              <TableHead className="w-16">Status</TableHead>
+              {showStatus && <TableHead className="w-16">Status</TableHead>}
               <TableHead className="w-28">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {items.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length + 2} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={columns.length + (showStatus ? 2 : 1)} className="text-center text-muted-foreground py-8">
                   No items found
                 </TableCell>
               </TableRow>
@@ -161,11 +216,13 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
                       }
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Badge variant={item.status === CONTENT_STATUS.PUBLISHED ? 'default' : 'secondary'}>
-                      {String(item.status)}
-                    </Badge>
-                  </TableCell>
+                  {showStatus && (
+                    <TableCell>
+                      <Badge variant={item.status === CONTENT_STATUS.PUBLISHED ? 'default' : 'secondary'}>
+                        {String(item.status)}
+                      </Badge>
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="flex gap-1">
                       {previewFields && (
@@ -173,12 +230,26 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
                           <Eye className="h-3.5 w-3.5" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(item)}>
-                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                      </Button>
+                      {item.deleted_at ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRestore(String(item.id))}
+                          disabled={isRestoringId === String(item.id)}
+                          title="Restore"
+                        >
+                          <RotateCcw className="h-3.5 w-3.5" />
+                        </Button>
+                      ) : (
+                        <>
+                          <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(item)}>
+                            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

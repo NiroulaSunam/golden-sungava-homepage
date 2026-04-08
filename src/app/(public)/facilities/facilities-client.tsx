@@ -55,7 +55,7 @@ export const FacilitiesClient = () => {
     <>
       <PageHeader
         title={t('heading.facilities')}
-        subtitle={config.pageDescriptions.facilities}
+        subtitle={config?.pageDescriptions?.facilities || ''}
         breadcrumbs={[{ label: t('heading.facilities'), href: '/facilities' }]}
       />
 

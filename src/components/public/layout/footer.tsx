@@ -44,6 +44,12 @@ export const Footer = () => {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
 
+  // Safe access with fallbacks
+  const socialLinks = config?.socialLinks ?? {};
+  const phones = Array.isArray(config?.phones) ? config.phones : [];
+  const emails = Array.isArray(config?.emails) ? config.emails : [];
+  const footer = config?.footer ?? {};
+
   return (
     <footer className="relative">
       {/* Gold gradient top border */}
@@ -56,45 +62,51 @@ export const Footer = () => {
             <div className="lg:pr-4">
               <div className="flex items-center gap-3">
                 <ImageWithFallback
-                  src={config.logoUrl}
-                  alt={config.schoolName}
+                  src={config?.logoUrl || '/images/logo.png'}
+                  alt={config?.schoolName || ''}
                   width={40}
                   height={40}
                   className="h-10 w-10 object-contain"
                 />
-                <h3 className="font-heading text-lg font-bold text-white">{config.schoolName}</h3>
+                <h3 className="font-heading text-lg font-bold text-white">{config?.schoolName || 'Golden Sungava'}</h3>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-white/50">{config.tagline}</p>
+              <p className="mt-4 text-sm leading-relaxed text-white/50">{config?.tagline || ''}</p>
 
               {/* Social Links */}
               <div className="mt-6 flex gap-2">
-                <a
-                  href={config.socialLinks.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a
-                  href={`https://wa.me/${config.socialLinks.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
-                  aria-label="WhatsApp"
-                >
-                  <WhatsAppIcon className="h-4 w-4" />
-                </a>
-                <a
-                  href={config.socialLinks.messenger}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
-                  aria-label="Messenger"
-                >
-                  <MessengerIcon className="h-4 w-4" />
-                </a>
+                {socialLinks.facebook && (
+                  <a
+                    href={socialLinks.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="h-4 w-4" />
+                  </a>
+                )}
+                {socialLinks.whatsapp && (
+                  <a
+                    href={`https://wa.me/${socialLinks.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    aria-label="WhatsApp"
+                  >
+                    <WhatsAppIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {socialLinks.messenger && (
+                  <a
+                    href={socialLinks.messenger}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    aria-label="Messenger"
+                  >
+                    <MessengerIcon className="h-4 w-4" />
+                  </a>
+                )}
               </div>
             </div>
 
@@ -119,26 +131,26 @@ export const Footer = () => {
             {/* Contact Info */}
             <FooterSection title={t('footer.contactInfo')}>
               <ul className="space-y-4">
-                <FooterContactItem icon={MapPin}>{config.address}</FooterContactItem>
+                <FooterContactItem icon={MapPin}>{config?.address || ''}</FooterContactItem>
                 <FooterContactItem icon={Phone}>
-                  {config.phones.slice(0, 2).join(', ')}
+                  {phones.slice(0, 2).join(', ')}
                 </FooterContactItem>
-                <FooterContactItem icon={Mail}>{config.emails[0]}</FooterContactItem>
-                <FooterContactItem icon={Clock}>{config.officeHours}</FooterContactItem>
+                <FooterContactItem icon={Mail}>{emails[0] || ''}</FooterContactItem>
+                <FooterContactItem icon={Clock}>{config?.officeHours || ''}</FooterContactItem>
               </ul>
             </FooterSection>
 
             {/* Newsletter / CTA */}
             <div>
-              <h3 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{config.footer.ctaHeading}</h3>
+              <h3 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{footer.ctaHeading || ''}</h3>
               <p className="text-sm leading-relaxed text-white/50">
-                {config.footer.ctaDescription}
+                {footer.ctaDescription || ''}
               </p>
               <Link
                 href="/contact"
                 className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-xl"
               >
-                {config.footer.ctaButtonText}
+                {footer.ctaButtonText || 'Contact Us'}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -148,10 +160,10 @@ export const Footer = () => {
           <div className="mt-14 border-t border-white/[0.06] pt-6">
             <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
               <p className="text-xs text-white/30">
-                &copy; {year} {config.schoolName}. {t('footer.copyright')}
+                &copy; {year} {config?.schoolName || 'Golden Sungava'}. {t('footer.copyright')}
               </p>
               <p className="text-xs text-white/20">
-                {config.footer.tagline}
+                {footer.tagline || ''}
               </p>
             </div>
           </div>

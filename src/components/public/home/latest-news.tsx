@@ -13,7 +13,9 @@ interface LatestNewsProps {
 export const LatestNews = ({ news, subtitle }: LatestNewsProps) => {
   const { t } = useLanguage();
 
-  if (news.length === 0) {
+  const newsItems = Array.isArray(news) ? news : [];
+
+  if (newsItems.length === 0) {
     return null;
   }
 
@@ -27,7 +29,7 @@ export const LatestNews = ({ news, subtitle }: LatestNewsProps) => {
           viewAllLabel={t('action.viewAll')}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {news.slice(0, 6).map((article, i) => (
+          {newsItems.slice(0, 6).map((article, i) => (
             <ContentCard
               key={article.id}
               title={article.title}

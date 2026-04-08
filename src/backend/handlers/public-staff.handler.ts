@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { staffRepository } from '@/backend/repositories/content';
+import { transformContentRows } from '@/backend/utils/response-transformer';
 import { PAGINATION_CONFIG, SORT_DEFAULTS } from '@/lib/constants';
+
+const NO_STORE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate',
+};
 
 export const handleGetStaff = async (request: NextRequest): Promise<NextResponse> => {
   try {
@@ -18,15 +23,20 @@ export const handleGetStaff = async (request: NextRequest): Promise<NextResponse
       { is_active: true }
     );
 
-    return NextResponse.json({
-      data: result.data,
-      meta: {
-        total: result.total,
-        page: result.page,
-        limit: result.limit,
-        totalPages: result.totalPages,
+    // Transform all rows from snake_case to camelCase
+    const transformed = transformContentRows(result.data);
+    return NextResponse.json(
+      {
+        data: transformed,
+        meta: {
+          total: result.total,
+          page: result.page,
+          limit: result.limit,
+          totalPages: result.totalPages,
+        },
       },
-    });
+      { headers: NO_STORE_HEADERS },
+    );
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json({ error: message }, { status: 500 });

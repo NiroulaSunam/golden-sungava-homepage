@@ -25,6 +25,7 @@ export interface ContentService<TCreate, TUpdate, TSelect> {
   create: (data: unknown, userId: string) => Promise<TSelect>;
   update: (id: string, data: unknown, userId: string) => Promise<TSelect | null>;
   remove: (id: string, userId: string) => Promise<boolean>;
+  restore: (id: string, userId: string) => Promise<TSelect | null>;
 }
 
 export const createContentService = <TCreate, TUpdate, TInsert, TSelect extends { id: string }>({
@@ -94,5 +95,21 @@ export const createContentService = <TCreate, TUpdate, TInsert, TSelect extends 
     return success;
   };
 
-  return { list, listPublished, getById, create, update, remove };
+  const restore = async (id: string, userId: string): Promise<TSelect | null> => {
+    const result = await repository.restore(id);
+
+    if (result) {
+      await auditService.log({
+        userId,
+        action: AUDIT_ACTION.UPDATE,
+        resource: resourceName,
+        resourceId: id,
+        details: { restored: true },
+      });
+    }
+
+    return result;
+  };
+
+  return { list, listPublished, getById, create, update, remove, restore };
 };

@@ -89,11 +89,11 @@ export const HomePageClient = () => {
     load();
   }, [lang]);
 
-  const subtitles = config.sectionSubtitles;
+  const subtitles = config?.sectionSubtitles ?? {};
 
   return (
     <>
-      <HeroCarousel slides={data.heroSlides} accentText={config.heroAccentText} />
+      <HeroCarousel slides={data.heroSlides} accentText={config?.heroAccentText ?? ''} />
 
       <StatsCounter />
 

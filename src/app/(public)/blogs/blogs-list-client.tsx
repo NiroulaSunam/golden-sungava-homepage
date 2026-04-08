@@ -21,7 +21,8 @@ export const BlogsListClient = () => {
     load();
   }, [lang]);
 
-  const items = blogs.map((b) => ({
+  const safeBlogs = Array.isArray(blogs) ? blogs : [];
+  const items = safeBlogs.map((b) => ({
     id: b.id,
     title: b.title,
     date: b.date,

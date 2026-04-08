@@ -11,11 +11,13 @@ export const AboutPageClient = () => {
   const { config } = useSiteConfig();
   const { t } = useLanguage();
 
+  const aboutDescription = config?.pageDescriptions?.about || '';
+
   return (
     <>
       <PageHeader
         title={t('heading.about')}
-        subtitle={`${config.schoolName} — ${config.pageDescriptions.about}`}
+        subtitle={`${config?.schoolName || 'Golden Sungava'} — ${aboutDescription}`}
         breadcrumbs={[{ label: t('heading.about'), href: '/about' }]}
       />
 

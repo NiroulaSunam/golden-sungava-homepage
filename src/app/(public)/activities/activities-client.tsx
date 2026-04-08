@@ -44,7 +44,7 @@ export const ActivitiesClient = () => {
     <>
       <PageHeader
         title={t('heading.activities')}
-        subtitle={config.pageDescriptions.activities}
+        subtitle={config?.pageDescriptions?.activities || ''}
         breadcrumbs={[{ label: t('heading.activities'), href: '/activities' }]}
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">

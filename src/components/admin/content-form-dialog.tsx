@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -11,16 +11,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BilingualInput } from '@/components/shared/bilingual-input';
+import { BilingualListTextarea } from '@/components/shared/bilingual-list-textarea';
 import { BilingualTextarea } from '@/components/shared/bilingual-textarea';
 import { BilingualRichText } from '@/components/shared/bilingual-rich-text';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
+import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ContentPreview } from '@/components/admin/content-preview';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
+import { isRenderableImageSrc, normalizeImageUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Eye, PenLine } from 'lucide-react';
-import Image from 'next/image';
 
-export type FieldType = 'bilingual-input' | 'bilingual-textarea' | 'bilingual-rich-text' | 'text' | 'date' | 'image-url';
+export type FieldType = 'bilingual-input' | 'bilingual-textarea' | 'bilingual-list' | 'bilingual-rich-text' | 'text' | 'date' | 'image-url';
 
 export interface FieldConfig {
   name: string;
@@ -55,6 +57,7 @@ interface ImageUrlFieldProps {
 const ImageUrlField = ({ name, label, placeholder, disabled, form }: ImageUrlFieldProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const value = form.watch(name) as string | undefined;
+  const previewUrl = isRenderableImageSrc(value) ? normalizeImageUrl(value) : '';
 
   return (
     <div className="space-y-2">
@@ -64,19 +67,19 @@ const ImageUrlField = ({ name, label, placeholder, disabled, form }: ImageUrlFie
         placeholder={placeholder || 'https://drive.google.com/...'}
         disabled={disabled}
       />
-      {value && (
+      {previewUrl && (
         <div
           className="group relative h-32 w-full cursor-pointer overflow-hidden rounded-md border"
           onClick={() => setLightboxOpen(true)}
         >
-          <Image src={value} alt="Preview" fill className="object-cover" />
+          <ImageWithFallback src={previewUrl} alt="Preview" fill className="object-cover" />
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
             <Eye className="h-6 w-6 text-white" />
           </div>
         </div>
       )}
-      {lightboxOpen && value && (
-        <ImageLightbox src={value} alt={label} onClose={() => setLightboxOpen(false)} />
+      {lightboxOpen && previewUrl && (
+        <ImageLightbox src={previewUrl} alt={label} onClose={() => setLightboxOpen(false)} />
       )}
     </div>
   );
@@ -96,11 +99,87 @@ export const ContentFormDialog = ({
   const isEdit = !!editItem;
   const [showPreview, setShowPreview] = useState(false);
 
+  const normalizeBilingualValue = (value: unknown) => {
+    if (value === null || value === undefined) {
+      return { en: '', np: '' };
+    }
+
+    if (typeof value === 'string') {
+      return { en: value, np: '' };
+    }
+
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      return {
+        en: typeof obj.en === 'string' ? obj.en : '',
+        np: typeof obj.np === 'string' ? obj.np : '',
+      };
+    }
+
+    return { en: String(value), np: '' };
+  };
+
+  const normalizeBilingualListValue = (value: unknown) => {
+    if (value === null || value === undefined) {
+      return { en: [], np: [] };
+    }
+
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      return {
+        en: Array.isArray(obj.en) ? obj.en.filter((item): item is string => typeof item === 'string') : [],
+        np: Array.isArray(obj.np) ? obj.np.filter((item): item is string => typeof item === 'string') : [],
+      };
+    }
+
+    if (typeof value === 'string') {
+      return { en: [value], np: [] };
+    }
+
+    return { en: [], np: [] };
+  };
+
+  const normalizedEditItem = useMemo(() => {
+    if (!editItem) {
+      return null;
+    }
+
+    return fields.reduce((acc, field) => {
+      const rawValue = editItem[field.name];
+
+      if (field.type === 'bilingual-list') {
+        acc[field.name] = normalizeBilingualListValue(rawValue);
+      } else if (field.type.startsWith('bilingual')) {
+        acc[field.name] = normalizeBilingualValue(rawValue);
+      } else {
+        acc[field.name] = rawValue;
+      }
+
+      return acc;
+    }, { ...editItem } as Record<string, unknown>);
+  }, [editItem, fields]);
+
+  const createDefaultValues = useMemo(() => {
+    return fields.reduce((acc, field) => {
+      if (field.type === 'date' && field.required) {
+        acc[field.name] = new Date().toISOString().slice(0, 10);
+      }
+
+      return acc;
+    }, {} as Record<string, unknown>);
+  }, [fields]);
+
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
-    defaultValues: editItem ?? {},
+    defaultValues: normalizedEditItem ?? createDefaultValues,
   });
+
+  // Sync form values when edit target changes
+  useEffect(() => {
+    form.reset(normalizedEditItem ?? createDefaultValues);
+    setShowPreview(false);
+  }, [normalizedEditItem, createDefaultValues, form]);
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const url = isEdit ? `${apiPath}?id=${editItem?.id}` : apiPath;
@@ -115,6 +194,7 @@ export const ContentFormDialog = ({
       toast.error(error);
     } else {
       toast.success(isEdit ? 'Updated successfully' : 'Created successfully');
+      window.dispatchEvent(new Event('content-changed'));
       form.reset();
       setShowPreview(false);
       onSuccess();
@@ -142,6 +222,19 @@ export const ContentFormDialog = ({
       case 'bilingual-textarea':
         return (
           <BilingualTextarea
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            control={form.control}
+            placeholder={bilingualPlaceholder}
+            required={field.required}
+            disabled={isLoading}
+          />
+        );
+
+      case 'bilingual-list':
+        return (
+          <BilingualListTextarea
             key={field.name}
             name={field.name}
             label={field.label}
@@ -213,14 +306,15 @@ export const ContentFormDialog = ({
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             <DialogTitle>{isEdit ? `Edit ${title}` : `Add ${title}`}</DialogTitle>
             <Button
               type="button"
               variant={showPreview ? 'default' : 'outline'}
               size="sm"
               onClick={() => setShowPreview(!showPreview)}
-              className="gap-1.5"
+              aria-label={showPreview ? 'Switch to edit mode' : 'Preview form values'}
+              className="gap-1.5 mr-8 whitespace-nowrap"
             >
               {showPreview ? <PenLine className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
               {showPreview ? 'Edit' : 'Preview'}
@@ -229,7 +323,7 @@ export const ContentFormDialog = ({
         </DialogHeader>
 
         {showPreview ? (
-          <div className="py-2">
+          <div className="py-4">
             <ContentPreview fields={fields} values={form.watch()} />
           </div>
         ) : (
@@ -247,10 +341,15 @@ export const ContentFormDialog = ({
         )}
 
         {showPreview && (
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setShowPreview(false)}>
-              Back to Edit
-            </Button>
+          <DialogFooter className="justify-between">
+            <div className="flex gap-2">
+              <Button type="button" variant="outline" onClick={() => setShowPreview(false)}>
+                Back to Edit
+              </Button>
+              <Button type="button" variant="ghost" onClick={handleClose}>
+                Cancel
+              </Button>
+            </div>
           </DialogFooter>
         )}
       </DialogContent>

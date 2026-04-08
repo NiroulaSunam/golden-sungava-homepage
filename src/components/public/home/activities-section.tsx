@@ -45,6 +45,11 @@ interface ActivitiesSectionProps {
 
 export const ActivitiesSection = ({ activities, subtitle }: ActivitiesSectionProps) => {
   const { t } = useLanguage();
+  const activitiesList = Array.isArray(activities) ? activities : [];
+
+  if (activitiesList.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative overflow-hidden bg-muted py-16 md:py-24">
@@ -59,7 +64,7 @@ export const ActivitiesSection = ({ activities, subtitle }: ActivitiesSectionPro
           viewAllLabel={t('action.viewAll')}
         />
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4">
-          {activities.slice(0, 8).map((activity) => (
+          {activitiesList.slice(0, 8).map((activity) => (
             <div key={activity.id} className="min-w-[240px] snap-start md:min-w-0">
               <ActivityCard activity={activity} />
             </div>

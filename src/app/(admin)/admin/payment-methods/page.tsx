@@ -11,8 +11,17 @@ const COLUMNS: ColumnDef[] = [
 
 const FIELDS: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'bilingual-input', required: true },
-  { name: 'icon', label: 'Icon', type: 'text' },
-  { name: 'color', label: 'Color', type: 'text', placeholder: '#hex' },
+  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'khalti or esewa' },
+  { name: 'color', label: 'Color', type: 'text', placeholder: '#7c3aed or bg-purple-600' },
+  {
+    name: 'steps',
+    label: 'Steps',
+    type: 'bilingual-list',
+    placeholder: {
+      en: 'One step per line',
+      np: 'प्रत्येक चरण छुट्टै लाइनमा',
+    },
+  },
 ];
 
 const PaymentMethodsPage = () => (

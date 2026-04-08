@@ -59,8 +59,9 @@ export const ListingPage = ({
     return result;
   }, [items, search, activeCategory]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice(
+  const safeFiltered = Array.isArray(filtered) ? filtered : [];
+  const totalPages = Math.ceil(safeFiltered.length / ITEMS_PER_PAGE);
+  const paginated = safeFiltered.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );

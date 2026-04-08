@@ -5,6 +5,7 @@ import { Trophy, Bus, FlaskConical, Monitor, BookOpen, Utensils, ArrowRight } fr
 import type { Facility } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { toKebabCase } from '@/lib/utils';
 
 // Map icon names to Lucide components
 const iconMap: Record<string, typeof Trophy> = {
@@ -24,7 +25,7 @@ interface FacilityCardProps {
 }
 
 const FacilityCard = ({ facility, index }: FacilityCardProps) => {
-  const Icon = iconMap[facility.icon] || BookOpen;
+  const Icon = iconMap[toKebabCase(facility.icon)] || BookOpen;
   const number = String(index + 1).padStart(2, '0');
 
   return (
@@ -60,6 +61,11 @@ interface FacilitiesPreviewProps {
 
 export const FacilitiesPreview = ({ facilities, subtitle }: FacilitiesPreviewProps) => {
   const { t } = useLanguage();
+  const facilitiesList = Array.isArray(facilities) ? facilities : [];
+
+  if (facilitiesList.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-16 md:py-24">
@@ -72,7 +78,7 @@ export const FacilitiesPreview = ({ facilities, subtitle }: FacilitiesPreviewPro
         />
         {/* Desktop grid, mobile horizontal scroll */}
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-3 xl:grid-cols-3">
-          {facilities.slice(0, 6).map((facility, i) => (
+          {facilitiesList.slice(0, 6).map((facility, i) => (
             <div key={facility.id} className="min-w-[260px] snap-start md:min-w-0">
               <FacilityCard facility={facility} index={i} />
             </div>

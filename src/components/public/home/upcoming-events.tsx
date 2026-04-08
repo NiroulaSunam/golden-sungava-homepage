@@ -58,7 +58,9 @@ interface UpcomingEventsProps {
 export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
   const { t } = useLanguage();
 
-  if (events.length === 0) {
+  const eventsList = Array.isArray(events) ? events : [];
+
+  if (eventsList.length === 0) {
     return null;
   }
 
@@ -74,7 +76,7 @@ export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
           viewAllLabel={t('action.viewAll')}
         />
         <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
-          {events.slice(0, 6).map((event) => (
+          {eventsList.slice(0, 6).map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>

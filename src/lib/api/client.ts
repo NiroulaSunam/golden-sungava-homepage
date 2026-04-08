@@ -71,6 +71,22 @@ const resolveMockData = <T>(endpoint: ApiEndpoint, lang: string): T => {
   return data as T;
 };
 
+const getApiBaseUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    return '';
+  }
+
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL;
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return 'http://localhost:3000';
+};
+
 /**
  * Fetch data from real API endpoint.
  * Appends lang query parameter. Returns null on failure.
@@ -79,7 +95,10 @@ const fetchFromApi = async <T>(
   endpoint: ApiEndpoint,
   options: FetchOptions = {},
 ): Promise<{ data: T | null; error: string | null }> => {
-  const url = new URL(getApiUrl(endpoint), process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
+  const baseUrl = getApiBaseUrl();
+  const url = baseUrl
+    ? new URL(getApiUrl(endpoint), baseUrl)
+    : new URL(getApiUrl(endpoint), 'http://localhost');
 
   if (options.lang) url.searchParams.set('lang', options.lang);
   if (options.page) url.searchParams.set('page', String(options.page));
@@ -88,13 +107,34 @@ const fetchFromApi = async <T>(
   if (options.category) url.searchParams.set('category', options.category);
 
   try {
-    const response = await fetch(url.toString(), { next: { tags: [endpoint] } });
+    const requestUrl = baseUrl ? url.toString() : `${url.pathname}${url.search}`;
+
+    const response = await fetch(requestUrl, {
+      cache: 'no-store',
+      next: { tags: [endpoint] },
+    });
 
     if (!response.ok) {
       return { data: null, error: `API returned ${response.status}` };
     }
 
-    const json = await response.json();
+    const text = await response.text();
+    const json = text
+      ? (() => {
+        try {
+          return JSON.parse(text) as Record<string, unknown>;
+        } catch {
+          return null;
+        }
+      })()
+      : null;
+
+    // Unwrap paginated API payloads that return { data, meta }
+    if (json && typeof json === 'object' && !Array.isArray(json) && 'data' in json) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return { data: (json as any).data as T, error: null };
+    }
+
     return { data: json as T, error: null };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown fetch error';
@@ -127,10 +167,7 @@ export const fetchApi = async <T>(
     if (data !== null) {
       return { data, error: null, isMock: false };
     }
-
-    // Fall back to mock data on API failure
-    const fallback = resolveMockData<T>(endpoint, lang);
-    return { data: fallback, error, isMock: true };
+    return { data: null as T, error, isMock: false };
   }
 
   // Use mock data for unimplemented endpoints

@@ -16,20 +16,16 @@ describe('fetchApi', () => {
 
     const result = await fetchApi<HeroSlide[]>('hero-slides', { lang: 'en' });
 
-    // Falls back to mock data
-    expect(result.isMock).toBe(true);
+    expect(result.isMock).toBe(false);
     expect(result.error).toBe('fetch failed');
-    expect(result.data).toBeDefined();
-    expect(Array.isArray(result.data)).toBe(true);
-    expect(result.data.length).toBeGreaterThan(0);
-    expect(result.data[0].heading).toBeDefined();
+    expect(result.data).toBeNull();
   });
 
   it('should return API data when fetch succeeds', async () => {
     const apiData = { school_name: 'Test School' };
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(apiData),
+      text: () => Promise.resolve(JSON.stringify(apiData)),
     });
 
     const result = await fetchApi<SiteConfig>('site-config', { lang: 'en' });
@@ -40,20 +36,19 @@ describe('fetchApi', () => {
   });
 
   it('should fall back to mock on non-ok response', async () => {
-    mockFetch.mockResolvedValue({ ok: false, status: 500 });
+    mockFetch.mockResolvedValue({ ok: false, status: 500, text: () => Promise.resolve('') });
 
     const result = await fetchApi<SiteConfig>('site-config');
 
-    expect(result.isMock).toBe(true);
+    expect(result.isMock).toBe(false);
     expect(result.error).toBe('API returned 500');
-    // Still returns mock data as fallback
-    expect(result.data.schoolName).toBe('Golden Sungava English Boarding School');
+    expect(result.data).toBeNull();
   });
 
   it('should append lang query parameter to fetch URL', async () => {
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve([]),
+      text: () => Promise.resolve('[]'),
     });
 
     await fetchApi<NavItem[]>('navigation', { lang: 'np' });

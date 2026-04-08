@@ -189,7 +189,7 @@ export const GalleryClient = () => {
     <>
       <PageHeader
         title={t('heading.gallery')}
-        subtitle={config.pageDescriptions.gallery}
+        subtitle={config?.pageDescriptions?.gallery || ''}
         breadcrumbs={[{ label: t('nav.gallery'), href: '/gallery' }]}
       />
 
@@ -202,13 +202,15 @@ export const GalleryClient = () => {
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {events.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                onQuickPreview={() => setPreviewEvent(event)}
-              />
-            ))}
+            {Array.isArray(events) && events.length > 0
+              ? events.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    onQuickPreview={() => setPreviewEvent(event)}
+                  />
+                ))
+              : null}
           </div>
         )}
       </div>

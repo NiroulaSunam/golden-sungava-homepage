@@ -53,8 +53,10 @@ export const createAdminContentHandlers = ({ service, resourceName }: AdminConte
         return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
       }
 
-      const body = await request.json();
-      const result = await service.update(id, body, ctx.userId);
+      const restore = request.nextUrl.searchParams.get('restore') === 'true';
+      const result = restore
+        ? await service.restore(id, ctx.userId)
+        : await service.update(id, await request.json(), ctx.userId);
 
       if (!result) {
         return NextResponse.json({ error: 'Not found' }, { status: 404 });

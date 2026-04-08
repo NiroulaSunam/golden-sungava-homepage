@@ -47,6 +47,11 @@ const STAT_DELAYS = ['delay-100', 'delay-200', 'delay-300', 'delay-400'];
 export const StatsCounter = () => {
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { config } = useSiteConfig();
+  const statsList = Array.isArray(config?.stats) ? config.stats : [];
+
+  if (statsList.length === 0) {
+    return null;
+  }
 
   return (
     <section ref={ref} className="relative overflow-hidden border-y border-border bg-card py-14 md:py-20">
@@ -54,7 +59,7 @@ export const StatsCounter = () => {
       <div className="pointer-events-none absolute inset-0 bg-gold-gradient-subtle opacity-50" />
 
       <div className="relative mx-auto grid max-w-5xl grid-cols-2 gap-8 px-4 md:grid-cols-4 md:gap-12 md:px-6">
-        {config.stats.map((stat, i) => (
+        {statsList.map((stat, i) => (
           <StatItem
             key={stat.label}
             icon={iconMap[stat.icon] || Award}
