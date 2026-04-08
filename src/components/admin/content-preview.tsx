@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
+import { isRenderableImageSrc, normalizeImageUrl } from '@/lib/utils';
 import { Eye } from 'lucide-react';
 import type { FieldConfig } from '@/components/admin/content-form-dialog';
 
@@ -111,7 +112,9 @@ export const ContentPreview = ({ fields, values }: ContentPreviewProps) => {
 
         switch (field.type) {
           case 'image-url': {
-            const url = typeof rawValue === 'string' ? rawValue : '';
+            const url = typeof rawValue === 'string' && isRenderableImageSrc(rawValue)
+              ? normalizeImageUrl(rawValue)
+              : '';
             if (!url) return null;
             return <ImagePreviewField key={field.name} label={field.label} url={url} />;
           }

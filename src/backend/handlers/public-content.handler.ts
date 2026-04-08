@@ -4,6 +4,10 @@ import { parseLang } from '@/backend/utils';
 import { transformSiteConfigRow, transformContentRow, transformContentRows } from '@/backend/utils/response-transformer';
 import { PAGINATION_CONFIG, SORT_DEFAULTS } from '@/lib/constants';
 
+const NO_STORE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate',
+};
+
 export const createPublicSingletonHandler = <TInsert, TSelect extends Record<string, unknown>>(
   repository: ContentRepository<TInsert, TSelect>
 ) => {
@@ -18,7 +22,7 @@ export const createPublicSingletonHandler = <TInsert, TSelect extends Record<str
 
       // Transform snake_case DB response to camelCase API response
       const transformed = transformContentRow(data, lang);
-      return NextResponse.json(transformed);
+      return NextResponse.json(transformed, { headers: NO_STORE_HEADERS });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';
       return NextResponse.json({ error: message }, { status: 500 });
@@ -40,7 +44,7 @@ export const createPublicListHandler = <TInsert, TSelect extends Record<string, 
 
       // Transform all rows from snake_case to camelCase
       const transformed = transformContentRows(result.data, lang);
-      return NextResponse.json(transformed);
+      return NextResponse.json(transformed, { headers: NO_STORE_HEADERS });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';
       return NextResponse.json({ error: message }, { status: 500 });
@@ -72,15 +76,18 @@ export const createPublicPaginatedHandler = <TInsert, TSelect extends Record<str
 
       // Transform all rows from snake_case to camelCase
       const transformed = transformContentRows(result.data, lang);
-      return NextResponse.json({
-        data: transformed,
-        meta: {
-          total: result.total,
-          page: result.page,
-          limit: result.limit,
-          totalPages: result.totalPages,
+      return NextResponse.json(
+        {
+          data: transformed,
+          meta: {
+            total: result.total,
+            page: result.page,
+            limit: result.limit,
+            totalPages: result.totalPages,
+          },
         },
-      });
+        { headers: NO_STORE_HEADERS },
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Internal server error';
       return NextResponse.json({ error: message }, { status: 500 });

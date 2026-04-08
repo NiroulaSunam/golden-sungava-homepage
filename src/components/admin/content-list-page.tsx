@@ -77,6 +77,15 @@ export const ContentListPage = ({
     fetchItems();
   }, [fetchItems]);
 
+  useEffect(() => {
+    const handlePublished = () => {
+      fetchItems();
+    };
+
+    window.addEventListener('content-published', handlePublished);
+    return () => window.removeEventListener('content-published', handlePublished);
+  }, [fetchItems]);
+
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setIsDeleting(true);

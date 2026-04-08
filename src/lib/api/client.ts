@@ -88,7 +88,10 @@ const fetchFromApi = async <T>(
   if (options.category) url.searchParams.set('category', options.category);
 
   try {
-    const response = await fetch(url.toString(), { next: { tags: [endpoint] } });
+    const response = await fetch(url.toString(), {
+      cache: 'no-store',
+      next: { tags: [endpoint] },
+    });
 
     if (!response.ok) {
       return { data: null, error: `API returned ${response.status}` };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,7 @@ interface PublishResponse {
 }
 
 export const PublishButton = () => {
+  const router = useRouter();
   const { adminFetch } = useAdminApi();
   const [draftCount, setDraftCount] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -46,7 +48,9 @@ export const PublishButton = () => {
       toast.error(`Publish failed: ${error}`);
     } else {
       toast.success(`Published ${data?.data.itemsPublished ?? 0} items`);
-      setDraftCount(0);
+      await fetchDraftCount();
+      window.dispatchEvent(new Event('content-published'));
+      router.refresh();
     }
 
     setIsPublishing(false);

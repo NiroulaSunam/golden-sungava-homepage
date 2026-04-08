@@ -17,6 +17,7 @@ import { ImageLightbox } from '@/components/shared/image-lightbox';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ContentPreview } from '@/components/admin/content-preview';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
+import { isRenderableImageSrc, normalizeImageUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Eye, PenLine } from 'lucide-react';
 
@@ -55,6 +56,7 @@ interface ImageUrlFieldProps {
 const ImageUrlField = ({ name, label, placeholder, disabled, form }: ImageUrlFieldProps) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const value = form.watch(name) as string | undefined;
+  const previewUrl = isRenderableImageSrc(value) ? normalizeImageUrl(value) : '';
 
   return (
     <div className="space-y-2">
@@ -64,19 +66,19 @@ const ImageUrlField = ({ name, label, placeholder, disabled, form }: ImageUrlFie
         placeholder={placeholder || 'https://drive.google.com/...'}
         disabled={disabled}
       />
-      {value && (
+      {previewUrl && (
         <div
           className="group relative h-32 w-full cursor-pointer overflow-hidden rounded-md border"
           onClick={() => setLightboxOpen(true)}
         >
-          <ImageWithFallback src={value} alt="Preview" fill className="object-cover" />
+          <ImageWithFallback src={previewUrl} alt="Preview" fill className="object-cover" />
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
             <Eye className="h-6 w-6 text-white" />
           </div>
         </div>
       )}
-      {lightboxOpen && value && (
-        <ImageLightbox src={value} alt={label} onClose={() => setLightboxOpen(false)} />
+      {lightboxOpen && previewUrl && (
+        <ImageLightbox src={previewUrl} alt={label} onClose={() => setLightboxOpen(false)} />
       )}
     </div>
   );

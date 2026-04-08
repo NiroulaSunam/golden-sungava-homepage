@@ -67,3 +67,29 @@ export const isRemoteImageUrl = (url?: string | null): boolean => {
   const normalized = normalizeImageUrl(url);
   return normalized.startsWith('http://') || normalized.startsWith('https://');
 };
+
+export const isRenderableImageSrc = (url?: string | null): boolean => {
+  if (!url) return false;
+
+  const normalized = normalizeImageUrl(url);
+  if (!normalized) return false;
+
+  if (
+    normalized.startsWith('/') ||
+    normalized.startsWith('data:') ||
+    normalized.startsWith('blob:')
+  ) {
+    return true;
+  }
+
+  if (!isRemoteImageUrl(normalized)) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(normalized);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
