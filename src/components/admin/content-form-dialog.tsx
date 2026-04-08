@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BilingualInput } from '@/components/shared/bilingual-input';
+import { BilingualListTextarea } from '@/components/shared/bilingual-list-textarea';
 import { BilingualTextarea } from '@/components/shared/bilingual-textarea';
 import { BilingualRichText } from '@/components/shared/bilingual-rich-text';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
@@ -21,7 +22,7 @@ import { isRenderableImageSrc, normalizeImageUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import { Eye, PenLine } from 'lucide-react';
 
-export type FieldType = 'bilingual-input' | 'bilingual-textarea' | 'bilingual-rich-text' | 'text' | 'date' | 'image-url';
+export type FieldType = 'bilingual-input' | 'bilingual-textarea' | 'bilingual-list' | 'bilingual-rich-text' | 'text' | 'date' | 'image-url';
 
 export interface FieldConfig {
   name: string;
@@ -118,6 +119,26 @@ export const ContentFormDialog = ({
     return { en: String(value), np: '' };
   };
 
+  const normalizeBilingualListValue = (value: unknown) => {
+    if (value === null || value === undefined) {
+      return { en: [], np: [] };
+    }
+
+    if (typeof value === 'object') {
+      const obj = value as Record<string, unknown>;
+      return {
+        en: Array.isArray(obj.en) ? obj.en.filter((item): item is string => typeof item === 'string') : [],
+        np: Array.isArray(obj.np) ? obj.np.filter((item): item is string => typeof item === 'string') : [],
+      };
+    }
+
+    if (typeof value === 'string') {
+      return { en: [value], np: [] };
+    }
+
+    return { en: [], np: [] };
+  };
+
   const normalizedEditItem = useMemo(() => {
     if (!editItem) {
       return null;
@@ -126,7 +147,9 @@ export const ContentFormDialog = ({
     return fields.reduce((acc, field) => {
       const rawValue = editItem[field.name];
 
-      if (field.type.startsWith('bilingual')) {
+      if (field.type === 'bilingual-list') {
+        acc[field.name] = normalizeBilingualListValue(rawValue);
+      } else if (field.type.startsWith('bilingual')) {
         acc[field.name] = normalizeBilingualValue(rawValue);
       } else {
         acc[field.name] = rawValue;
@@ -199,6 +222,19 @@ export const ContentFormDialog = ({
       case 'bilingual-textarea':
         return (
           <BilingualTextarea
+            key={field.name}
+            name={field.name}
+            label={field.label}
+            control={form.control}
+            placeholder={bilingualPlaceholder}
+            required={field.required}
+            disabled={isLoading}
+          />
+        );
+
+      case 'bilingual-list':
+        return (
+          <BilingualListTextarea
             key={field.name}
             name={field.name}
             label={field.label}

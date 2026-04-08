@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Phone, Mail, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { WhatsAppIcon, MessengerIcon } from '@/components/shared/brand-icons';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { PageHeader } from '@/components/shared/page-header';
-import { cn } from '@/lib/utils';
+import { buildGoogleMapsEmbedUrl, cn } from '@/lib/utils';
 
 // --- Schema ---
 
@@ -42,14 +43,44 @@ export const ContactClient = () => {
   const { config } = useSiteConfig();
   const { t } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm<ContactFormData>();
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+  });
 
-  const onSubmit = () => setIsSubmitted(true);
+  const onSubmit = async (values: ContactFormData) => {
+    setSubmitError(null);
+
+    const response = await fetch('/api/contact-submissions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    const payload = await response.json().catch(() => null) as { error?: string } | null;
+
+    if (!response.ok) {
+      setSubmitError(payload?.error || 'Failed to send your message. Please try again.');
+      return;
+    }
+
+    reset();
+    setIsSubmitted(true);
+  };
 
   const inputClass = (hasError: boolean) => cn(
     'w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring',
     hasError ? 'border-destructive' : 'border-border',
   );
+
+  const mapEmbedUrl = config.googleMapsEmbed || buildGoogleMapsEmbedUrl(config.address);
 
   return (
     <>
@@ -86,7 +117,13 @@ export const ContactClient = () => {
 
             {/* Google Maps */}
             <div className="aspect-[4/3] overflow-hidden rounded-xl border border-border">
-              <iframe src={config.googleMapsEmbed} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="School Location" />
+              {mapEmbedUrl ? (
+                <iframe src={mapEmbedUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="School Location" />
+              ) : (
+                <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
+                  Add a Google Maps embed link in Site Config to show the live map here.
+                </div>
+              )}
             </div>
           </div>
 
@@ -129,8 +166,9 @@ export const ContactClient = () => {
                   <textarea {...register('message')} rows={4} className={inputClass(!!errors.message)} placeholder="Your message..." />
                   {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message.message}</p>}
                 </div>
-                <button type="submit" className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark">
-                  {t('action.submit')}
+                {submitError && <p className="text-sm text-destructive">{submitError}</p>}
+                <button type="submit" disabled={isSubmitting} className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70">
+                  {isSubmitting ? 'Sending...' : t('action.submit')}
                 </button>
               </form>
             )}

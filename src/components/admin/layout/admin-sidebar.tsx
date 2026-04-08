@@ -20,6 +20,8 @@ import {
   CreditCard,
   Settings,
   MessageCircle,
+  Inbox,
+  ClipboardList,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -45,6 +47,8 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Navigation', href: '/admin/navigation', icon: <Navigation className="h-4 w-4" /> },
   { label: 'Admission Steps', href: '/admin/admission-steps', icon: <GraduationCap className="h-4 w-4" /> },
   { label: 'Payment Methods', href: '/admin/payment-methods', icon: <CreditCard className="h-4 w-4" /> },
+  { label: 'Contact Messages', href: '/admin/contact-submissions', icon: <Inbox className="h-4 w-4" /> },
+  { label: 'Admission Applications', href: '/admin/admission-applications', icon: <ClipboardList className="h-4 w-4" /> },
   { label: 'Principal Message', href: '/admin/principal-message', icon: <MessageCircle className="h-4 w-4" /> },
   { label: 'Site Config', href: '/admin/site-config', icon: <Settings className="h-4 w-4" /> },
 ];

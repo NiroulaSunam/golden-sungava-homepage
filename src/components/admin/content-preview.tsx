@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
@@ -20,8 +19,13 @@ interface ContentPreviewProps {
 const getFieldValue = (value: unknown, lang: 'en' | 'np' = 'en'): string => {
   if (value === null || value === undefined) return '';
   if (typeof value === 'object' && value !== null && lang in value) {
-    return String((value as Record<string, string>)[lang] || '');
+    const bilingualValue = (value as Record<string, unknown>)[lang];
+    if (Array.isArray(bilingualValue)) {
+      return bilingualValue.filter((item): item is string => typeof item === 'string').join('\n');
+    }
+    return String(bilingualValue || '');
   }
+  if (Array.isArray(value)) return value.join('\n');
   return String(value);
 };
 
@@ -134,6 +138,7 @@ export const ContentPreview = ({ fields, values }: ContentPreviewProps) => {
             );
 
           case 'bilingual-textarea':
+          case 'bilingual-list':
             if (!displayValue) return null;
             return (
               <div key={field.name} className="space-y-1">

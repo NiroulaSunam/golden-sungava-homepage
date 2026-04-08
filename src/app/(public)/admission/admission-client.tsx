@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CheckCircle, GraduationCap, FileText, Users, ChevronDown } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
@@ -102,9 +103,17 @@ export const AdmissionClient = () => {
   const { lang, t } = useLanguage();
   const { config } = useSiteConfig();
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [faqs, setFaqs] = useState<FaqItem[]>([]);
   const [steps, setSteps] = useState<AdmissionStep[]>([]);
-  const { register, handleSubmit, formState: { errors } } = useForm<AdmissionFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<AdmissionFormData>({
+    resolver: zodResolver(admissionSchema),
+  });
 
   useEffect(() => {
     const load = async () => {
@@ -118,7 +127,25 @@ export const AdmissionClient = () => {
     load();
   }, [lang]);
 
-  const onSubmit = () => {
+  const onSubmit = async (values: AdmissionFormData) => {
+    setSubmitError(null);
+
+    const response = await fetch('/api/admission-applications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    });
+
+    const payload = await response.json().catch(() => null) as { error?: string } | null;
+
+    if (!response.ok) {
+      setSubmitError(payload?.error || 'Failed to submit your application. Please try again.');
+      return;
+    }
+
+    reset();
     setIsSubmitted(true);
   };
 
@@ -126,6 +153,9 @@ export const AdmissionClient = () => {
     'w-full rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring',
     hasError ? 'border-destructive' : 'border-border',
   );
+
+  const admissionUrl = typeof window !== 'undefined' ? window.location.href : '/admission';
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=${encodeURIComponent(admissionUrl)}`;
 
   return (
     <>
@@ -193,8 +223,9 @@ export const AdmissionClient = () => {
                 <FormField label={t('form.address')} error={errors.address?.message}>
                   <textarea {...register('address')} rows={2} className={inputClass(!!errors.address)} placeholder="Enter address" />
                 </FormField>
-                <button type="submit" className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark">
-                  {t('action.submit')}
+                {submitError && <p className="text-sm text-destructive">{submitError}</p>}
+                <button type="submit" disabled={isSubmitting} className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70">
+                  {isSubmitting ? 'Submitting...' : t('action.submit')}
                 </button>
               </form>
             )}
@@ -204,11 +235,9 @@ export const AdmissionClient = () => {
           <div className="flex flex-col items-center gap-4 lg:col-span-2">
             <h2 className="font-heading text-xl font-semibold">Scan to Apply</h2>
             <div className="rounded-xl border border-border bg-card p-6">
-              <div className="flex h-48 w-48 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                QR Code
-              </div>
+              <img src={qrCodeUrl} alt="Admission form QR code" className="h-48 w-48 rounded-lg bg-white object-contain" />
             </div>
-            <p className="text-center text-sm text-muted-foreground">Scan the QR code to fill the admission form on your phone</p>
+            <p className="text-center text-sm text-muted-foreground">Scan the QR code to open this admission form directly on your phone.</p>
           </div>
         </div>
 

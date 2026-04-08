@@ -104,3 +104,10 @@ export const toKebabCase = (value?: string | null): string => {
     .replace(/-+/g, '-')
     .toLowerCase();
 };
+
+export const buildGoogleMapsEmbedUrl = (address?: string | null): string => {
+  const trimmed = address?.trim();
+  if (!trimmed) return '';
+
+  return `https://www.google.com/maps?q=${encodeURIComponent(trimmed)}&output=embed`;
+};

@@ -73,6 +73,48 @@ export type Database = {
         }
         Relationships: []
       }
+      admission_applications: {
+        Row: {
+          address: string
+          created_at: string
+          dob: string
+          email: string
+          grade: string
+          id: string
+          parent_name: string
+          parent_phone: string
+          status: string
+          student_name: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          dob: string
+          email: string
+          grade: string
+          id?: string
+          parent_name: string
+          parent_phone: string
+          status?: string
+          student_name: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          dob?: string
+          email?: string
+          grade?: string
+          id?: string
+          parent_name?: string
+          parent_phone?: string
+          status?: string
+          student_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admission_steps: {
         Row: {
           created_at: string
@@ -189,6 +231,42 @@ export type Database = {
           sort_order?: number
           status?: Database["public"]["Enums"]["content_status"]
           title?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_submissions: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          status?: string
+          subject?: string
           updated_at?: string
         }
         Relationships: []
@@ -1074,4 +1152,3 @@ export const Constants = {
     },
   },
 } as const
-

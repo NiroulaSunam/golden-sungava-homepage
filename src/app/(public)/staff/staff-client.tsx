@@ -12,8 +12,6 @@ import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 import { cn } from '@/lib/utils';
 
-const DEPARTMENTS = ['Administration', 'Teaching', 'Co-curricular', 'Support'] as const;
-
 // --- Sub-component ---
 
 interface StaffCardProps {
@@ -77,6 +75,11 @@ export const StaffDirectoryClient = () => {
   }, [lang]);
 
   const staffList = Array.isArray(staff) ? staff : [];
+  const departments = Array.from(new Set(
+    staffList
+      .map((member) => member.department)
+      .filter((department): department is string => typeof department === 'string' && department.trim().length > 0),
+  ));
 
   const filtered = activeDept === 'all'
     ? staffList
@@ -105,7 +108,7 @@ export const StaffDirectoryClient = () => {
           >
             {t('misc.all')}
           </button>
-          {DEPARTMENTS.map((dept) => {
+          {departments.map((dept) => {
             const label = lang === 'np' ? departmentLabels.np[dept] || dept : dept;
             return (
               <button
