@@ -37,6 +37,15 @@ export const PublishButton = () => {
     fetchDraftCount();
   }, [fetchDraftCount]);
 
+  useEffect(() => {
+    const handleContentChanged = () => {
+      fetchDraftCount();
+    };
+
+    window.addEventListener('content-changed', handleContentChanged);
+    return () => window.removeEventListener('content-changed', handleContentChanged);
+  }, [fetchDraftCount]);
+
   const handlePublish = async () => {
     setIsPublishing(true);
 

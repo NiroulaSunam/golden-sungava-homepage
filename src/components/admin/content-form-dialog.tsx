@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { z } from 'zod';
@@ -118,17 +118,23 @@ export const ContentFormDialog = ({
     return { en: String(value), np: '' };
   };
 
-  const normalizedEditItem = editItem ? fields.reduce((acc, field) => {
-    const rawValue = editItem[field.name];
-
-    if (field.type.startsWith('bilingual')) {
-      acc[field.name] = normalizeBilingualValue(rawValue);
-    } else {
-      acc[field.name] = rawValue;
+  const normalizedEditItem = useMemo(() => {
+    if (!editItem) {
+      return null;
     }
 
-    return acc;
-  }, { ...editItem } as Record<string, unknown>) : null;
+    return fields.reduce((acc, field) => {
+      const rawValue = editItem[field.name];
+
+      if (field.type.startsWith('bilingual')) {
+        acc[field.name] = normalizeBilingualValue(rawValue);
+      } else {
+        acc[field.name] = rawValue;
+      }
+
+      return acc;
+    }, { ...editItem } as Record<string, unknown>);
+  }, [editItem, fields]);
 
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,6 +161,7 @@ export const ContentFormDialog = ({
       toast.error(error);
     } else {
       toast.success(isEdit ? 'Updated successfully' : 'Created successfully');
+      window.dispatchEvent(new Event('content-changed'));
       form.reset();
       setShowPreview(false);
       onSuccess();

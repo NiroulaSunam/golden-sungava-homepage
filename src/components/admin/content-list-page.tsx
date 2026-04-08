@@ -61,15 +61,22 @@ export const ContentListPage = ({
   const [deleteTarget, setDeleteTarget] = useState<Record<string, unknown> | null>(null);
   const [previewItem, setPreviewItem] = useState<Record<string, unknown> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const fetchItems = useCallback(async () => {
     const params = new URLSearchParams({ page: String(page), limit: String(PAGINATION_CONFIG.DEFAULT_PAGE_SIZE) });
     if (search) params.set('search', search);
 
-    const { data } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
+    const { data, error } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
     if (data) {
       setItems(data.data);
       setMeta(data.meta);
+      setLoadError(null);
+      return;
+    }
+
+    if (error) {
+      setLoadError(error);
     }
   }, [adminFetch, apiPath, page, search]);
 
@@ -96,6 +103,7 @@ export const ContentListPage = ({
       toast.error(error);
     } else {
       toast.success('Deleted successfully');
+      window.dispatchEvent(new Event('content-changed'));
       fetchItems();
     }
 
@@ -147,6 +155,12 @@ export const ContentListPage = ({
           className="pl-9"
         />
       </div>
+
+      {loadError && (
+        <div className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+          Failed to load {title.toLowerCase()}: {loadError}
+        </div>
+      )}
 
       {/* Table */}
       <div className="rounded-md border">
