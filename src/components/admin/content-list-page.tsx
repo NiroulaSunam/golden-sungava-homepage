@@ -27,6 +27,7 @@ interface ContentListPageProps {
   title: string;
   apiPath: string;
   columns: ColumnDef[];
+  showStatus?: boolean;
   /** Field configs for the preview dialog — when provided, shows a view (eye) button */
   previewFields?: FieldConfig[];
   renderForm: (props: {
@@ -42,7 +43,14 @@ interface ListResponse {
   meta: { total: number; page: number; limit: number; totalPages: number };
 }
 
-export const ContentListPage = ({ title, apiPath, columns, previewFields, renderForm }: ContentListPageProps) => {
+export const ContentListPage = ({
+  title,
+  apiPath,
+  columns,
+  showStatus = true,
+  previewFields,
+  renderForm,
+}: ContentListPageProps) => {
   const { adminFetch } = useAdminApi();
   const [items, setItems] = useState<Record<string, unknown>[]>([]);
   const [meta, setMeta] = useState({ total: 0, page: 1, limit: PAGINATION_CONFIG.DEFAULT_PAGE_SIZE as number, totalPages: 0 });
@@ -139,14 +147,14 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
               {columns.map((col) => (
                 <TableHead key={col.key}>{col.label}</TableHead>
               ))}
-              <TableHead className="w-16">Status</TableHead>
+              {showStatus && <TableHead className="w-16">Status</TableHead>}
               <TableHead className="w-28">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {items.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={columns.length + 2} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={columns.length + (showStatus ? 2 : 1)} className="text-center text-muted-foreground py-8">
                   No items found
                 </TableCell>
               </TableRow>
@@ -161,11 +169,13 @@ export const ContentListPage = ({ title, apiPath, columns, previewFields, render
                       }
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Badge variant={item.status === CONTENT_STATUS.PUBLISHED ? 'default' : 'secondary'}>
-                      {String(item.status)}
-                    </Badge>
-                  </TableCell>
+                  {showStatus && (
+                    <TableCell>
+                      <Badge variant={item.status === CONTENT_STATUS.PUBLISHED ? 'default' : 'secondary'}>
+                        {String(item.status)}
+                      </Badge>
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="flex gap-1">
                       {previewFields && (

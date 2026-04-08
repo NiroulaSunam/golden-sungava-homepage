@@ -14,11 +14,11 @@ import { BilingualInput } from '@/components/shared/bilingual-input';
 import { BilingualTextarea } from '@/components/shared/bilingual-textarea';
 import { BilingualRichText } from '@/components/shared/bilingual-rich-text';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
+import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ContentPreview } from '@/components/admin/content-preview';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
 import { toast } from 'sonner';
 import { Eye, PenLine } from 'lucide-react';
-import Image from 'next/image';
 
 export type FieldType = 'bilingual-input' | 'bilingual-textarea' | 'bilingual-rich-text' | 'text' | 'date' | 'image-url';
 
@@ -69,7 +69,7 @@ const ImageUrlField = ({ name, label, placeholder, disabled, form }: ImageUrlFie
           className="group relative h-32 w-full cursor-pointer overflow-hidden rounded-md border"
           onClick={() => setLightboxOpen(true)}
         >
-          <Image src={value} alt="Preview" fill className="object-cover" />
+          <ImageWithFallback src={value} alt="Preview" fill className="object-cover" />
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
             <Eye className="h-6 w-6 text-white" />
           </div>

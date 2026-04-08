@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { ImageLightbox } from '@/components/shared/image-lightbox';
 import { Eye } from 'lucide-react';
 import type { FieldConfig } from '@/components/admin/content-form-dialog';
@@ -38,7 +38,7 @@ const ImagePreviewField = ({ label, url }: ImagePreviewFieldProps) => {
     <div className="space-y-1">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
       <div className="group relative h-48 w-full cursor-pointer overflow-hidden rounded-md border" onClick={() => setLightboxOpen(true)}>
-        <Image src={url} alt={label} fill className="object-cover" />
+        <ImageWithFallback src={url} alt={label} fill className="object-cover" />
         <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/30 group-hover:opacity-100">
           <Eye className="h-8 w-8 text-white" />
         </div>
