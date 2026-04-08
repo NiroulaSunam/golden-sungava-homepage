@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { getSupabaseClient } from '@/lib/supabase/client';
+import { useAuth } from '@/lib/auth/provider';
 
 /**
  * Shared hook for admin API calls with auth token injection.
@@ -9,6 +10,7 @@ import { getSupabaseClient } from '@/lib/supabase/client';
  */
 export const useAdminApi = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuth();
 
   const parseResponse = useCallback(async (response: Response) => {
     const text = await response.text();
@@ -36,6 +38,14 @@ export const useAdminApi = () => {
     url: string,
     options?: RequestInit
   ): Promise<{ data: T | null; error: string | null }> => {
+    if (isAuthLoading) {
+      return { data: null, error: null };
+    }
+
+    if (!isAuthenticated) {
+      return { data: null, error: 'Authentication required' };
+    }
+
     setIsLoading(true);
     try {
       const authHeaders = await getAuthHeaders();
@@ -63,7 +73,7 @@ export const useAdminApi = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [getAuthHeaders, parseResponse]);
+  }, [getAuthHeaders, isAuthLoading, isAuthenticated, parseResponse]);
 
   return { adminFetch, isLoading };
 };

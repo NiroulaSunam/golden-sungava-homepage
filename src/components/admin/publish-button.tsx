@@ -9,6 +9,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { useAdminApi } from '@/lib/hooks/use-admin-api';
+import { useAuth } from '@/lib/auth/provider';
 import { toast } from 'sonner';
 
 interface DraftCountResponse {
@@ -22,6 +23,7 @@ interface PublishResponse {
 export const PublishButton = () => {
   const router = useRouter();
   const { adminFetch } = useAdminApi();
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuth();
   const [draftCount, setDraftCount] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -34,8 +36,10 @@ export const PublishButton = () => {
   }, [adminFetch]);
 
   useEffect(() => {
-    fetchDraftCount();
-  }, [fetchDraftCount]);
+    if (!isAuthLoading && isAuthenticated) {
+      fetchDraftCount();
+    }
+  }, [fetchDraftCount, isAuthLoading, isAuthenticated]);
 
   useEffect(() => {
     const handleContentChanged = () => {
@@ -72,7 +76,7 @@ export const PublishButton = () => {
         variant="outline"
         size="sm"
         onClick={() => setConfirmOpen(true)}
-        disabled={draftCount === 0}
+        disabled={isAuthLoading || !isAuthenticated || draftCount === 0}
         className="relative gap-1.5"
       >
         <Upload className="h-4 w-4" />

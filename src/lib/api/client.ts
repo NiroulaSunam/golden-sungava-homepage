@@ -138,7 +138,6 @@ export const fetchApi = async <T>(
   options: FetchOptions = {},
 ): Promise<ApiResponse<T>> => {
   const lang = options.lang || DEFAULT_LANGUAGE;
-  const allowMockFallback = process.env.NODE_ENV !== 'production';
 
   // Route to real API if endpoint is implemented
   if (isImplemented(endpoint)) {
@@ -146,10 +145,6 @@ export const fetchApi = async <T>(
 
     if (data !== null) {
       return { data, error: null, isMock: false };
-    }
-
-    if (!allowMockFallback) {
-      return { data: [] as T, error, isMock: false };
     }
 
     // Fall back to mock data on API failure

@@ -13,7 +13,7 @@ const FIELDS: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'bilingual-input', required: true },
   { name: 'description', label: 'Description', type: 'bilingual-textarea' },
   { name: 'image_url', label: 'Image', type: 'image-url' },
-  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'Lucide icon name' },
+  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'trophy, bus, flask-conical, monitor, book-open, utensils' },
 ];
 
 const FacilitiesPage = () => (

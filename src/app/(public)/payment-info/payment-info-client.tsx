@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { fetchApi } from '@/lib/api/client';
+import { toKebabCase } from '@/lib/utils';
 import type { PaymentMethod as PaymentMethodType } from '@/types/api';
 
 // Icon map for CMS-driven payment methods
@@ -22,12 +23,14 @@ interface PaymentMethodCardProps {
 }
 
 const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
-  const Icon = paymentIconMap[method.icon] || KhaltiIcon;
+  const Icon = paymentIconMap[toKebabCase(method.icon)] || KhaltiIcon;
+  const colorStyle = method.color?.startsWith('#') ? { backgroundColor: method.color } : undefined;
+  const colorClassName = colorStyle ? '' : method.color;
 
   return (
     <div className="card-gold-accent rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md">
       <div className="flex items-center gap-3">
-        <div className={`rounded-lg p-3 ${method.color}`}>
+        <div className={`rounded-lg p-3 ${colorClassName}`} style={colorStyle}>
           <Icon className="h-6 w-6 text-white" />
         </div>
         <h2 className="font-heading text-xl font-semibold">{method.name}</h2>

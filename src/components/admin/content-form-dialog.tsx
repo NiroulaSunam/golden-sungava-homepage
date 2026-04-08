@@ -136,17 +136,27 @@ export const ContentFormDialog = ({
     }, { ...editItem } as Record<string, unknown>);
   }, [editItem, fields]);
 
+  const createDefaultValues = useMemo(() => {
+    return fields.reduce((acc, field) => {
+      if (field.type === 'date' && field.required) {
+        acc[field.name] = new Date().toISOString().slice(0, 10);
+      }
+
+      return acc;
+    }, {} as Record<string, unknown>);
+  }, [fields]);
+
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(schema as any),
-    defaultValues: normalizedEditItem ?? {},
+    defaultValues: normalizedEditItem ?? createDefaultValues,
   });
 
   // Sync form values when edit target changes
   useEffect(() => {
-    form.reset(normalizedEditItem ?? {});
+    form.reset(normalizedEditItem ?? createDefaultValues);
     setShowPreview(false);
-  }, [normalizedEditItem, form]);
+  }, [normalizedEditItem, createDefaultValues, form]);
 
   const handleSubmit = form.handleSubmit(async (data) => {
     const url = isEdit ? `${apiPath}?id=${editItem?.id}` : apiPath;

@@ -11,8 +11,8 @@ const COLUMNS: ColumnDef[] = [
 
 const FIELDS: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'bilingual-input', required: true },
-  { name: 'icon', label: 'Icon', type: 'text' },
-  { name: 'color', label: 'Color', type: 'text', placeholder: '#hex' },
+  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'khalti or esewa' },
+  { name: 'color', label: 'Color', type: 'text', placeholder: '#7c3aed or bg-purple-600' },
 ];
 
 const PaymentMethodsPage = () => (

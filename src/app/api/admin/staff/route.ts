@@ -4,7 +4,6 @@ import { staffRepository } from '@/backend/repositories/content';
 import { staffCreateSchema, staffUpdateSchema } from '@/backend/services/schemas';
 import { auditService } from '@/backend/services/audit.service';
 import { buildPaginationMeta, parsePaginationParams } from '@/backend/utils';
-import { transformContentRows } from '@/backend/utils/response-transformer';
 import { AUDIT_ACTION } from '@/lib/constants';
 
 const handleGet = async (request: NextRequest, _ctx: AdminContext): Promise<NextResponse> => {
@@ -22,7 +21,7 @@ const handleGet = async (request: NextRequest, _ctx: AdminContext): Promise<Next
     });
 
     return NextResponse.json({
-      data: transformContentRows(result.data),
+      data: result.data,
       meta: buildPaginationMeta(result.total, result.page, result.limit),
     });
   } catch (error) {

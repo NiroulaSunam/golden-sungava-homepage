@@ -10,7 +10,7 @@ import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { fetchApi } from '@/lib/api/client';
 import type { FaqItem, AdmissionStep } from '@/types/api';
-import { cn } from '@/lib/utils';
+import { cn, toKebabCase } from '@/lib/utils';
 
 // --- Zod Schema ---
 
@@ -141,7 +141,7 @@ export const AdmissionClient = () => {
           {steps.map((step, i) => (
             <StepCard
               key={step.id}
-              icon={stepIconMap[step.icon] || FileText}
+              icon={stepIconMap[toKebabCase(step.icon)] || FileText}
               step={i + 1}
               title={step.title}
               desc={step.description}

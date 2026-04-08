@@ -5,6 +5,7 @@ import { Trophy, Bus, FlaskConical, Monitor, BookOpen, Utensils, ArrowRight } fr
 import type { Facility } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { toKebabCase } from '@/lib/utils';
 
 // Map icon names to Lucide components
 const iconMap: Record<string, typeof Trophy> = {
@@ -24,7 +25,7 @@ interface FacilityCardProps {
 }
 
 const FacilityCard = ({ facility, index }: FacilityCardProps) => {
-  const Icon = iconMap[facility.icon] || BookOpen;
+  const Icon = iconMap[toKebabCase(facility.icon)] || BookOpen;
   const number = String(index + 1).padStart(2, '0');
 
   return (
