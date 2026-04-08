@@ -25,6 +25,7 @@ interface SubmissionInboxPageProps<TItem extends { id: string; created_at: strin
     label: string;
     render: (item: TItem) => React.ReactNode;
   }[];
+  renderActions?: (item: TItem) => React.ReactNode;
 }
 
 interface AdminListResponse<TItem> {
@@ -44,6 +45,7 @@ export const SubmissionInboxPage = <TItem extends { id: string; created_at: stri
   apiPath,
   emptyMessage,
   columns,
+  renderActions,
 }: SubmissionInboxPageProps<TItem>) => {
   const { adminFetch, isLoading } = useAdminApi();
   const [items, setItems] = useState<TItem[]>([]);
@@ -151,6 +153,7 @@ export const SubmissionInboxPage = <TItem extends { id: string; created_at: stri
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
+                      {renderActions ? renderActions(item) : null}
                       <Button
                         type="button"
                         size="icon"
