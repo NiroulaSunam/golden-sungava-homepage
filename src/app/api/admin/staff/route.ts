@@ -62,9 +62,10 @@ const handlePatch = async (request: NextRequest, ctx: AdminContext): Promise<Nex
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
     }
 
-    const body = await request.json();
-    const validated = staffUpdateSchema.parse(body);
-    const result = await staffRepository.update(id, validated);
+    const restore = request.nextUrl.searchParams.get('restore') === 'true';
+    const result = restore
+      ? await staffRepository.restore(id)
+      : await staffRepository.update(id, staffUpdateSchema.parse(await request.json()));
 
     if (!result) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -75,7 +76,7 @@ const handlePatch = async (request: NextRequest, ctx: AdminContext): Promise<Nex
       action: AUDIT_ACTION.UPDATE,
       resource: 'staff',
       resourceId: id,
-      details: validated as Record<string, unknown>,
+      details: restore ? { restored: true } : result as Record<string, unknown>,
     });
 
     return NextResponse.json({ data: result });

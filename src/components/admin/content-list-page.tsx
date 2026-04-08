@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, Search, Eye } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Eye, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -62,10 +62,13 @@ export const ContentListPage = ({
   const [previewItem, setPreviewItem] = useState<Record<string, unknown> | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [showDeleted, setShowDeleted] = useState(false);
+  const [isRestoringId, setIsRestoringId] = useState<string | null>(null);
 
   const fetchItems = useCallback(async () => {
     const params = new URLSearchParams({ page: String(page), limit: String(PAGINATION_CONFIG.DEFAULT_PAGE_SIZE) });
     if (search) params.set('search', search);
+    if (showDeleted) params.set('includeDeleted', 'true');
 
     const { data, error } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
     if (data) {
@@ -78,7 +81,7 @@ export const ContentListPage = ({
     if (error) {
       setLoadError(error);
     }
-  }, [adminFetch, apiPath, page, search]);
+  }, [adminFetch, apiPath, page, search, showDeleted]);
 
   useEffect(() => {
     fetchItems();
@@ -109,6 +112,21 @@ export const ContentListPage = ({
 
     setDeleteTarget(null);
     setIsDeleting(false);
+  };
+
+  const handleRestore = async (id: string) => {
+    setIsRestoringId(id);
+    const { error } = await adminFetch(`${apiPath}?id=${id}&restore=true`, { method: 'PATCH' });
+
+    if (error) {
+      toast.error(error);
+    } else {
+      toast.success('Restored successfully');
+      window.dispatchEvent(new Event('content-changed'));
+      fetchItems();
+    }
+
+    setIsRestoringId(null);
   };
 
   const handleFormSuccess = () => {
@@ -154,6 +172,12 @@ export const ContentListPage = ({
           onChange={(e) => { setSearch(e.target.value); setPage(1); }}
           className="pl-9"
         />
+      </div>
+
+      <div className="flex items-center justify-end">
+        <Button variant={showDeleted ? 'default' : 'outline'} size="sm" onClick={() => setShowDeleted(!showDeleted)}>
+          {showDeleted ? 'Showing Deleted' : 'Show Deleted'}
+        </Button>
       </div>
 
       {loadError && (
@@ -206,12 +230,26 @@ export const ContentListPage = ({
                           <Eye className="h-3.5 w-3.5" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(item)}>
-                        <Trash2 className="h-3.5 w-3.5 text-destructive" />
-                      </Button>
+                      {item.deleted_at ? (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRestore(String(item.id))}
+                          disabled={isRestoringId === String(item.id)}
+                          title="Restore"
+                        >
+                          <RotateCcw className="h-3.5 w-3.5" />
+                        </Button>
+                      ) : (
+                        <>
+                          <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(item)}>
+                            <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

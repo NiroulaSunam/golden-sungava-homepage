@@ -146,10 +146,7 @@ export const fetchApi = async <T>(
     if (data !== null) {
       return { data, error: null, isMock: false };
     }
-
-    // Fall back to mock data on API failure
-    const fallback = resolveMockData<T>(endpoint, lang);
-    return { data: fallback, error, isMock: true };
+    return { data: null as T, error, isMock: false };
   }
 
   // Use mock data for unimplemented endpoints
