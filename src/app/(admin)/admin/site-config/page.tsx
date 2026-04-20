@@ -108,7 +108,20 @@ const SiteConfigPage = () => {
           </div>
           <div className="space-y-2">
             <Label>Established Year</Label>
-            <Input type="number" {...form.register('established_year', { valueAsNumber: true })} disabled={isLoading} />
+            <Input
+              type="number"
+              {...form.register('established_year', {
+                setValueAs: (value) => {
+                  if (value === '' || value === null || value === undefined) {
+                    return null;
+                  }
+
+                  const parsed = Number(value);
+                  return Number.isFinite(parsed) ? parsed : null;
+                },
+              })}
+              disabled={isLoading}
+            />
           </div>
         </section>
 
