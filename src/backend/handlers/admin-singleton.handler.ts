@@ -20,7 +20,7 @@ export const createAdminSingletonHandlers = <TInsert, TSelect>({
 }: AdminSingletonHandlersConfig<TInsert, TSelect>) => {
   const handleGet = async (_request: NextRequest, _ctx: AdminContext): Promise<NextResponse> => {
     try {
-      const items = await repository.findAll({ limit: 1 });
+      const items = await repository.findAll({ limit: 1, sortBy: 'updated_at', sortOrder: 'desc' });
       const data = items[0] ?? {};
 
       return NextResponse.json({ data });
@@ -34,8 +34,16 @@ export const createAdminSingletonHandlers = <TInsert, TSelect>({
     try {
       const body = await request.json();
       const validated = updateSchema.parse(body);
+      const existingItems = await repository.findAll({ limit: 1, sortBy: 'updated_at', sortOrder: 'desc' });
+      const existingItem = existingItems[0] as (Record<string, unknown> & { id?: string }) | undefined;
 
-      const result = await repository.upsert(validated as TInsert);
+      const result = existingItem?.id
+        ? await repository.update(existingItem.id, validated as Partial<TInsert>)
+        : await repository.create(validated as TInsert);
+
+      if (!result) {
+        return NextResponse.json({ error: 'Failed to save singleton content' }, { status: 500 });
+      }
 
       await auditService.log({
         userId: ctx.userId,

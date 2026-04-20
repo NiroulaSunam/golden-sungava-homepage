@@ -37,6 +37,7 @@ export const BlogPreview = ({ blogs, subtitle }: BlogPreviewProps) => {
               date={blog.date}
               excerpt={blog.excerpt}
               author={blog.author}
+              compact
             />
           ))}
         </div>

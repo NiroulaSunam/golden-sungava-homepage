@@ -21,6 +21,8 @@ const NoticesPage = () => (
     title="Notices"
     apiPath="/api/admin/notices"
     columns={COLUMNS}
+    defaultSortBy="date"
+    defaultSortOrder="desc"
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

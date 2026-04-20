@@ -254,6 +254,8 @@ const GalleryPage = () => {
       <ContentListPage
         title="Gallery Events"
         apiPath="/api/admin/gallery-events"
+        defaultSortBy="date"
+        defaultSortOrder="desc"
         columns={[
           ...COLUMNS,
           {

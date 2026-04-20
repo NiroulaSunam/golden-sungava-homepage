@@ -21,6 +21,10 @@ const FacilitiesPage = () => (
     title="Facilities"
     apiPath="/api/admin/facilities"
     columns={COLUMNS}
+    defaultSortBy="sort_order"
+    defaultSortOrder="asc"
+    manualOrder
+    fetchLimit={100}
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

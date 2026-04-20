@@ -32,7 +32,8 @@ import { setupMockAuth } from '@/test-utils/mock-auth';
 
 const mockRepository = {
   findAll: vi.fn(),
-  upsert: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
 };
 
 const mockUpdateSchema = {
@@ -46,7 +47,7 @@ const handlers = createAdminSingletonHandlers({
 });
 
 const setupAuth = (role: 'admin' | 'editor' | 'viewer' = 'admin') =>
-  setupMockAuth(role, vi.mocked(getUserFromToken), supabaseAdmin);
+  setupMockAuth(role, vi.mocked(getUserFromToken), supabaseAdmin as never);
 
 describe('Admin Singleton Handlers', () => {
   beforeEach(() => {
@@ -73,10 +74,10 @@ describe('Admin Singleton Handlers', () => {
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body.data).toEqual(item);
-      expect(mockRepository.findAll).toHaveBeenCalledWith({ limit: 1 });
+      expect(mockRepository.findAll).toHaveBeenCalledWith({ limit: 1, sortBy: 'updated_at', sortOrder: 'desc' });
     });
 
-    it('should return 404 when no data exists', async () => {
+    it('should return empty data when no singleton row exists yet', async () => {
       setupAuth('admin');
       mockRepository.findAll.mockResolvedValue([]);
 
@@ -84,7 +85,9 @@ describe('Admin Singleton Handlers', () => {
         createAuthenticatedRequest('/api/admin/site-config')
       );
 
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.data).toEqual({});
     });
 
     it('should return 500 on repository error', async () => {
@@ -114,12 +117,14 @@ describe('Admin Singleton Handlers', () => {
       expect(response.status).toBe(401);
     });
 
-    it('should validate and upsert data with audit log', async () => {
+    it('should validate and update the latest singleton row with audit log', async () => {
       const { userId } = setupAuth('admin');
       const inputData = { site_name: 'Updated Sungava' };
-      const upsertedData = { id: 'cfg-1', ...inputData };
+      const existingRow = { id: 'cfg-1', site_name: 'Golden Sungava' };
+      const updatedData = { id: 'cfg-1', ...inputData };
       mockUpdateSchema.parse.mockReturnValue(inputData);
-      mockRepository.upsert.mockResolvedValue(upsertedData);
+      mockRepository.findAll.mockResolvedValue([existingRow]);
+      mockRepository.update.mockResolvedValue(updatedData);
 
       const response = await handlers.PUT(
         createAuthenticatedRequest('/api/admin/site-config', {
@@ -130,9 +135,10 @@ describe('Admin Singleton Handlers', () => {
 
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body.data).toEqual(upsertedData);
+      expect(body.data).toEqual(updatedData);
       expect(mockUpdateSchema.parse).toHaveBeenCalledWith(inputData);
-      expect(mockRepository.upsert).toHaveBeenCalledWith(inputData);
+      expect(mockRepository.findAll).toHaveBeenCalledWith({ limit: 1, sortBy: 'updated_at', sortOrder: 'desc' });
+      expect(mockRepository.update).toHaveBeenCalledWith('cfg-1', inputData);
       expect(auditService.log).toHaveBeenCalledWith(
         expect.objectContaining({
           userId,
@@ -141,6 +147,26 @@ describe('Admin Singleton Handlers', () => {
           resourceId: 'cfg-1',
         })
       );
+    });
+
+    it('should create the singleton row when one does not exist yet', async () => {
+      setupAuth('admin');
+      const inputData = { site_name: 'First Sungava' };
+      const createdData = { id: 'cfg-1', ...inputData };
+
+      mockUpdateSchema.parse.mockReturnValue(inputData);
+      mockRepository.findAll.mockResolvedValue([]);
+      mockRepository.create.mockResolvedValue(createdData);
+
+      const response = await handlers.PUT(
+        createAuthenticatedRequest('/api/admin/site-config', {
+          method: 'PUT',
+          body: inputData,
+        })
+      );
+
+      expect(response.status).toBe(200);
+      expect(mockRepository.create).toHaveBeenCalledWith(inputData);
     });
 
     it('should return 400 on validation error (ZodError)', async () => {

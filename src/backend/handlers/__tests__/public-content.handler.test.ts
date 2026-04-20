@@ -39,7 +39,7 @@ describe('Public Content Handlers', () => {
       const body = await response.json();
 
       expect(mockRepo.findSingleton).toHaveBeenCalledWith('en');
-      expect(body).toEqual({ id: '1', school_name: 'Test School' });
+      expect(body).toEqual({ id: '1', schoolName: 'Test School' });
     });
 
     it('should default to en when no lang provided', async () => {

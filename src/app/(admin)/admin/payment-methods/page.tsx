@@ -11,8 +11,9 @@ const COLUMNS: ColumnDef[] = [
 
 const FIELDS: FieldConfig[] = [
   { name: 'name', label: 'Name', type: 'bilingual-input', required: true },
-  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'khalti or esewa' },
-  { name: 'color', label: 'Color', type: 'text', placeholder: '#7c3aed or bg-purple-600' },
+  { name: 'icon', label: 'Icon', type: 'text', placeholder: 'khalti, esewa, wallet, credit-card, smartphone, banknote, landmark' },
+  { name: 'color', label: 'Icon Color', type: 'text', placeholder: '#7c3aed or text-emerald-600' },
+  { name: 'qr_code_url', label: 'QR Card Image', type: 'image-url' },
   {
     name: 'steps',
     label: 'Steps',
@@ -29,6 +30,10 @@ const PaymentMethodsPage = () => (
     title="Payment Methods"
     apiPath="/api/admin/payment-methods"
     columns={COLUMNS}
+    defaultSortBy="sort_order"
+    defaultSortOrder="asc"
+    manualOrder
+    fetchLimit={100}
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

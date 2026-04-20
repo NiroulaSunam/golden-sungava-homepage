@@ -10,6 +10,7 @@ export type PaymentMethod = {
   name: string;
   icon: string;
   color: string;
+  qrCodeUrl?: string;
   steps: string[];
 };
 
@@ -19,7 +20,8 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
       id: 1,
       name: 'Khalti',
       icon: 'khalti',
-      color: 'bg-purple-600',
+      color: '#5c2d91',
+      qrCodeUrl: '/images/placeholder.svg',
       steps: [
         'Open the Khalti app on your phone',
         'Search for "Golden Sungava" or scan the QR code',
@@ -32,7 +34,8 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
       id: 2,
       name: 'eSewa',
       icon: 'esewa',
-      color: 'bg-green-600',
+      color: '#60bb46',
+      qrCodeUrl: '/images/placeholder.svg',
       steps: [
         'Open the eSewa app on your phone',
         'Go to "School Fee Payment" or scan the QR code',
@@ -47,7 +50,8 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
       id: 1,
       name: 'खल्ती',
       icon: 'khalti',
-      color: 'bg-purple-600',
+      color: '#5c2d91',
+      qrCodeUrl: '/images/placeholder.svg',
       steps: [
         'आफ्नो फोनमा खल्ती एप खोल्नुहोस्',
         '"गोल्डेन सुनगाभा" खोज्नुहोस् वा QR कोड स्क्यान गर्नुहोस्',
@@ -60,7 +64,8 @@ export const mockPaymentMethods: Record<string, PaymentMethod[]> = {
       id: 2,
       name: 'इसेवा',
       icon: 'esewa',
-      color: 'bg-green-600',
+      color: '#60bb46',
+      qrCodeUrl: '/images/placeholder.svg',
       steps: [
         'आफ्नो फोनमा इसेवा एप खोल्नुहोस्',
         '"स्कुल फी पेमेन्ट" मा जानुहोस् वा QR कोड स्क्यान गर्नुहोस्',

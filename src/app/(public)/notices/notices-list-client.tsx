@@ -16,21 +16,23 @@ interface NoticeCardProps {
 }
 
 const NoticeCard = ({ notice }: NoticeCardProps) => (
-  <div className="card-gold-accent flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:shadow-md">
-    <div className="shrink-0 rounded-lg bg-primary/10 p-3">
-      <FileText className="h-5 w-5 text-primary" />
+  <div className="card-gold-accent flex items-start gap-3 rounded-lg border border-border bg-card p-3.5 transition-all hover:shadow-md">
+    <div className="shrink-0 rounded-lg bg-primary/10 p-2.5">
+      <FileText className="h-4.5 w-4.5 text-primary" />
     </div>
     <div className="min-w-0 flex-1">
-      <h3 className="font-heading text-base font-semibold">{notice.title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">{notice.excerpt}</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <h3 className="font-heading text-[15px] font-semibold leading-snug">{notice.title}</h3>
+        <time className="text-[11px] text-muted-foreground">{notice.date}</time>
+      </div>
+      <p className="mt-1.5 line-clamp-2 text-[13px] leading-relaxed text-muted-foreground">{notice.excerpt}</p>
       <div className="mt-2 flex items-center gap-4">
-        <time className="text-xs text-muted-foreground">{notice.date}</time>
         {notice.pdfUrl && (
           <a
             href={notice.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline"
           >
             <Download className="h-3 w-3" />
             PDF

@@ -61,6 +61,7 @@ const SiteConfigPage = () => {
   const handleSubmit = form.handleSubmit(async (values) => {
     const payload = {
       ...values,
+      established_year: Number.isFinite(values.established_year) ? values.established_year : null,
       phones: phonesInput.split(',').map((item) => item.trim()).filter(Boolean),
       emails: emailsInput.split(',').map((item) => item.trim()).filter(Boolean),
       google_maps_embed: googleMapsEmbed.trim(),
@@ -81,6 +82,8 @@ const SiteConfigPage = () => {
     } else {
       toast.success('Site config saved');
     }
+  }, () => {
+    toast.error('Please fix the invalid fields before saving.');
   });
 
   if (!loaded) {

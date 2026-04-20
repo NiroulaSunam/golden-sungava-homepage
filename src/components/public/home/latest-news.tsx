@@ -28,8 +28,8 @@ export const LatestNews = ({ news, subtitle }: LatestNewsProps) => {
           viewAllHref="/news"
           viewAllLabel={t('action.viewAll')}
         />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {newsItems.slice(0, 6).map((article, i) => (
+        <div className="grid gap-6 lg:grid-cols-3">
+          {newsItems.slice(0, 3).map((article) => (
             <ContentCard
               key={article.id}
               title={article.title}
@@ -37,7 +37,6 @@ export const LatestNews = ({ news, subtitle }: LatestNewsProps) => {
               imageUrl={article.imageUrl}
               date={article.date}
               excerpt={article.excerpt}
-              featured={i === 0}
             />
           ))}
         </div>

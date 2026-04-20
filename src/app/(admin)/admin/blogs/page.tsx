@@ -25,6 +25,8 @@ const BlogsPage = () => (
     title="Blogs"
     apiPath="/api/admin/blogs"
     columns={COLUMNS}
+    defaultSortBy="date"
+    defaultSortOrder="desc"
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

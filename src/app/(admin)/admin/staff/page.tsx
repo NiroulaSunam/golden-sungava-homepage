@@ -24,6 +24,10 @@ const StaffPage = () => (
     apiPath="/api/admin/staff"
     columns={COLUMNS}
     showStatus={false}
+    defaultSortBy="sort_order"
+    defaultSortOrder="asc"
+    manualOrder
+    fetchLimit={100}
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

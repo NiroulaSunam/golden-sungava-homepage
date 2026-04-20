@@ -25,6 +25,7 @@ interface ListingPageProps {
   isLoading?: boolean;
   searchPlaceholder?: string;
   categories?: string[];
+  compactCards?: boolean;
   className?: string;
 }
 
@@ -34,6 +35,7 @@ export const ListingPage = ({
   isLoading = false,
   searchPlaceholder = 'Search...',
   categories = [],
+  compactCards = false,
   className,
 }: ListingPageProps) => {
   const [search, setSearch] = useState('');
@@ -152,6 +154,7 @@ export const ListingPage = ({
               date={item.date}
               excerpt={item.excerpt}
               author={item.author}
+              compact={compactCards}
             />
           ))}
         </div>

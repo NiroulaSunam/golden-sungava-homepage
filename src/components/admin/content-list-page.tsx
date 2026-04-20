@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Pencil, Trash2, Search, Eye, RotateCcw } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Eye, RotateCcw, ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +28,10 @@ interface ContentListPageProps {
   apiPath: string;
   columns: ColumnDef[];
   showStatus?: boolean;
+  defaultSortBy?: string;
+  defaultSortOrder?: 'asc' | 'desc';
+  manualOrder?: boolean;
+  fetchLimit?: number;
   /** Field configs for the preview dialog — when provided, shows a view (eye) button */
   previewFields?: FieldConfig[];
   renderForm: (props: {
@@ -48,6 +52,10 @@ export const ContentListPage = ({
   apiPath,
   columns,
   showStatus = true,
+  defaultSortBy,
+  defaultSortOrder,
+  manualOrder = false,
+  fetchLimit,
   previewFields,
   renderForm,
 }: ContentListPageProps) => {
@@ -64,11 +72,17 @@ export const ContentListPage = ({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showDeleted, setShowDeleted] = useState(false);
   const [isRestoringId, setIsRestoringId] = useState<string | null>(null);
+  const [movingItemId, setMovingItemId] = useState<string | null>(null);
 
   const fetchItems = useCallback(async () => {
-    const params = new URLSearchParams({ page: String(page), limit: String(PAGINATION_CONFIG.DEFAULT_PAGE_SIZE) });
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(fetchLimit ?? PAGINATION_CONFIG.DEFAULT_PAGE_SIZE),
+    });
     if (search) params.set('search', search);
     if (showDeleted) params.set('includeDeleted', 'true');
+    if (defaultSortBy) params.set('sortBy', defaultSortBy);
+    if (defaultSortOrder) params.set('sortOrder', defaultSortOrder);
 
     const { data, error } = await adminFetch<ListResponse>(`${apiPath}?${params}`);
     if (data) {
@@ -81,7 +95,7 @@ export const ContentListPage = ({
     if (error) {
       setLoadError(error);
     }
-  }, [adminFetch, apiPath, page, search, showDeleted]);
+  }, [adminFetch, apiPath, defaultSortBy, defaultSortOrder, fetchLimit, page, search, showDeleted]);
 
   useEffect(() => {
     fetchItems();
@@ -133,6 +147,41 @@ export const ContentListPage = ({
     setFormOpen(false);
     setEditItem(null);
     fetchItems();
+  };
+
+  const handleMove = async (itemId: string, direction: 'up' | 'down') => {
+    const currentIndex = items.findIndex((item) => String(item.id) === itemId);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+
+    const currentItem = items[currentIndex];
+    const targetItem = items[targetIndex];
+    const currentOrder = typeof currentItem.sort_order === 'number' ? currentItem.sort_order : currentIndex;
+    const targetOrder = typeof targetItem.sort_order === 'number' ? targetItem.sort_order : targetIndex;
+
+    setMovingItemId(itemId);
+
+    const [currentResponse, targetResponse] = await Promise.all([
+      adminFetch(`${apiPath}?id=${currentItem.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ sort_order: targetOrder }),
+      }),
+      adminFetch(`${apiPath}?id=${targetItem.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ sort_order: currentOrder }),
+      }),
+    ]);
+
+    if (currentResponse.error || targetResponse.error) {
+      toast.error(currentResponse.error || targetResponse.error || 'Failed to update order');
+    } else {
+      toast.success('Display order updated');
+      fetchItems();
+    }
+
+    setMovingItemId(null);
   };
 
   const handleEdit = (item: Record<string, unknown>) => {
@@ -195,7 +244,7 @@ export const ContentListPage = ({
                 <TableHead key={col.key}>{col.label}</TableHead>
               ))}
               {showStatus && <TableHead className="w-16">Status</TableHead>}
-              <TableHead className="w-28">Actions</TableHead>
+              <TableHead className="w-36">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -242,6 +291,28 @@ export const ContentListPage = ({
                         </Button>
                       ) : (
                         <>
+                          {manualOrder && !search && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleMove(String(item.id), 'up')}
+                                disabled={movingItemId === String(item.id) || items[0] === item}
+                                title="Move Up"
+                              >
+                                <ChevronUp className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleMove(String(item.id), 'down')}
+                                disabled={movingItemId === String(item.id) || items[items.length - 1] === item}
+                                title="Move Down"
+                              >
+                                <ChevronDown className="h-3.5 w-3.5" />
+                              </Button>
+                            </>
+                          )}
                           <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>

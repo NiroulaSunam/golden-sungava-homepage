@@ -11,6 +11,7 @@ interface ContentCardProps {
   excerpt?: string;
   author?: string;
   featured?: boolean;
+  compact?: boolean;
   className?: string;
 }
 
@@ -22,6 +23,7 @@ export const ContentCard = ({
   excerpt,
   author,
   featured = false,
+  compact = false,
   className,
 }: ContentCardProps) => {
   return (
@@ -35,7 +37,11 @@ export const ContentCard = ({
     >
       <div className={cn(
         'relative overflow-hidden',
-        featured ? 'aspect-[16/10] sm:aspect-auto sm:w-1/2' : 'aspect-[16/10]',
+        featured
+          ? 'aspect-[16/10] sm:aspect-auto sm:w-1/2'
+          : compact
+            ? 'aspect-[16/8.5]'
+            : 'aspect-[16/10]',
       )}>
         <ImageWithFallback
           src={imageUrl}
@@ -51,7 +57,8 @@ export const ContentCard = ({
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       </div>
       <div className={cn(
-        'flex flex-1 flex-col p-5',
+        'flex flex-1 flex-col',
+        compact ? 'p-4' : 'p-5',
         featured && 'sm:justify-center sm:p-8',
       )}>
         <div className="flex flex-wrap items-center gap-3">
@@ -70,19 +77,23 @@ export const ContentCard = ({
         </div>
         <h3 className={cn(
           'mt-2 line-clamp-2 font-heading font-bold text-card-foreground transition-colors group-hover:text-primary',
-          featured ? 'text-xl md:text-2xl' : 'text-lg',
+          featured ? 'text-xl md:text-2xl' : compact ? 'text-base' : 'text-lg',
         )}>
           {title}
         </h3>
         {excerpt && (
           <p className={cn(
-            'mt-2.5 text-sm leading-relaxed text-muted-foreground',
+            'leading-relaxed text-muted-foreground',
+            compact ? 'mt-2 text-[13px] line-clamp-2' : 'mt-2.5 text-sm',
             featured ? 'line-clamp-3' : 'line-clamp-2',
           )}>
             {excerpt}
           </p>
         )}
-        <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100">
+        <span className={cn(
+          'mt-auto inline-flex items-center gap-1 font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100',
+          compact ? 'pt-3 text-xs' : 'pt-4 text-sm',
+        )}>
           Read more &rarr;
         </span>
       </div>

@@ -31,14 +31,15 @@ export const createPublicSingletonHandler = <TInsert, TSelect extends Record<str
 };
 
 export const createPublicListHandler = <TInsert, TSelect extends Record<string, unknown>>(
-  repository: ContentRepository<TInsert, TSelect>
+  repository: ContentRepository<TInsert, TSelect>,
+  sortOptions: { sortBy?: string; sortOrder?: 'asc' | 'desc' } = {}
 ) => {
   return async (request: NextRequest): Promise<NextResponse> => {
     try {
       const lang = parseLang(request);
       const result = await repository.findPublished(lang, {
-        sortBy: SORT_DEFAULTS.COLUMN,
-        sortOrder: SORT_DEFAULTS.ORDER,
+        sortBy: sortOptions.sortBy ?? SORT_DEFAULTS.COLUMN,
+        sortOrder: sortOptions.sortOrder ?? SORT_DEFAULTS.ORDER,
         limit: PAGINATION_CONFIG.MAX_PAGE_SIZE,
       });
 
@@ -53,7 +54,8 @@ export const createPublicListHandler = <TInsert, TSelect extends Record<string, 
 };
 
 export const createPublicPaginatedHandler = <TInsert, TSelect extends Record<string, unknown>>(
-  repository: ContentRepository<TInsert, TSelect>
+  repository: ContentRepository<TInsert, TSelect>,
+  sortOptions: { sortBy?: string; sortOrder?: 'asc' | 'desc' } = {}
 ) => {
   return async (request: NextRequest): Promise<NextResponse> => {
     try {
@@ -70,8 +72,8 @@ export const createPublicPaginatedHandler = <TInsert, TSelect extends Record<str
       const result = await repository.findPublished(lang, {
         page,
         limit,
-        sortBy: SORT_DEFAULTS.COLUMN,
-        sortOrder: SORT_DEFAULTS.ORDER,
+        sortBy: sortOptions.sortBy ?? SORT_DEFAULTS.COLUMN,
+        sortOrder: sortOptions.sortOrder ?? SORT_DEFAULTS.ORDER,
       });
 
       // Transform all rows from snake_case to camelCase

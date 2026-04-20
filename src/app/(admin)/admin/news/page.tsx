@@ -24,6 +24,8 @@ const NewsPage = () => (
     title="News"
     apiPath="/api/admin/news"
     columns={COLUMNS}
+    defaultSortBy="date"
+    defaultSortOrder="desc"
     previewFields={FIELDS}
     renderForm={({ open, onClose, editItem, onSuccess }) => (
       <ContentFormDialog

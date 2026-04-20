@@ -19,8 +19,8 @@ export const handleGetGalleryEvents = async (request: NextRequest): Promise<Next
     const result = await galleryEventsRepository.findWithMedia(lang, {
       page,
       limit,
-      sortBy: SORT_DEFAULTS.COLUMN,
-      sortOrder: SORT_DEFAULTS.ORDER,
+      sortBy: 'date',
+      sortOrder: 'desc',
     });
 
     // Transform all rows from snake_case to camelCase, rename gallery_photos/videos to photos/videos

@@ -48,6 +48,8 @@ const PrincipalMessagePage = () => {
     } else {
       toast.success('Principal message saved');
     }
+  }, () => {
+    toast.error('Please fix the invalid fields before saving.');
   });
 
   if (!loaded) {

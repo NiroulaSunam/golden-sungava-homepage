@@ -38,7 +38,7 @@ export const BlogsListClient = () => {
         breadcrumbs={[{ label: t('heading.blogs'), href: '/blogs' }]}
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-        <ListingPage items={items} basePath="/blogs" isLoading={isLoading} searchPlaceholder={t('action.search')} />
+        <ListingPage items={items} basePath="/blogs" isLoading={isLoading} searchPlaceholder={t('action.search')} compactCards />
       </div>
     </>
   );

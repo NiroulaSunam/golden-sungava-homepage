@@ -17,6 +17,7 @@ export const newsCreateSchema = z.object({
   image_url: z.string().nullable().optional(),
   category: z.string().nullable().optional(),
   content: bilingualOptional,
+  sort_order: z.number().optional(),
 });
 export const newsUpdateSchema = newsCreateSchema.partial();
 
@@ -28,6 +29,7 @@ export const eventsCreateSchema = z.object({
   venue: bilingualOptional,
   description: bilingualOptional,
   image_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const eventsUpdateSchema = eventsCreateSchema.partial();
 
@@ -40,6 +42,7 @@ export const blogsCreateSchema = z.object({
   excerpt: bilingualOptional,
   image_url: z.string().nullable().optional(),
   content: bilingualOptional,
+  sort_order: z.number().optional(),
 });
 export const blogsUpdateSchema = blogsCreateSchema.partial();
 
@@ -49,6 +52,7 @@ export const noticesCreateSchema = z.object({
   date: z.string(),
   excerpt: bilingualOptional,
   pdf_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const noticesUpdateSchema = noticesCreateSchema.partial();
 
@@ -59,6 +63,7 @@ export const staffCreateSchema = z.object({
   department: z.string().min(1),
   email: z.string().email().nullable().optional(),
   photo_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const staffUpdateSchema = staffCreateSchema.partial();
 
@@ -68,6 +73,7 @@ export const facilitiesCreateSchema = z.object({
   description: bilingualOptional,
   image_url: z.string().nullable().optional(),
   icon: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const facilitiesUpdateSchema = facilitiesCreateSchema.partial();
 
@@ -76,6 +82,7 @@ export const activitiesCreateSchema = z.object({
   name: bilingual,
   description: bilingualOptional,
   image_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const activitiesUpdateSchema = activitiesCreateSchema.partial();
 
@@ -85,6 +92,7 @@ export const testimonialsCreateSchema = z.object({
   author_name: bilingual,
   role: z.string().nullable().optional(),
   photo_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const testimonialsUpdateSchema = testimonialsCreateSchema.partial();
 
@@ -92,6 +100,7 @@ export const testimonialsUpdateSchema = testimonialsCreateSchema.partial();
 export const faqsCreateSchema = z.object({
   question: bilingual,
   answer: bilingual,
+  sort_order: z.number().optional(),
 });
 export const faqsUpdateSchema = faqsCreateSchema.partial();
 
@@ -102,6 +111,7 @@ export const heroSlidesCreateSchema = z.object({
   image_url: z.string().nullable().optional(),
   cta_text: bilingualOptional,
   cta_link: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const heroSlidesUpdateSchema = heroSlidesCreateSchema.partial();
 
@@ -110,6 +120,7 @@ export const navigationCreateSchema = z.object({
   label: bilingual,
   href: z.string().min(1),
   parent_id: z.string().uuid().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const navigationUpdateSchema = navigationCreateSchema.partial();
 
@@ -118,6 +129,7 @@ export const admissionStepsCreateSchema = z.object({
   icon: z.string().nullable().optional(),
   title: bilingual,
   description: bilingualOptional,
+  sort_order: z.number().optional(),
 });
 export const admissionStepsUpdateSchema = admissionStepsCreateSchema.partial();
 
@@ -131,7 +143,9 @@ export const paymentMethodsCreateSchema = z.object({
   name: bilingual,
   icon: z.string().nullable().optional(),
   color: z.string().nullable().optional(),
+  qr_code_url: z.string().nullable().optional(),
   steps: bilingualSteps,
+  sort_order: z.number().optional(),
 });
 export const paymentMethodsUpdateSchema = paymentMethodsCreateSchema.partial();
 
@@ -140,6 +154,7 @@ export const galleryEventsCreateSchema = z.object({
   name: bilingual,
   date: z.string(),
   cover_url: z.string().nullable().optional(),
+  sort_order: z.number().optional(),
 });
 export const galleryEventsUpdateSchema = galleryEventsCreateSchema.partial();
 

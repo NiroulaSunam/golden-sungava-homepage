@@ -1,19 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { QrCode } from 'lucide-react';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { Banknote, CreditCard, Landmark, QrCode, Smartphone, Wallet } from 'lucide-react';
 import { EsewaIcon, KhaltiIcon } from '@/components/shared/brand-icons';
 import { PageHeader } from '@/components/shared/page-header';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { fetchApi } from '@/lib/api/client';
-import { toKebabCase } from '@/lib/utils';
+import { cn, normalizeImageUrl, toKebabCase } from '@/lib/utils';
 import type { PaymentMethod as PaymentMethodType } from '@/types/api';
+import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 
 // Icon map for CMS-driven payment methods
 const paymentIconMap: Record<string, React.FC<{ className?: string }>> = {
   khalti: KhaltiIcon,
   esewa: EsewaIcon,
+  wallet: Wallet,
+  'credit-card': CreditCard,
+  smartphone: Smartphone,
+  banknote: Banknote,
+  landmark: Landmark,
 };
 
 // --- Sub-component ---
@@ -24,19 +30,43 @@ interface PaymentMethodCardProps {
 
 const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
   const Icon = paymentIconMap[toKebabCase(method.icon)] || KhaltiIcon;
-  const colorStyle = method.color?.startsWith('#') ? { backgroundColor: method.color } : undefined;
-  const colorClassName = colorStyle ? '' : method.color;
+  const hasInlineColor = typeof method.color === 'string'
+    && /^(#|rgb|hsl|oklch|oklab)/i.test(method.color.trim());
+  const iconStyle: CSSProperties | undefined = hasInlineColor ? { color: method.color.trim() } : undefined;
+  const iconClassName = hasInlineColor ? '' : method.color;
   const steps = Array.isArray(method.steps) ? method.steps.filter((step): step is string => typeof step === 'string' && step.trim().length > 0) : [];
 
   return (
     <div className="card-gold-accent rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md">
       <div className="flex items-center gap-3">
-        <div className={`rounded-lg p-3 ${colorClassName}`} style={colorStyle}>
-          <Icon className="h-6 w-6 text-white" />
+        <div className="rounded-lg border border-border bg-muted/50 p-3">
+          <span className="block" style={iconStyle}>
+            <Icon className={cn('h-6 w-6', iconClassName)} />
+          </span>
         </div>
         <h2 className="font-heading text-xl font-semibold">{method.name}</h2>
       </div>
-      <ol className="mt-4 space-y-2">
+
+      <div className="mt-6 overflow-hidden rounded-xl border border-dashed border-border bg-muted/40">
+        {method.qrCodeUrl ? (
+          <div className="relative aspect-[4/5] w-full">
+            <ImageWithFallback
+              src={normalizeImageUrl(method.qrCodeUrl)}
+              alt={`${method.name} QR code`}
+              fill
+              className="object-contain p-4"
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          </div>
+        ) : (
+          <div className="flex min-h-72 flex-col items-center justify-center gap-2 p-8 text-muted-foreground">
+            <QrCode className="h-16 w-16" />
+            <p className="text-sm">QR card not added yet.</p>
+          </div>
+        )}
+      </div>
+
+      <ol className="mt-6 space-y-3">
         {steps.length > 0 ? (
           steps.map((step, i) => (
             <li key={i} className="flex gap-3 text-sm text-muted-foreground">
@@ -48,12 +78,6 @@ const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
           <li className="text-sm text-muted-foreground">Payment instructions have not been added yet.</li>
         )}
       </ol>
-      <div className="mt-6 flex items-center justify-center rounded-lg bg-muted p-8">
-        <div className="flex flex-col items-center gap-2 text-muted-foreground">
-          <QrCode className="h-16 w-16" />
-          <p className="text-sm">QR Code</p>
-        </div>
-      </div>
     </div>
   );
 };

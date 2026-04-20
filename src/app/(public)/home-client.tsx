@@ -15,6 +15,7 @@ import {
   BlogPreview,
   TestimonialsCarousel,
 } from '@/components/public/home';
+import { UpcomingAnnouncement } from '@/components/public/layout';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { cn } from '@/lib/utils';
 
@@ -93,6 +94,7 @@ export const HomePageClient = () => {
 
   return (
     <>
+      <UpcomingAnnouncement />
       <HeroCarousel slides={data.heroSlides} accentText={config?.heroAccentText ?? ''} />
 
       <StatsCounter />

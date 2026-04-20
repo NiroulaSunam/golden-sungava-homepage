@@ -147,6 +147,8 @@ export abstract class ContentRepository<TInsert, TSelect> extends BaseRepository
     const { data, error } = await this.db
       .from(this.tableName)
       .select(selectStr)
+      .is('deleted_at', null)
+      .order('updated_at', { ascending: false })
       .limit(1)
       .single();
 

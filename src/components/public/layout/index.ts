@@ -3,3 +3,4 @@ export { MobileDrawer } from './mobile-drawer';
 export { Footer } from './footer';
 export { FloatingCTA } from './floating-cta';
 export { LanguageSwitcher } from './language-switcher';
+export { UpcomingAnnouncement } from './upcoming-announcement';

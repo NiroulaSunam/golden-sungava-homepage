@@ -76,7 +76,7 @@ export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
           viewAllLabel={t('action.viewAll')}
         />
         <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
-          {eventsList.slice(0, 6).map((event) => (
+          {eventsList.slice(0, 4).map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>

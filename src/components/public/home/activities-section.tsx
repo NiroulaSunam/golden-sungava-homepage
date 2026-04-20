@@ -64,7 +64,7 @@ export const ActivitiesSection = ({ activities, subtitle }: ActivitiesSectionPro
           viewAllLabel={t('action.viewAll')}
         />
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4">
-          {activitiesList.slice(0, 8).map((activity) => (
+          {activitiesList.slice(0, 4).map((activity) => (
             <div key={activity.id} className="min-w-[240px] snap-start md:min-w-0">
               <ActivityCard activity={activity} />
             </div>
