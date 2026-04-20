@@ -1,18 +1,15 @@
 /**
  * CMS Constants
  * Content status values, audit actions, and PostgREST error codes.
- * Status values sourced from database.gen.ts enums.
  */
-
-import { Constants } from '@/types/database.gen';
 
 /**
  * Content status enum values from the database.
  * Use these instead of raw 'draft' / 'published' strings.
  */
 export const CONTENT_STATUS = {
-  DRAFT: Constants.public.Enums.content_status[0],   // 'draft'
-  PUBLISHED: Constants.public.Enums.content_status[1], // 'published'
+  DRAFT: 'draft',
+  PUBLISHED: 'published',
 } as const;
 
 /**

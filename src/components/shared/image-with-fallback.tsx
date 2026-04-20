@@ -2,7 +2,7 @@
 
 import { useState, type SyntheticEvent } from 'react';
 import Image, { type ImageProps } from 'next/image';
-import { isRemoteImageUrl, normalizeImageUrl } from '@/lib/utils';
+import { isBlockedRemoteImageUrl, isRemoteImageUrl, normalizeImageUrl } from '@/lib/utils';
 
 const DEFAULT_FALLBACK = '/images/placeholder.svg';
 
@@ -28,8 +28,9 @@ export const ImageWithFallback = ({
     : props.src;
 
   const normalizedFallback = normalizeImageUrl(fallbackSrc);
+  const shouldForceFallback = typeof requestedSrc === 'string' && isBlockedRemoteImageUrl(requestedSrc);
 
-  const resolvedSrc = hasError
+  const resolvedSrc = hasError || shouldForceFallback
     ? normalizedFallback
     : requestedSrc && requestedSrc !== ''
     ? requestedSrc

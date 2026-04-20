@@ -8,6 +8,10 @@ const GOOGLE_DRIVE_FILE_PATTERNS = [
   /[?&]id=([^&]+)/,
 ];
 
+const BLOCKED_REMOTE_IMAGE_PATTERNS = [
+  /:\/\/s3\.veda-app\.com\/veda-app-private\//i,
+];
+
 /**
  * Get acronym/short name from a full name.
  * e.g., "Golden Sungava English Boarding School" → "GSEBS"
@@ -47,6 +51,10 @@ export const normalizeImageUrl = (url?: string | null): string => {
   const trimmed = url.trim();
   if (!trimmed) return '';
 
+  if (/goldenlogo\.svg$/i.test(trimmed)) {
+    return '/images/goldenlogo.svg';
+  }
+
   if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.startsWith('/')) {
     return trimmed;
   }
@@ -68,11 +76,24 @@ export const isRemoteImageUrl = (url?: string | null): boolean => {
   return normalized.startsWith('http://') || normalized.startsWith('https://');
 };
 
+export const isBlockedRemoteImageUrl = (url?: string | null): boolean => {
+  if (!url) return false;
+
+  const normalized = normalizeImageUrl(url);
+  if (!normalized) return false;
+
+  return BLOCKED_REMOTE_IMAGE_PATTERNS.some((pattern) => pattern.test(normalized));
+};
+
 export const isRenderableImageSrc = (url?: string | null): boolean => {
   if (!url) return false;
 
   const normalized = normalizeImageUrl(url);
   if (!normalized) return false;
+
+  if (isBlockedRemoteImageUrl(normalized)) {
+    return false;
+  }
 
   if (
     normalized.startsWith('/') ||
