@@ -31,7 +31,7 @@ const sharedDefaults = {
     accentForeground: '#F7FAFD',
   },
   currency: 'NPR',
-  languages: ['en', 'np'] as const,
+  languages: ['en', 'np'],
   admissionMode: 'external' as const,
   admissionExternalUrl: 'https://ingrails.com/school/admission/form/golden-sungava-school',
 };
