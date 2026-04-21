@@ -31,13 +31,15 @@ interface PaymentMethodCardProps {
 }
 
 const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const Icon = paymentIconMap[toKebabCase(method.icon)] || KhaltiIcon;
   const hasInlineColor = typeof method.color === 'string'
     && /^(#|rgb|hsl|oklch|oklab)/i.test(method.color.trim());
   const iconStyle: CSSProperties | undefined = hasInlineColor ? { color: method.color.trim() } : undefined;
   const iconClassName = hasInlineColor ? '' : method.color;
-  const steps = Array.isArray(method.steps) ? method.steps.filter((step): step is string => typeof step === 'string' && step.trim().length > 0) : [];
+  const steps = method.steps && typeof method.steps === 'object' && lang in method.steps 
+    ? (method.steps as Record<string, string[]>)[lang].filter((step: string) => typeof step === 'string' && step.trim().length > 0)
+    : [];
 
   return (
     <div className="card-gold-accent rounded-xl border border-border bg-card p-6 transition-all hover:shadow-md">
