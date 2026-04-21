@@ -1,80 +1,126 @@
 # Golden Sungava Homepage
 
-## Admission Form Routing
+Next.js school website with Supabase-backed CMS, admin panel, and public pages.
 
-The admission flow can now be switched between the built-in website form and the external Ingrails form.
+## Requirements
 
-Where to change it:
-- Admin panel: `Site Config`
-- Field: `Admission Form Destination`
-- Field: `External Admission URL`
+- Node.js 20+
+- pnpm
+- Supabase CLI
 
-How it behaves:
-- `Use website admission form`:
-  All admission buttons go to `/admission`
-- `Send users to external admission form`:
-  All admission buttons go to the external URL
-  Visiting `/admission` also redirects to that external URL
+## Clone And Install
 
-Current external URL:
-- `https://ingrails.com/school/admission/form/golden-sungava-school`
+```bash
+git clone <your-repo-url>
+cd golden-sungava-homepage
+pnpm install
+```
 
-Important:
-- If you change the destination in admin, save the Site Config change
-- The code default is currently set to the external Ingrails URL
+## Environment Variables
 
-## Downloads CMS
+Create `.env.local` and set:
 
-Downloads is now a real CMS-backed content type instead of placeholder templates.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-Where to manage it:
-- Admin panel: `Downloads`
+## Run The App
 
-Each download item supports:
-- `Title`
-- `Description`
-- `File URL`
-- manual order
+```bash
+pnpm dev
+```
 
-How it behaves:
-- Downloads are shown on `/downloads`
-- Each item opens the file URL directly
-- Unlike notices, downloads do not use a date
-- Downloads must be published before they appear on the live website
+Open [http://localhost:3000](http://localhost:3000).
 
-Publishing downloads:
-- Create or edit the item in admin
-- Then use the global `Publish` button in the admin top bar
-- Downloads are included in the publish flow only after the latest migration is applied
+## Local Supabase
 
-## Required Supabase Migration
+Start local Supabase:
 
-Apply this migration so the new admission toggle and downloads work correctly:
+```bash
+pnpm sb:start
+```
 
-- `supabase/migrations/20260420143000_add_admission_toggle_and_downloads.sql`
+Check status:
 
-This migration adds:
-- `site_config.admission_mode`
-- `site_config.admission_external_url`
-- the `downloads` table
-- updated publish functions so download drafts are counted and published
+```bash
+pnpm sb:status
+```
 
-Recommended commands:
+Stop local Supabase:
+
+```bash
+pnpm sb:stop
+```
+
+## Database Migrations
+
+Apply local migrations:
+
+```bash
+pnpm db:migrate
+```
+
+Reset local database:
+
+```bash
+pnpm db:reset
+```
+
+Push migrations to linked cloud project:
 
 ```bash
 pnpm sb:login
 export SUPABASE_PROJECT_ID=your_project_ref
 pnpm sb:link
 pnpm db:push
+```
+
+Generate database types:
+
+```bash
 pnpm db:gen:types
 ```
 
-## Build Note
+## Tests
 
-If you see this error:
-
-```text
-File 'src/types/database.gen.ts' is not a module
+```bash
+pnpm test
+pnpm lint
 ```
 
-make sure `src/types/database.gen.ts` exists and exports the database helper types. This repo now includes a safe fallback version of that file so builds do not fail when generated types have not been refreshed yet.
+## Production Build
+
+```bash
+pnpm build
+pnpm start
+```
+
+## Deployment Notes
+
+Before deploying, make sure:
+
+- the latest Supabase migrations are pushed
+- `src/types/database.gen.ts` exists
+- production env vars are set in Vercel
+
+## Admission Routing
+
+Admission routing is controlled from the admin panel:
+
+- `Admin > Site Config`
+- `Admission Form Destination`
+- `External Admission URL`
+
+Modes:
+
+- `Use website admission form`: admission buttons go to `/admission`
+- `Send users to external admission form`: admission buttons go to the external URL and `/admission` redirects there
+
+Current external URL:
+
+```text
+https://ingrails.com/school/admission/form/golden-sungava-school
+```
