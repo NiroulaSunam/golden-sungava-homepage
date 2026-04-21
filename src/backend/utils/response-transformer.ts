@@ -209,13 +209,13 @@ export const transformContentRow = <T extends Record<string, unknown>>(
   const bilingualFields = [
     'school_name', 'tagline', 'address', 'office_hours', 'name', 'title', 'message',
     'heading', 'subheading', 'cta_text', 'label', 'excerpt', 'content', 'hero_accent_text',
-    'quote', 'author_name', 'description', 'venue', 'caption'
+    'quote', 'author_name', 'description', 'venue', 'caption', 'steps' // steps is bilingual array
   ];
 
   // Fields that contain JSON data and should be parsed (bilingual or not)
   const jsonFields = [
     'social_links', 'theme', 'seo', 'stats', 'footer', 'section_subtitles', 'page_descriptions',
-    'steps', 'author_role', 'role' // Additional JSON-y fields
+    'author_role', 'role' // Additional JSON-y fields
   ];
 
   for (const [key, value] of Object.entries(row)) {
