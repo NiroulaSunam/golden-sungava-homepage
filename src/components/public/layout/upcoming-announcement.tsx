@@ -118,12 +118,12 @@ export const UpcomingAnnouncement = () => {
   };
 
   return (
-    <section className="bg-amber-50/60 py-4">
+    <section className="bg-[#e8eff6] py-3">
       <div className="mx-auto max-w-7xl px-4 lg:px-6">
-        <div className="rounded-2xl border border-amber-200/70 bg-background/85 p-4 shadow-sm">
+        <div className="rounded-2xl border border-[#c5d5e3] bg-white/90 p-4 shadow-[0_12px_26px_rgba(16,40,59,0.08)]">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-amber-100 p-2 text-amber-700">
+              <div className="rounded-xl bg-[#173B58]/8 p-2 text-[#173B58]">
                 <BellRing className="h-4 w-4" />
               </div>
               <div>
@@ -164,19 +164,19 @@ export const UpcomingAnnouncement = () => {
                 <Link
                   key={`${item.kind}-${item.id}`}
                   href={item.href}
-                  className="group rounded-2xl border border-amber-100 bg-amber-50/45 p-4 transition-colors hover:bg-amber-50"
+                  className="group rounded-2xl border border-[#d7e2eb] bg-[#f5f8fb] p-3.5 transition-colors hover:bg-white"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="mt-0.5 rounded-lg bg-background p-2 text-amber-700 shadow-sm">
+                    <div className="mt-0.5 rounded-lg bg-[#173B58]/8 p-2 text-[#173B58] shadow-sm">
                       {item.kind === 'event' ? <CalendarDays className="h-4 w-4" /> : <BellRing className="h-4 w-4" />}
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+                        <span className="rounded-full bg-primary/14 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#173B58]">
                           {kindLabel}
                         </span>
-                        <span className="text-xs font-medium text-amber-700">{timingLabel}</span>
+                        <span className="text-xs font-medium text-primary-dark">{timingLabel}</span>
                         <span className="text-xs text-muted-foreground">{item.date}</span>
                       </div>
 

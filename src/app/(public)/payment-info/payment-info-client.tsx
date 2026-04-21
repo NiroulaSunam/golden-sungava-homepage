@@ -10,6 +10,8 @@ import { fetchApi } from '@/lib/api/client';
 import { cn, normalizeImageUrl, toKebabCase } from '@/lib/utils';
 import type { PaymentMethod as PaymentMethodType } from '@/types/api';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // Icon map for CMS-driven payment methods
 const paymentIconMap: Record<string, React.FC<{ className?: string }>> = {
@@ -29,6 +31,7 @@ interface PaymentMethodCardProps {
 }
 
 const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
+  const { t } = useLanguage();
   const Icon = paymentIconMap[toKebabCase(method.icon)] || KhaltiIcon;
   const hasInlineColor = typeof method.color === 'string'
     && /^(#|rgb|hsl|oklch|oklab)/i.test(method.color.trim());
@@ -61,7 +64,7 @@ const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
         ) : (
           <div className="flex min-h-72 flex-col items-center justify-center gap-2 p-8 text-muted-foreground">
             <QrCode className="h-16 w-16" />
-            <p className="text-sm">QR card not added yet.</p>
+            <p className="text-sm">{t('misc.qrMissing')}</p>
           </div>
         )}
       </div>
@@ -75,7 +78,7 @@ const PaymentMethodCard = ({ method }: PaymentMethodCardProps) => {
             </li>
           ))
         ) : (
-          <li className="text-sm text-muted-foreground">Payment instructions have not been added yet.</li>
+          <li className="text-sm text-muted-foreground">{t('misc.paymentInstructionsMissing')}</li>
         )}
       </ol>
     </div>
@@ -88,6 +91,12 @@ export const PaymentInfoClient = () => {
   const { lang, t } = useLanguage();
   const { config } = useSiteConfig();
   const [methods, setMethods] = useState<PaymentMethodType[]>([]);
+  const pageSubtitle = resolveLocalizedSiteText(
+    config?.pageDescriptions?.paymentInfo,
+    SITE_DEFAULTS.pageDescriptions.paymentInfo,
+    t('page.paymentDescription'),
+    lang,
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -101,7 +110,7 @@ export const PaymentInfoClient = () => {
     <>
       <PageHeader
         title={t('heading.paymentInfo')}
-        subtitle={config?.pageDescriptions?.paymentInfo || ''}
+        subtitle={pageSubtitle}
         breadcrumbs={[{ label: t('heading.paymentInfo'), href: '/payment-info' }]}
       />
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">

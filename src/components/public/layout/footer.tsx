@@ -7,6 +7,8 @@ import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { getAdmissionHref } from '@/lib/admission';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // --- Sub-components ---
 
@@ -42,7 +44,7 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
 
 export const Footer = () => {
   const { config } = useSiteConfig();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const year = new Date().getFullYear();
 
   // Safe access with fallbacks
@@ -51,13 +53,37 @@ export const Footer = () => {
   const emails = Array.isArray(config?.emails) ? config.emails : [];
   const footer = config?.footer ?? {};
   const admissionHref = getAdmissionHref(config);
+  const ctaHeading = resolveLocalizedSiteText(
+    footer.ctaHeading,
+    SITE_DEFAULTS.footer.ctaHeading,
+    t('footer.ctaHeading'),
+    lang,
+  );
+  const ctaDescription = resolveLocalizedSiteText(
+    footer.ctaDescription,
+    SITE_DEFAULTS.footer.ctaDescription,
+    t('footer.ctaDescription'),
+    lang,
+  );
+  const ctaButtonText = resolveLocalizedSiteText(
+    footer.ctaButtonText,
+    SITE_DEFAULTS.footer.ctaButtonText,
+    t('action.contactUs'),
+    lang,
+  );
+  const footerTagline = resolveLocalizedSiteText(
+    footer.tagline,
+    SITE_DEFAULTS.footer.tagline,
+    t('footer.taglineText'),
+    lang,
+  );
 
   return (
     <footer className="relative">
       {/* Gold gradient top border */}
       <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
 
-      <div className="bg-gradient-to-b from-[#2D2413] to-[#1A1508]">
+      <div className="bg-gradient-to-b from-[#173B58] to-[#10283B]">
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12">
             {/* School Info */}
@@ -72,7 +98,7 @@ export const Footer = () => {
                 />
                 <h3 className="font-heading text-lg font-bold text-white">{config?.schoolName || 'Golden Sungava'}</h3>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-white/50">{config?.tagline || ''}</p>
+              <p className="mt-4 text-sm leading-relaxed text-white/62">{config?.tagline || ''}</p>
 
               {/* Social Links */}
               <div className="mt-6 flex gap-2">
@@ -81,7 +107,7 @@ export const Footer = () => {
                     href={socialLinks.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    className="rounded-lg bg-white/6 p-2.5 text-white/60 transition-all hover:bg-primary/20 hover:text-primary"
                     aria-label="Facebook"
                   >
                     <Facebook className="h-4 w-4" />
@@ -92,7 +118,7 @@ export const Footer = () => {
                     href={`https://wa.me/${socialLinks.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    className="rounded-lg bg-white/6 p-2.5 text-white/60 transition-all hover:bg-primary/20 hover:text-primary"
                     aria-label="WhatsApp"
                   >
                     <WhatsAppIcon className="h-4 w-4" />
@@ -103,7 +129,7 @@ export const Footer = () => {
                     href={socialLinks.messenger}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg bg-white/5 p-2.5 text-white/50 transition-all hover:bg-primary/20 hover:text-primary-light"
+                    className="rounded-lg bg-white/6 p-2.5 text-white/60 transition-all hover:bg-primary/20 hover:text-primary"
                     aria-label="Messenger"
                   >
                     <MessengerIcon className="h-4 w-4" />
@@ -144,15 +170,15 @@ export const Footer = () => {
 
             {/* Newsletter / CTA */}
             <div>
-              <h3 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{footer.ctaHeading || ''}</h3>
-              <p className="text-sm leading-relaxed text-white/50">
-                {footer.ctaDescription || ''}
+              <h3 className="mb-5 text-sm font-bold uppercase tracking-wider text-white">{ctaHeading}</h3>
+              <p className="text-sm leading-relaxed text-white/62">
+                {ctaDescription}
               </p>
               <Link
                 href="/contact"
-                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-xl"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-[#173B58] shadow-[0_14px_30px_rgba(242,195,24,0.32)] transition-all hover:-translate-y-0.5 hover:bg-primary-light"
               >
-                {footer.ctaButtonText || 'Contact Us'}
+                {ctaButtonText}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -165,7 +191,7 @@ export const Footer = () => {
                 &copy; {year} {config?.schoolName || 'Golden Sungava'}. {t('footer.copyright')}
               </p>
               <p className="text-xs text-white/20">
-                {footer.tagline || ''}
+                {footerTagline}
               </p>
             </div>
           </div>

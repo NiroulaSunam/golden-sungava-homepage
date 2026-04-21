@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { Calendar, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/frontend/providers/language-provider';
 import { ImageWithFallback } from './image-with-fallback';
 
 interface ContentCardProps {
@@ -26,6 +29,8 @@ export const ContentCard = ({
   compact = false,
   className,
 }: ContentCardProps) => {
+  const { t } = useLanguage();
+
   return (
     <Link
       href={href}
@@ -40,7 +45,7 @@ export const ContentCard = ({
         featured
           ? 'aspect-[16/10] sm:aspect-auto sm:w-1/2'
           : compact
-            ? 'aspect-[16/8.5]'
+            ? 'aspect-[16/8]'
             : 'aspect-[16/10]',
       )}>
         <ImageWithFallback
@@ -58,7 +63,7 @@ export const ContentCard = ({
       </div>
       <div className={cn(
         'flex flex-1 flex-col',
-        compact ? 'p-4' : 'p-5',
+        compact ? 'p-3.5' : 'p-4',
         featured && 'sm:justify-center sm:p-8',
       )}>
         <div className="flex flex-wrap items-center gap-3">
@@ -84,7 +89,7 @@ export const ContentCard = ({
         {excerpt && (
           <p className={cn(
             'leading-relaxed text-muted-foreground',
-            compact ? 'mt-2 text-[13px] line-clamp-2' : 'mt-2.5 text-sm',
+            compact ? 'mt-1.5 text-[13px] line-clamp-2' : 'mt-2 text-sm',
             featured ? 'line-clamp-3' : 'line-clamp-2',
           )}>
             {excerpt}
@@ -92,9 +97,9 @@ export const ContentCard = ({
         )}
         <span className={cn(
           'mt-auto inline-flex items-center gap-1 font-semibold text-primary opacity-0 transition-opacity group-hover:opacity-100',
-          compact ? 'pt-3 text-xs' : 'pt-4 text-sm',
+          compact ? 'pt-2.5 text-xs' : 'pt-4 text-sm',
         )}>
-          Read more &rarr;
+          {t('action.readMore')} &rarr;
         </span>
       </div>
     </Link>

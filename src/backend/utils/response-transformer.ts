@@ -81,6 +81,34 @@ const parseJsonField = <T>(field: unknown, fallback: T): T => {
   return fallback;
 };
 
+const localizeStructuredField = <T>(field: unknown, lang: string, fallback: T): T => {
+  const parsed = parseJsonField(field, fallback);
+
+  const localizeValue = (value: unknown): unknown => {
+    if (Array.isArray(value)) {
+      return value.map(localizeValue);
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      const obj = value as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const isPureBilingual = keys.length > 0 && keys.every((key) => key === 'en' || key === 'np');
+
+      if (isPureBilingual) {
+        return extractBilingualField(obj, lang);
+      }
+
+      return Object.fromEntries(
+        Object.entries(obj).map(([key, nestedValue]) => [key, localizeValue(nestedValue)])
+      );
+    }
+
+    return value;
+  };
+
+  return localizeValue(parsed) as T;
+};
+
 /**
  * Transform a single site_config row from database format to API format.
  *
@@ -111,13 +139,13 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
       accentColor: '',
       accentForeground: '',
     }),
-    seo: parseJsonField(row.seo, { defaultTitle: '', defaultDescription: '', ogImage: '', keywords: [] }),
+    seo: localizeStructuredField(row.seo, lang, { defaultTitle: '', defaultDescription: '', ogImage: '', keywords: [] }),
     currency: row.currency ?? '',
     languages: row.languages || ['en', 'np'],
     defaultLanguage: row.default_language ?? '',
-    stats: parseJsonField(row.stats, []),
+    stats: localizeStructuredField(row.stats, lang, []),
     heroAccentText: extractBilingualField(row.hero_accent_text, lang) as string,
-    sectionSubtitles: parseJsonField(row.section_subtitles, {
+    sectionSubtitles: localizeStructuredField(row.section_subtitles, lang, {
       facilities: '',
       activities: '',
       latestNews: '',
@@ -125,7 +153,7 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
       blogs: '',
       testimonials: '',
     }),
-    pageDescriptions: parseJsonField(row.page_descriptions, {
+    pageDescriptions: localizeStructuredField(row.page_descriptions, lang, {
       about: '',
       admission: '',
       contact: '',
@@ -138,7 +166,7 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
       downloads: '',
       notices: '',
     }),
-    footer: parseJsonField(row.footer, { ctaHeading: '', ctaDescription: '', ctaButtonText: '', tagline: '' }),
+    footer: localizeStructuredField(row.footer, lang, { ctaHeading: '', ctaDescription: '', ctaButtonText: '', tagline: '' }),
     admissionMode: row.admission_mode === 'external' ? 'external' : 'internal',
     admissionExternalUrl: row.admission_external_url ?? '',
   };

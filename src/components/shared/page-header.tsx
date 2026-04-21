@@ -26,11 +26,11 @@ export const PageHeader = ({ title, subtitle, breadcrumbs, className }: PageHead
         {title}
       </h1>
       <div className="mt-4 flex items-center gap-1.5">
-        <div className="h-[3px] w-10 rounded-full bg-primary-light" />
-        <div className="h-[3px] w-3 rounded-full bg-primary-light/40" />
+        <div className="h-[4px] w-12 rounded-full bg-primary" />
+        <div className="h-[4px] w-4 rounded-full bg-primary/45" />
       </div>
       {subtitle && (
-        <p className="mt-4 max-w-2xl text-base text-white/70 md:text-lg">{subtitle}</p>
+        <p className="mt-4 max-w-2xl text-base text-white/76 md:text-lg">{subtitle}</p>
       )}
     </div>
   </div>

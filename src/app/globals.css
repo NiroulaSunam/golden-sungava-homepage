@@ -10,36 +10,36 @@
 /* ============================================================
    CMS-Ready Color Tokens
    --cms-* variables are overridden at runtime by CmsThemeProvider.
-   Fallback values provide the default Deep Gold theme.
+   Fallback values provide the default Blue + Gold school theme.
    ============================================================ */
 :root {
-  --cms-primary: #B8860B;
-  --cms-primary-light: #D4A017;
-  --cms-primary-dark: #8B6508;
-  --cms-background: #FDFCFA;
-  --cms-foreground: #1A1A1A;
-  --cms-muted: #F5F2EC;
-  --cms-muted-foreground: #5C5549;
-  --cms-accent: #1A1A1A;
-  --cms-accent-foreground: #F5F2EC;
-  --cms-border: #E8E3DA;
-  --cms-ring: #B8860B;
+  --cms-primary: #F2C318;
+  --cms-primary-light: #FFD84D;
+  --cms-primary-dark: #C79400;
+  --cms-background: #F4F7FB;
+  --cms-foreground: #12324A;
+  --cms-muted: #E3EBF4;
+  --cms-muted-foreground: #4B6478;
+  --cms-accent: #173B58;
+  --cms-accent-foreground: #F7FAFD;
+  --cms-border: #C9D7E4;
+  --cms-ring: #F2C318;
   --cms-card: #FFFFFF;
-  --cms-card-foreground: #1A1A1A;
+  --cms-card-foreground: #15344B;
   --cms-destructive: #DC2626;
   --cms-destructive-foreground: #FFFFFF;
 }
 
 .dark {
-  --cms-background: #0F0F0F;
-  --cms-foreground: #F5F2EC;
-  --cms-muted: #1A1A1A;
-  --cms-muted-foreground: #A3A3A3;
-  --cms-accent: #F5F2EC;
-  --cms-accent-foreground: #1A1A1A;
-  --cms-border: #2A2A2A;
-  --cms-card: #141414;
-  --cms-card-foreground: #F5F2EC;
+  --cms-background: #0E2234;
+  --cms-foreground: #F7FAFD;
+  --cms-muted: #17344C;
+  --cms-muted-foreground: #A8BED0;
+  --cms-accent: #F2C318;
+  --cms-accent-foreground: #10273B;
+  --cms-border: #224560;
+  --cms-card: #132C42;
+  --cms-card-foreground: #F7FAFD;
 }
 
 /* ============================================================
@@ -213,11 +213,13 @@ body {
    Gold Gradient Utilities
    ============================================================ */
 .bg-gold-gradient {
-  background: linear-gradient(160deg, var(--cms-primary-dark) 0%, #4A3510 30%, #2D2413 65%, #1A1508 100%);
+  background:
+    radial-gradient(circle at top left, rgba(255, 216, 77, 0.18), transparent 28%),
+    linear-gradient(155deg, #214D6F 0%, #173B58 34%, #12324A 68%, #10283B 100%);
 }
 
 .bg-gold-gradient-subtle {
-  background: linear-gradient(135deg, var(--cms-muted) 0%, #F0EADD 50%, var(--cms-muted) 100%);
+  background: linear-gradient(135deg, #EFF4F9 0%, #E4EDF5 45%, #DCE7F1 100%);
 }
 
 /* ============================================================
@@ -248,12 +250,14 @@ body {
    Card Styles
    ============================================================ */
 .card-gold-accent {
-  border-top: 3px solid transparent;
+  border-top: 4px solid transparent;
+  box-shadow: 0 14px 34px rgba(16, 40, 59, 0.06);
   transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .card-gold-accent:hover {
   border-top-color: var(--cms-primary);
+  box-shadow: 0 18px 38px rgba(16, 40, 59, 0.12);
   transform: translateY(-2px);
 }
 
@@ -319,7 +323,7 @@ body {
    Gradient Text
    ============================================================ */
 .text-gradient-gold {
-  background: linear-gradient(135deg, var(--cms-primary-dark), var(--cms-primary), var(--cms-primary-light));
+  background: linear-gradient(135deg, #fff0a2, var(--cms-primary), #f7aa00);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

@@ -5,6 +5,8 @@ import { SectionHeading } from '@/components/shared/section-heading';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import Link from 'next/link';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // --- Sub-component ---
 
@@ -44,28 +46,34 @@ interface ActivitiesSectionProps {
 }
 
 export const ActivitiesSection = ({ activities, subtitle }: ActivitiesSectionProps) => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const activitiesList = Array.isArray(activities) ? activities : [];
+  const localizedSubtitle = resolveLocalizedSiteText(
+    subtitle,
+    SITE_DEFAULTS.sectionSubtitles.activities,
+    t('home.activitiesSubtitle'),
+    lang,
+  );
 
   if (activitiesList.length === 0) {
     return null;
   }
 
   return (
-    <section className="relative overflow-hidden bg-muted py-16 md:py-24">
+    <section className="relative overflow-hidden bg-muted py-12 md:py-16">
       {/* Decorative background elements */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,var(--cms-primary)_0%,transparent_50%)] opacity-[0.03]" />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.activities')}
-          subtitle={subtitle || 'Nurturing talent beyond the classroom'}
+          subtitle={localizedSubtitle}
           viewAllHref="/activities"
           viewAllLabel={t('action.viewAll')}
         />
-        <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4">
+        <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:pb-0 lg:grid-cols-4">
           {activitiesList.slice(0, 4).map((activity) => (
-            <div key={activity.id} className="min-w-[240px] snap-start md:min-w-0">
+            <div key={activity.id} className="min-w-[220px] snap-start md:min-w-0">
               <ActivityCard activity={activity} />
             </div>
           ))}

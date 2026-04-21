@@ -13,6 +13,8 @@ import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { SkeletonLoader } from '@/components/shared/skeleton-loader';
 import { Lightbox } from '@/components/shared/lightbox';
 import { VideoEmbed } from '@/components/shared/video-embed';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // --- Count Badge ---
 
@@ -37,6 +39,7 @@ interface QuickPreviewProps {
 }
 
 const QuickPreview = ({ event, onClose, onOpenLightbox }: QuickPreviewProps) => {
+  const { t } = useLanguage();
   useScrollLock();
 
   useEffect(() => {
@@ -102,11 +105,8 @@ const QuickPreview = ({ event, onClose, onOpenLightbox }: QuickPreviewProps) => 
 
         {/* View Full Page Link */}
         <div className="mt-4 text-center">
-          <Link
-            href={`/gallery/${event.id}`}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-          >
-            View full event page
+          <Link href={`/gallery/${event.id}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+            {t('misc.viewFullEventPage')}
           </Link>
         </div>
       </div>
@@ -172,6 +172,12 @@ export const GalleryClient = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [previewEvent, setPreviewEvent] = useState<GalleryEvent | null>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const pageSubtitle = resolveLocalizedSiteText(
+    config?.pageDescriptions?.gallery,
+    SITE_DEFAULTS.pageDescriptions.gallery,
+    t('page.galleryDescription'),
+    lang,
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -189,7 +195,7 @@ export const GalleryClient = () => {
     <>
       <PageHeader
         title={t('heading.gallery')}
-        subtitle={config?.pageDescriptions?.gallery || ''}
+        subtitle={pageSubtitle}
         breadcrumbs={[{ label: t('nav.gallery'), href: '/gallery' }]}
       />
 

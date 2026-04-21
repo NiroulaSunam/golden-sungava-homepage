@@ -44,10 +44,10 @@ const DropdownMenu = ({ item, isActive }: DropdownMenuProps) => {
       <button
         type="button"
         className={cn(
-          'flex items-center gap-1 rounded-lg px-3 py-2 text-[13px] font-semibold tracking-wide uppercase transition-all',
+          'flex items-center gap-1 rounded-full px-3.5 py-2 text-[13px] font-semibold tracking-wide uppercase transition-all',
           isActive
-            ? 'text-primary'
-            : 'text-foreground/70 hover:text-foreground hover:bg-muted',
+            ? 'bg-white/10 text-primary'
+            : 'text-white/80 hover:bg-white/8 hover:text-primary',
         )}
       >
         {item.label}
@@ -60,7 +60,7 @@ const DropdownMenu = ({ item, isActive }: DropdownMenuProps) => {
             <Link
               key={child.href}
               href={child.href}
-              className="block rounded-lg px-3.5 py-2.5 text-sm text-foreground/80 transition-all hover:bg-primary/5 hover:text-primary"
+              className="block rounded-lg px-3.5 py-2.5 text-sm text-foreground/80 transition-all hover:bg-[#173B58]/6 hover:text-[#173B58]"
               onClick={() => setIsOpen(false)}
             >
               {child.label}
@@ -83,10 +83,10 @@ const SingleNavLink = ({ item, isActive }: NavLinkProps) => (
   <Link
     href={item.href}
     className={cn(
-      'rounded-lg px-3 py-2 text-[13px] font-semibold tracking-wide uppercase transition-all',
+      'rounded-full px-3.5 py-2 text-[13px] font-semibold tracking-wide uppercase transition-all',
       isActive
-        ? 'text-primary'
-        : 'text-foreground/70 hover:text-foreground hover:bg-muted',
+        ? 'bg-white/10 text-primary'
+        : 'text-white/80 hover:bg-white/8 hover:text-primary',
     )}
   >
     {item.label}
@@ -104,7 +104,7 @@ const InstallButton = () => {
     <button
       type="button"
       onClick={triggerInstall}
-      className="flex items-center gap-1.5 rounded-lg border border-primary/20 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:border-primary/40 hover:bg-primary/5"
+      className="flex items-center gap-1.5 rounded-full border border-white/14 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:border-primary/40 hover:bg-white/8"
       aria-label="Install app"
     >
       <Download className="h-3.5 w-3.5" />
@@ -147,35 +147,39 @@ export const Header = () => {
         className={cn(
           'sticky top-0 z-40 w-full transition-all duration-300',
           isScrolled
-            ? 'border-b border-border/30 bg-background/95 shadow-sm backdrop-blur-xl'
-            : 'bg-background',
+            ? 'bg-background/70 backdrop-blur-xl'
+            : 'bg-transparent',
         )}
       >
-        {/* Top accent line */}
-        <div className="h-[3px] bg-gradient-to-r from-primary-dark via-primary to-primary-light" />
-
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-6">
+        <div className="mx-auto px-2 pt-2 sm:px-4 lg:max-w-7xl lg:px-6">
+          <div
+            className={cn(
+              'flex h-16 items-center justify-between rounded-[1.9rem] border px-4 shadow-[0_16px_38px_rgba(10,32,49,0.14)] lg:h-[92px] lg:px-6',
+              isScrolled
+                ? 'border-white/12 bg-[#143550]/95'
+                : 'border-[#214f72] bg-[#173B58]',
+            )}
+          >
           {/* Logo + School Name */}
           <Link href="/" className="group flex items-center gap-3 shrink-0">
-            <div className="relative">
+            <div className="relative rounded-full border-2 border-primary bg-[#10283B] p-1 shadow-[0_0_0_4px_rgba(255,255,255,0.06)]">
               <ImageWithFallback
                 src={config.logoUrl}
                 alt={config.schoolName}
                 width={44}
                 height={44}
-                className="h-10 w-10 object-contain lg:h-11 lg:w-11"
+                className="h-10 w-10 rounded-full object-contain lg:h-14 lg:w-14"
               />
             </div>
             <div className="flex flex-col leading-tight">
-              {/* Full short name on xl+, acronym on lg-xl */}
-              <span className="hidden font-heading text-[17px] font-bold tracking-tight text-foreground xl:inline">
+              <span className="hidden font-heading text-[15px] font-bold uppercase tracking-[0.02em] text-primary xl:inline xl:text-[20px]">
                 {getShortName(config.schoolName)}
               </span>
-              <span className="hidden font-heading text-base font-bold tracking-tight text-foreground lg:inline xl:hidden">
+              <span className="hidden font-heading text-base font-bold tracking-tight text-primary lg:inline xl:hidden">
                 {getAcronym(config.schoolName)}
               </span>
-              <span className="hidden text-[10px] font-semibold uppercase tracking-[0.15em] text-primary/70 xl:inline">
-                {(config.schoolName ?? '').split(/\s+/).slice(2).join(' ')}
+              <span className="hidden text-[11px] font-semibold tracking-wide text-white/92 xl:inline">
+                {config.address}
               </span>
             </div>
           </Link>
@@ -205,7 +209,7 @@ export const Header = () => {
             <LanguageSwitcher />
             <Link
               href={admissionHref}
-              className="rounded-lg bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/30"
+              className="rounded-full bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-[#173B58] shadow-[0_10px_24px_rgba(242,195,24,0.35)] transition-all hover:-translate-y-0.5 hover:bg-primary-light"
             >
               {t('action.getAdmission')}
             </Link>
@@ -213,16 +217,17 @@ export const Header = () => {
 
           {/* Mobile: Logo text + Hamburger */}
           <div className="flex items-center gap-3 lg:hidden">
-            <span className="font-heading text-sm font-bold text-foreground">{getAcronym(config.schoolName)}</span>
+            <span className="font-heading text-sm font-bold text-primary">{getAcronym(config.schoolName)}</span>
             <button
               type="button"
               onClick={() => setIsDrawerOpen(true)}
-              className="rounded-lg p-2 text-foreground transition-colors hover:bg-muted"
+              className="rounded-full bg-white/8 p-2 text-white transition-colors hover:bg-white/14"
               aria-label="Open navigation menu"
             >
               <Menu className="h-5 w-5" />
             </button>
           </div>
+        </div>
         </div>
       </header>
 

@@ -10,6 +10,8 @@ import { useLanguage } from '@/frontend/providers/language-provider';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { PageHeader } from '@/components/shared/page-header';
 import { buildGoogleMapsEmbedUrl, cn } from '@/lib/utils';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // --- Schema ---
 
@@ -41,7 +43,7 @@ const ContactInfoItem = ({ icon: Icon, label, children }: { icon: typeof Phone; 
 
 export const ContactClient = () => {
   const { config } = useSiteConfig();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const {
@@ -81,12 +83,18 @@ export const ContactClient = () => {
   );
 
   const mapEmbedUrl = config.googleMapsEmbed || buildGoogleMapsEmbedUrl(config.address);
+  const pageSubtitle = resolveLocalizedSiteText(
+    config?.pageDescriptions?.contact,
+    SITE_DEFAULTS.pageDescriptions.contact,
+    'हामीसँग सम्पर्क गर्नुहोस्। हामी तपाईंको सन्देशको प्रतीक्षा गरिरहेका छौं।',
+    lang,
+  );
 
   return (
     <>
       <PageHeader
         title={t('heading.contactUs')}
-        subtitle={config?.pageDescriptions?.contact || ''}
+        subtitle={pageSubtitle}
         breadcrumbs={[{ label: t('heading.contactUs'), href: '/contact' }]}
       />
 
@@ -94,9 +102,9 @@ export const ContactClient = () => {
         <div className="grid gap-10 lg:grid-cols-2">
           {/* Contact Info + Map */}
           <div className="space-y-6">
-            <ContactInfoItem icon={MapPin} label="Address">{config.address}</ContactInfoItem>
-            <ContactInfoItem icon={Phone} label="Phone">{config.phones.join(', ')}</ContactInfoItem>
-            <ContactInfoItem icon={Mail} label="Email">{config.emails[0]}</ContactInfoItem>
+            <ContactInfoItem icon={MapPin} label={t('misc.address')}>{config.address}</ContactInfoItem>
+            <ContactInfoItem icon={Phone} label={t('form.phone')}>{config.phones.join(', ')}</ContactInfoItem>
+            <ContactInfoItem icon={Mail} label={t('form.email')}>{config.emails[0]}</ContactInfoItem>
             <ContactInfoItem icon={Clock} label={t('footer.officeHours')}>{config.officeHours}</ContactInfoItem>
 
             {config?.socialLinks && ( 
@@ -118,10 +126,10 @@ export const ContactClient = () => {
             {/* Google Maps */}
             <div className="aspect-[4/3] overflow-hidden rounded-xl border border-border">
               {mapEmbedUrl ? (
-                <iframe src={mapEmbedUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="School Location" />
+                <iframe src={mapEmbedUrl} width="100%" height="100%" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" title={t('misc.schoolLocation')} />
               ) : (
                 <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted-foreground">
-                  Add a Google Maps embed link in Site Config to show the live map here.
+                  {t('misc.mapPlaceholder')}
                 </div>
               )}
             </div>
@@ -129,7 +137,7 @@ export const ContactClient = () => {
 
           {/* Contact Form */}
           <div className="rounded-xl border border-border bg-card p-6 md:p-8">
-            <h2 className="font-heading text-2xl font-semibold">Send us a message</h2>
+            <h2 className="font-heading text-2xl font-semibold">{t('misc.sendMessage')}</h2>
             <div className="mt-2 h-[2px] w-8 rounded-full bg-primary/30" />
 
             {isSubmitted ? (
@@ -141,7 +149,7 @@ export const ContactClient = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium">{t('form.name')}</label>
-                  <input {...register('name')} className={inputClass(!!errors.name)} placeholder="Your name" />
+                  <input {...register('name')} className={inputClass(!!errors.name)} placeholder={t('misc.yourName')} />
                   {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name.message}</p>}
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -158,17 +166,17 @@ export const ContactClient = () => {
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium">{t('form.subject')}</label>
-                  <input {...register('subject')} className={inputClass(!!errors.subject)} placeholder="Subject" />
+                  <input {...register('subject')} className={inputClass(!!errors.subject)} placeholder={t('misc.subjectPlaceholder')} />
                   {errors.subject && <p className="mt-1 text-xs text-destructive">{errors.subject.message}</p>}
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium">{t('form.message')}</label>
-                  <textarea {...register('message')} rows={4} className={inputClass(!!errors.message)} placeholder="Your message..." />
+                  <textarea {...register('message')} rows={4} className={inputClass(!!errors.message)} placeholder={t('misc.messagePlaceholder')} />
                   {errors.message && <p className="mt-1 text-xs text-destructive">{errors.message.message}</p>}
                 </div>
                 {submitError && <p className="text-sm text-destructive">{submitError}</p>}
                 <button type="submit" disabled={isSubmitting} className="w-full rounded-md bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70">
-                  {isSubmitting ? 'Sending...' : t('action.submit')}
+                  {isSubmitting ? t('misc.sending') : t('action.submit')}
                 </button>
               </form>
             )}

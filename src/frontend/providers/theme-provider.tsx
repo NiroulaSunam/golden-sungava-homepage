@@ -79,17 +79,24 @@ export const CmsThemeInjector = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const root = document.documentElement.style;
-    const theme = config.theme || {
-      primaryColor: '#B8860B',
-      primaryLight: '#D4A017',
-      primaryDark: '#8B6508',
-      backgroundColor: '#FFFFFF',
-      foregroundColor: '#1A1A1A',
-      mutedColor: '#F5F3EF',
-      mutedForeground: '#6B6B6B',
-      accentColor: '#1A1A1A',
-      accentForeground: '#F5F3EF',
+    const fallbackTheme = {
+      primaryColor: '#F2C318',
+      primaryLight: '#FFD84D',
+      primaryDark: '#C79400',
+      backgroundColor: '#F4F7FB',
+      foregroundColor: '#12324A',
+      mutedColor: '#E3EBF4',
+      mutedForeground: '#4B6478',
+      accentColor: '#173B58',
+      accentForeground: '#F7FAFD',
     };
+    const rawTheme = config.theme || fallbackTheme;
+    const theme = rawTheme.primaryColor === '#B8860B'
+      ? fallbackTheme
+      : {
+          ...fallbackTheme,
+          ...rawTheme,
+        };
 
     root.setProperty('--cms-primary', theme.primaryColor);
     root.setProperty('--cms-primary-light', theme.primaryLight);

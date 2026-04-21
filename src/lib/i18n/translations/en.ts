@@ -28,6 +28,7 @@ export const en = {
   // Common actions
   'action.viewAll': 'View All',
   'action.readMore': 'Read More',
+  'action.learnMore': 'Learn More',
   'action.getAdmission': 'Get Admission',
   'action.contactUs': 'Contact Us',
   'action.download': 'Download',
@@ -81,6 +82,9 @@ export const en = {
   'footer.followUs': 'Follow Us',
   'footer.officeHours': 'Office Hours',
   'footer.copyright': 'All rights reserved.',
+  'footer.ctaHeading': 'Get In Touch',
+  'footer.ctaDescription': 'Ready to give your child the best education? Visit us or get in touch today.',
+  'footer.taglineText': 'Crafted with care for quality education',
 
   // Empty states
   'empty.noNews': 'No news articles available.',
@@ -100,6 +104,28 @@ export const en = {
   'misc.imageNotAvailable': 'Image not available',
   'misc.department': 'Department',
   'misc.all': 'All',
+  'misc.address': 'Address',
+  'misc.sendMessage': 'Send us a message',
+  'misc.schoolLocation': 'School Location',
+  'misc.mapPlaceholder': 'Add a Google Maps embed link in Site Config to show the live map here.',
+  'misc.yourName': 'Your name',
+  'misc.subjectPlaceholder': 'Subject',
+  'misc.messagePlaceholder': 'Your message...',
+  'misc.sending': 'Sending...',
+  'misc.qrMissing': 'QR card not added yet.',
+  'misc.paymentInstructionsMissing': 'Payment instructions have not been added yet.',
+  'misc.viewFullEventPage': 'View full event page',
+  'home.facilitiesSubtitle': 'World-class infrastructure for holistic development',
+  'home.activitiesSubtitle': 'Nurturing talent beyond the classroom',
+  'home.newsSubtitle': 'Stay informed about school happenings',
+  'home.eventsSubtitle': 'Mark your calendar for important dates',
+  'home.blogsSubtitle': 'Insights and stories from our school community',
+  'home.stats.studentsEnrolled': 'Students Enrolled',
+  'home.stats.expertTeachers': 'Expert Teachers',
+  'home.stats.yearsOfExcellence': 'Years of Excellence',
+  'home.stats.eventsPerYear': 'Events Per Year',
+  'page.paymentDescription': 'We kindly request you to pay the fees either online or by visiting the school.',
+  'page.galleryDescription': 'Explore moments from school life — events, celebrations, and everyday learning.',
 } as const;
 
 export type TranslationKey = keyof typeof en;

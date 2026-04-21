@@ -3,6 +3,7 @@
 import { GraduationCap, Users, Award, Calendar, type LucideIcon } from 'lucide-react';
 import { useInView } from '@/lib/hooks/use-in-view';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
+import { useLanguage } from '@/frontend/providers/language-provider';
 import { cn } from '@/lib/utils';
 
 // Map icon string names from CMS to Lucide components
@@ -47,24 +48,31 @@ const STAT_DELAYS = ['delay-100', 'delay-200', 'delay-300', 'delay-400'];
 export const StatsCounter = () => {
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { config } = useSiteConfig();
+  const { lang, t } = useLanguage();
   const statsList = Array.isArray(config?.stats) ? config.stats : [];
+  const statLabelMap: Record<string, string> = {
+    'Students Enrolled': t('home.stats.studentsEnrolled'),
+    'Expert Teachers': t('home.stats.expertTeachers'),
+    'Years of Excellence': t('home.stats.yearsOfExcellence'),
+    'Events Per Year': t('home.stats.eventsPerYear'),
+  };
 
   if (statsList.length === 0) {
     return null;
   }
 
   return (
-    <section ref={ref} className="relative overflow-hidden border-y border-border bg-card py-14 md:py-20">
+    <section ref={ref} className="relative overflow-hidden border-y border-border bg-card py-10 md:py-14">
       {/* Subtle gradient */}
       <div className="pointer-events-none absolute inset-0 bg-gold-gradient-subtle opacity-50" />
 
-      <div className="relative mx-auto grid max-w-5xl grid-cols-2 gap-8 px-4 md:grid-cols-4 md:gap-12 md:px-6">
+      <div className="relative mx-auto grid max-w-5xl grid-cols-2 gap-6 px-4 md:grid-cols-4 md:gap-8 md:px-6">
         {statsList.map((stat, i) => (
           <StatItem
             key={stat.label}
             icon={iconMap[stat.icon] || Award}
             value={stat.value}
-            label={stat.label}
+            label={lang === 'np' ? statLabelMap[stat.label] || stat.label : stat.label}
             delay={STAT_DELAYS[i] ?? 'delay-100'}
             isInView={isInView}
           />

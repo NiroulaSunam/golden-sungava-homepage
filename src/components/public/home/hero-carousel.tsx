@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { HeroSlide } from '@/types/api';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/frontend/providers/language-provider';
 
 // --- Sub-components ---
 
@@ -15,6 +16,15 @@ interface HeroSlideProps {
 }
 
 const HeroSlideItem = ({ slide, isActive, accentText }: HeroSlideProps) => (
+  <HeroSlideContent slide={slide} isActive={isActive} accentText={accentText} />
+);
+
+const HeroSlideContent = ({ slide, isActive, accentText }: HeroSlideProps) => {
+  const { t } = useLanguage();
+  const primaryCtaText = slide.ctaText?.trim() || t('action.learnMore');
+  const localizedPrimaryCta = primaryCtaText === 'Learn More' ? t('action.learnMore') : primaryCtaText;
+
+  return (
   <div
     className={cn(
       'absolute inset-0 transition-opacity duration-1000',
@@ -35,9 +45,9 @@ const HeroSlideItem = ({ slide, isActive, accentText }: HeroSlideProps) => (
       <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-20">
         <div className="max-w-2xl">
           {/* Decorative accent */}
-          <div className="hero-stagger-1 mb-6 flex items-center gap-3 opacity-0">
-            <div className="h-px w-8 bg-primary-light" />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary-light">
+          <div className="hero-stagger-1 mb-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/8 px-4 py-2 opacity-0 backdrop-blur-md">
+            <div className="h-px w-8 bg-primary" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-primary">
               {accentText}
             </span>
           </div>
@@ -55,17 +65,17 @@ const HeroSlideItem = ({ slide, isActive, accentText }: HeroSlideProps) => (
             {slide.ctaLink ? (
               <Link
                 href={slide.ctaLink}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-xl hover:shadow-primary/30 md:px-8 md:py-4 md:text-base"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-[#173B58] shadow-[0_18px_38px_rgba(242,195,24,0.35)] transition-all hover:-translate-y-0.5 hover:bg-primary-light md:px-8 md:py-4 md:text-base"
               >
-                {slide.ctaText || 'Learn More'}
+                {localizedPrimaryCta}
                 <ChevronRight className="h-4 w-4" />
               </Link>
             ) : null}
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-6 py-3.5 text-sm font-medium text-white transition-all hover:border-white/40 hover:bg-white/10 md:px-7 md:py-4 md:text-base"
+              className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-white/6 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:border-primary/40 hover:bg-white/10 md:px-7 md:py-4 md:text-base"
             >
-              Learn More
+              {t('action.learnMore')}
             </Link>
           </div>
         </div>
@@ -73,6 +83,7 @@ const HeroSlideItem = ({ slide, isActive, accentText }: HeroSlideProps) => (
     </div>
   </div>
 );
+};
 
 interface HeroIndicatorsProps {
   count: number;

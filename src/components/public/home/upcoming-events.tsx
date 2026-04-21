@@ -5,6 +5,8 @@ import { Clock, ArrowRight } from 'lucide-react';
 import type { SchoolEvent } from '@/types/api';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { useLanguage } from '@/frontend/providers/language-provider';
+import { SITE_DEFAULTS } from '@/lib/constants/site-defaults';
+import { resolveLocalizedSiteText } from '@/lib/i18n/site-text';
 
 // --- Sub-components ---
 
@@ -14,8 +16,8 @@ const DateBadge = ({ date }: { date: string }) => {
   const day = parsed.getDate();
 
   return (
-    <div className="flex h-[72px] w-[72px] shrink-0 flex-col items-center justify-center rounded-2xl bg-primary text-white shadow-md shadow-primary/20">
-      <span className="text-[10px] font-bold uppercase tracking-wider">{month}</span>
+    <div className="flex h-[68px] w-[68px] shrink-0 flex-col items-center justify-center rounded-2xl border border-primary/15 bg-[#173B58]/8 text-[#173B58] shadow-sm">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-primary-dark">{month}</span>
       <span className="font-heading text-2xl font-bold leading-tight">{day}</span>
     </div>
   );
@@ -28,7 +30,7 @@ interface EventCardProps {
 const EventCard = ({ event }: EventCardProps) => (
   <Link
     href={`/events/${event.id}`}
-    className="group flex gap-4 rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
+    className="group flex gap-3 rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-0.5"
   >
     <DateBadge date={event.date} />
     <div className="flex flex-1 flex-col justify-center">
@@ -56,7 +58,13 @@ interface UpcomingEventsProps {
 }
 
 export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
+  const localizedSubtitle = resolveLocalizedSiteText(
+    subtitle,
+    SITE_DEFAULTS.sectionSubtitles.upcomingEvents,
+    t('home.eventsSubtitle'),
+    lang,
+  );
 
   const eventsList = Array.isArray(events) ? events : [];
 
@@ -65,17 +73,17 @@ export const UpcomingEvents = ({ events, subtitle }: UpcomingEventsProps) => {
   }
 
   return (
-    <section className="relative overflow-hidden bg-muted py-16 md:py-24">
+    <section className="relative overflow-hidden bg-muted py-12 md:py-16">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,var(--cms-primary)_0%,transparent_50%)] opacity-[0.03]" />
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-6">
         <SectionHeading
           title={t('heading.upcomingEvents')}
-          subtitle={subtitle || 'Mark your calendar for important dates'}
+          subtitle={localizedSubtitle}
           viewAllHref="/events"
           viewAllLabel={t('action.viewAll')}
         />
-        <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
+        <div className="grid gap-3 md:grid-cols-2 lg:gap-4">
           {eventsList.slice(0, 4).map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
