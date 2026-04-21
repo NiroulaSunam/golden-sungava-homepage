@@ -39,11 +39,22 @@ const extractBilingualField = (field: unknown, lang: string): unknown => {
     // If it looks like bilingual structure (has 'en' or 'np' keys at top level)
     if ('en' in obj || 'np' in obj) {
       const selected = obj[lang];
+      
+      // Handle arrays (e.g., steps: { en: [...], np: [...] })
+      if (Array.isArray(selected) && selected.length > 0) {
+        return selected;
+      }
+      
+      // Handle strings (e.g., name: { en: "...", np: "..." })
       if (typeof selected === 'string' && selected.trim().length > 0) {
         return selected;
       }
 
+      // Fallback to English
       const english = obj.en;
+      if (Array.isArray(english)) {
+        return english;
+      }
       if (typeof english === 'string') {
         return english;
       }
