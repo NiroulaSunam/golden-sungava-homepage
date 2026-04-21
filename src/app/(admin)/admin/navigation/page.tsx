@@ -72,6 +72,7 @@ const NavigationPage = () => {
       toast.error(error);
     } else {
       toast.success(editItem ? 'Updated' : 'Created');
+      window.dispatchEvent(new Event('content-changed'));
       setFormOpen(false);
       setEditItem(null);
       fetchItems();
@@ -81,7 +82,11 @@ const NavigationPage = () => {
   const handleDelete = async (id: string) => {
     const { error } = await adminFetch(`/api/admin/navigation?id=${id}`, { method: 'DELETE' });
     if (error) toast.error(error);
-    else { toast.success('Deleted'); fetchItems(); }
+    else {
+      toast.success('Deleted');
+      window.dispatchEvent(new Event('content-changed'));
+      fetchItems();
+    }
   };
 
   const topLevel = items.filter((i) => !i.parent_id);

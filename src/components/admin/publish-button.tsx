@@ -80,7 +80,7 @@ export const PublishButton = () => {
         className="relative gap-1.5"
       >
         <Upload className="h-4 w-4" />
-        <span className="hidden sm:inline">Publish</span>
+        <span>Publish</span>
         {draftCount > 0 && (
           <Badge variant="destructive" className="ml-1 h-5 min-w-5 px-1 text-xs">
             {draftCount}
