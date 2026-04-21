@@ -22,6 +22,7 @@ import {
   MessageCircle,
   Inbox,
   ClipboardList,
+  FolderDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Events', href: '/admin/events', icon: <CalendarDays className="h-4 w-4" /> },
   { label: 'Blogs', href: '/admin/blogs', icon: <BookOpen className="h-4 w-4" /> },
   { label: 'Notices', href: '/admin/notices', icon: <Bell className="h-4 w-4" /> },
+  { label: 'Downloads', href: '/admin/downloads', icon: <FolderDown className="h-4 w-4" /> },
   { label: 'Staff', href: '/admin/staff', icon: <Users className="h-4 w-4" /> },
   { label: 'Facilities', href: '/admin/facilities', icon: <Building2 className="h-4 w-4" /> },
   { label: 'Activities', href: '/admin/activities', icon: <Trophy className="h-4 w-4" /> },

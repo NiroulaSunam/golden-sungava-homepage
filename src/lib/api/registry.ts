@@ -63,6 +63,12 @@ export const apiRegistry: Record<ApiEndpoint, EndpointConfig> = {
     mockKey: 'notices',
     description: 'Official school notices and announcements',
   },
+  downloads: {
+    implemented: true,
+    apiUrl: '/api/downloads',
+    mockKey: 'downloads',
+    description: 'Downloadable forms, prospectus, fee sheets, and school documents',
+  },
   staff: {
     implemented: true,
     apiUrl: '/api/staff',

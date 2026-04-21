@@ -8,6 +8,7 @@ export { newsRepository, type NewsInsert, type NewsRow } from './news.repository
 export { eventsRepository, type EventInsert, type EventRow } from './events.repository';
 export { blogsRepository, type BlogInsert, type BlogRow } from './blogs.repository';
 export { noticesRepository, type NoticeInsert, type NoticeRow } from './notices.repository';
+export { downloadsRepository, type DownloadInsert, type DownloadRow } from './downloads.repository';
 export { staffRepository, type StaffInsert, type StaffRow } from './staff.repository';
 export { facilitiesRepository, type FacilityInsert, type FacilityRow } from './facilities.repository';
 export { activitiesRepository, type ActivityInsert, type ActivityRow } from './activities.repository';

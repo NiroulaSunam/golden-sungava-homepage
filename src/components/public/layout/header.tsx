@@ -12,6 +12,7 @@ import type { NavItem } from '@/types/api';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
 import { LanguageSwitcher } from './language-switcher';
 import { MobileDrawer } from './mobile-drawer';
+import { getAdmissionHref } from '@/lib/admission';
 import { cn, getAcronym, getShortName } from '@/lib/utils';
 
 // --- Dropdown Sub-component ---
@@ -121,6 +122,7 @@ export const Header = () => {
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const admissionHref = getAdmissionHref(config);
 
   useEffect(() => {
     const load = async () => {
@@ -202,7 +204,7 @@ export const Header = () => {
             <InstallButton />
             <LanguageSwitcher />
             <Link
-              href="/admission"
+              href={admissionHref}
               className="rounded-lg bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/30"
             >
               {t('action.getAdmission')}
@@ -228,6 +230,7 @@ export const Header = () => {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         navItems={navItems}
+        admissionHref={admissionHref}
       />
     </>
   );

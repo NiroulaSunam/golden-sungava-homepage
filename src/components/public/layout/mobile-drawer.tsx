@@ -99,9 +99,10 @@ interface MobileDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   navItems: NavItem[];
+  admissionHref: string;
 }
 
-export const MobileDrawer = ({ isOpen, onClose, navItems }: MobileDrawerProps) => {
+export const MobileDrawer = ({ isOpen, onClose, navItems, admissionHref }: MobileDrawerProps) => {
   const { t } = useLanguage();
 
   // Close on escape key
@@ -153,7 +154,7 @@ export const MobileDrawer = ({ isOpen, onClose, navItems }: MobileDrawerProps) =
         {/* CTA + Install */}
         <div className="border-t border-border/50 p-4 space-y-3">
           <Link
-            href="/admission"
+            href={admissionHref}
             onClick={onClose}
             className="block w-full rounded-xl bg-primary py-3.5 text-center text-sm font-bold text-white shadow-md shadow-primary/20 transition-all hover:bg-primary-dark"
           >

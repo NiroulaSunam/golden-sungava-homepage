@@ -12,6 +12,7 @@ export type ApiEndpoint =
   | 'events'
   | 'blogs'
   | 'notices'
+  | 'downloads'
   | 'staff'
   | 'facilities'
   | 'activities'
@@ -55,6 +56,7 @@ export type { NewsArticle } from '@/mocks/data/news';
 export type { SchoolEvent } from '@/mocks/data/events';
 export type { BlogPost } from '@/mocks/data/blogs';
 export type { Notice } from '@/mocks/data/notices';
+export type { DownloadItem } from '@/mocks/data/downloads';
 export type { GalleryEvent, GalleryPhoto } from '@/mocks/data/gallery';
 export type { Facility } from '@/mocks/data/facilities';
 export type { Testimonial } from '@/mocks/data/testimonials';
@@ -131,4 +133,6 @@ export type SiteConfig = {
     ctaButtonText: string;
     tagline: string;
   };
+  admissionMode: 'internal' | 'external';
+  admissionExternalUrl: string;
 };

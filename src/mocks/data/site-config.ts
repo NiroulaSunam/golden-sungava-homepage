@@ -34,6 +34,8 @@ const shared = {
   currency: 'NPR',
   languages: ['en', 'np'],
   defaultLanguage: 'en',
+  admissionMode: 'internal' as const,
+  admissionExternalUrl: 'https://ingrails.com/school/admission/form/golden-sungava-school',
 };
 
 export const mockSiteConfig: Record<string, SiteConfig> = {

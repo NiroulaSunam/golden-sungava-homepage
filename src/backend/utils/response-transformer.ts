@@ -129,6 +129,8 @@ export const transformSiteConfigRow = (row: SiteConfigRow, lang: string = 'en'):
       notices: '',
     }),
     footer: parseJsonField(row.footer, { ctaHeading: '', ctaDescription: '', ctaButtonText: '', tagline: '' }),
+    admissionMode: row.admission_mode === 'external' ? 'external' : 'internal',
+    admissionExternalUrl: row.admission_external_url ?? '',
   };
 };
 

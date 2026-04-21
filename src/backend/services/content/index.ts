@@ -9,6 +9,7 @@ import {
   eventsRepository,
   blogsRepository,
   noticesRepository,
+  downloadsRepository,
   facilitiesRepository,
   activitiesRepository,
   testimonialsRepository,
@@ -24,6 +25,7 @@ import {
   eventsCreateSchema, eventsUpdateSchema,
   blogsCreateSchema, blogsUpdateSchema,
   noticesCreateSchema, noticesUpdateSchema,
+  downloadsCreateSchema, downloadsUpdateSchema,
   facilitiesCreateSchema, facilitiesUpdateSchema,
   activitiesCreateSchema, activitiesUpdateSchema,
   testimonialsCreateSchema, testimonialsUpdateSchema,
@@ -61,6 +63,13 @@ export const noticesService = createContentService({
   resourceName: 'notices',
   createSchema: noticesCreateSchema,
   updateSchema: noticesUpdateSchema,
+});
+
+export const downloadsService = createContentService({
+  repository: downloadsRepository,
+  resourceName: 'downloads',
+  createSchema: downloadsCreateSchema,
+  updateSchema: downloadsUpdateSchema,
 });
 
 export const facilitiesService = createContentService({

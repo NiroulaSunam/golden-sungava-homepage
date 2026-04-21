@@ -26,6 +26,8 @@ const SiteConfigPage = () => {
   const [facebookLink, setFacebookLink] = useState('');
   const [whatsappValue, setWhatsappValue] = useState('');
   const [messengerLink, setMessengerLink] = useState('');
+  const [admissionMode, setAdmissionMode] = useState<'internal' | 'external'>('internal');
+  const [admissionExternalUrl, setAdmissionExternalUrl] = useState('');
 
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,6 +48,8 @@ const SiteConfigPage = () => {
       setFacebookLink(typeof socialLinks.facebook === 'string' ? socialLinks.facebook : '');
       setWhatsappValue(typeof socialLinks.whatsapp === 'string' ? socialLinks.whatsapp : '');
       setMessengerLink(typeof socialLinks.messenger === 'string' ? socialLinks.messenger : '');
+      setAdmissionMode(config.admission_mode === 'external' ? 'external' : 'internal');
+      setAdmissionExternalUrl(typeof config.admission_external_url === 'string' ? config.admission_external_url : '');
       setLoaded(true);
     }
   }, [adminFetch, form]);
@@ -58,7 +62,10 @@ const SiteConfigPage = () => {
     void run();
   }, [loadConfig]);
 
-  const handleSubmit = form.handleSubmit(async (values) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const values = form.getValues();
     const payload = {
       ...values,
       established_year: Number.isFinite(values.established_year) ? values.established_year : null,
@@ -70,11 +77,22 @@ const SiteConfigPage = () => {
         whatsapp: whatsappValue.trim(),
         messenger: messengerLink.trim(),
       },
+      admission_mode: admissionMode,
+      admission_external_url: admissionExternalUrl.trim() || null,
     };
+
+    const validationResult = siteConfigUpdateSchema.safeParse(payload);
+
+    if (!validationResult.success) {
+      const firstIssue = validationResult.error.issues[0];
+      const fieldLabel = firstIssue?.path?.length ? firstIssue.path.join('.') : 'form';
+      toast.error(`Invalid field: ${fieldLabel}`);
+      return;
+    }
 
     const { error } = await adminFetch('/api/admin/site-config', {
       method: 'PUT',
-      body: JSON.stringify(payload),
+      body: JSON.stringify(validationResult.data),
     });
 
     if (error) {
@@ -82,9 +100,7 @@ const SiteConfigPage = () => {
     } else {
       toast.success('Site config saved');
     }
-  }, () => {
-    toast.error('Please fix the invalid fields before saving.');
-  });
+  };
 
   if (!loaded) {
     return <div className="py-8 text-center text-muted-foreground">Loading...</div>;
@@ -163,6 +179,36 @@ const SiteConfigPage = () => {
           <h2 className="text-lg font-medium">Content</h2>
           <BilingualInput name="hero_accent_text" label="Hero Accent Text" control={form.control} />
           <BilingualTextarea name="footer" label="Footer Content" control={form.control} />
+        </section>
+
+        <Separator />
+
+        <section className="space-y-4">
+          <h2 className="text-lg font-medium">Admission Routing</h2>
+          <div className="space-y-2">
+            <Label>Admission Form Destination</Label>
+            <select
+              value={admissionMode}
+              onChange={(event) => setAdmissionMode(event.target.value === 'external' ? 'external' : 'internal')}
+              disabled={isLoading}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
+              <option value="internal">Use website admission form</option>
+              <option value="external">Send users to external admission form</option>
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label>External Admission URL</Label>
+            <Input
+              value={admissionExternalUrl}
+              onChange={(event) => setAdmissionExternalUrl(event.target.value)}
+              placeholder="https://ingrails.com/school/admission/form/golden-sungava-school"
+              disabled={isLoading}
+            />
+            <p className="text-xs text-muted-foreground">
+              This URL is used only when the external destination is selected.
+            </p>
+          </div>
         </section>
 
         <div className="flex justify-end pt-4">

@@ -56,6 +56,14 @@ export const noticesCreateSchema = z.object({
 });
 export const noticesUpdateSchema = noticesCreateSchema.partial();
 
+export const downloadsCreateSchema = z.object({
+  title: bilingual,
+  description: bilingualOptional,
+  file_url: z.string().min(1, 'Required'),
+  sort_order: z.number().optional(),
+});
+export const downloadsUpdateSchema = downloadsCreateSchema.partial();
+
 // ─── Staff (non-bilingual) ────────────────────────────
 export const staffCreateSchema = z.object({
   name: z.string().min(1),
@@ -199,6 +207,8 @@ export const siteConfigUpdateSchema = z.object({
   page_descriptions: z.any().optional(),
   footer: z.any().optional(),
   seo: z.any().optional(),
+  admission_mode: z.enum(['internal', 'external']).optional(),
+  admission_external_url: z.string().nullable().optional(),
 }).partial();
 
 // ─── Principal Message (singleton) ────────────────────

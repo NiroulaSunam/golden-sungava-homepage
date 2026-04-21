@@ -6,6 +6,7 @@ import { WhatsAppIcon, MessengerIcon } from '@/components/shared/brand-icons';
 import { useSiteConfig } from '@/frontend/providers/site-config-provider';
 import { useLanguage } from '@/frontend/providers/language-provider';
 import { ImageWithFallback } from '@/components/shared/image-with-fallback';
+import { getAdmissionHref } from '@/lib/admission';
 
 // --- Sub-components ---
 
@@ -49,6 +50,7 @@ export const Footer = () => {
   const phones = Array.isArray(config?.phones) ? config.phones : [];
   const emails = Array.isArray(config?.emails) ? config.emails : [];
   const footer = config?.footer ?? {};
+  const admissionHref = getAdmissionHref(config);
 
   return (
     <footer className="relative">
@@ -115,7 +117,7 @@ export const Footer = () => {
               <ul className="space-y-2.5">
                 {[
                   { label: t('nav.about'), href: '/about' },
-                  { label: t('nav.admission'), href: '/admission' },
+                  { label: t('nav.admission'), href: admissionHref },
                   { label: t('nav.news'), href: '/news' },
                   { label: t('nav.contact'), href: '/contact' },
                   { label: t('nav.gallery'), href: '/gallery' },
