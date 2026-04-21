@@ -27,12 +27,8 @@ export abstract class ContentRepository<TInsert, TSelect> extends BaseRepository
    * The '*' fetches all non-JSONB columns; the aliased extractions
    * override the JSONB columns with flat strings.
    */
-  buildPublishedSelectString = (lang: Lang): string => {
-    if (this.bilingualColumns.length === 0) return '*';
-    const extractions = this.bilingualColumns
-      .map((col) => `${col}:${col}->>${lang}`)
-      .join(',');
-    return `*,${extractions}`;
+  buildPublishedSelectString = (_lang: Lang): string => {
+    return '*';
   };
 
   /**

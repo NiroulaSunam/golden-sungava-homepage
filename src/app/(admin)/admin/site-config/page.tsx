@@ -67,8 +67,14 @@ const SiteConfigPage = () => {
 
     const values = form.getValues();
     const payload = {
-      ...values,
+      school_name: values.school_name,
+      tagline: values.tagline,
+      logo_url: values.logo_url,
       established_year: Number.isFinite(values.established_year) ? values.established_year : null,
+      address: values.address,
+      office_hours: values.office_hours,
+      hero_accent_text: values.hero_accent_text,
+      footer: values.footer,
       phones: phonesInput.split(',').map((item) => item.trim()).filter(Boolean),
       emails: emailsInput.split(',').map((item) => item.trim()).filter(Boolean),
       google_maps_embed: googleMapsEmbed.trim(),

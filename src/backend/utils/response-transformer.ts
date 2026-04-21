@@ -38,7 +38,17 @@ const extractBilingualField = (field: unknown, lang: string): unknown => {
     
     // If it looks like bilingual structure (has 'en' or 'np' keys at top level)
     if ('en' in obj || 'np' in obj) {
-      return (obj[lang] ?? obj['en']) ?? '';
+      const selected = obj[lang];
+      if (typeof selected === 'string' && selected.trim().length > 0) {
+        return selected;
+      }
+
+      const english = obj.en;
+      if (typeof english === 'string') {
+        return english;
+      }
+
+      return english ?? selected ?? '';
     }
     
     // Otherwise it's a regular object, return as-is

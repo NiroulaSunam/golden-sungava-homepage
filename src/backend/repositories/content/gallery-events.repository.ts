@@ -15,18 +15,14 @@ class GalleryEventsRepository extends ContentRepository<GalleryEventInsert, Gall
    * Find gallery events with nested photos and videos using Supabase joins.
    */
   findWithMedia = async (
-    lang: Lang,
+    _lang: Lang,
     options?: PaginationOptions
   ): Promise<PaginatedResult<GalleryEventRow & { gallery_photos: unknown[]; gallery_videos: unknown[] }>> => {
     const page = options?.page || 1;
     const limit = options?.limit || 20;
     const offset = (page - 1) * limit;
 
-    const langExtractions = this.bilingualColumns
-      .map((col) => `${col}:${col}->>${lang}`)
-      .join(',');
-
-    const selectStr = `*,${langExtractions},gallery_photos(*, caption:caption->>${lang}),gallery_videos(*, title:title->>${lang})`;
+    const selectStr = '*,gallery_photos(*),gallery_videos(*)';
 
     let query = this.db
       .from(this.tableName)
