@@ -89,7 +89,7 @@ const NavigationPage = () => {
     }
   };
 
-  const topLevel = items.filter((i) => !i.parent_id);
+  const topLevel = items.filter((i) => !i.parent_id || !items.some((candidate) => candidate.id === i.parent_id));
   const childrenOf = (parentId: string) => items.filter((i) => i.parent_id === parentId);
 
   return (
@@ -106,6 +106,9 @@ const NavigationPage = () => {
           <div key={item.id}>
             <div className="flex items-center gap-2 rounded-md border p-3">
               <span className="flex-1 font-medium">{item.label?.en || '—'}</span>
+              {item.parent_id && !items.some((candidate) => candidate.id === item.parent_id) && (
+                <span className="rounded bg-amber-100 px-2 py-0.5 text-xs text-amber-700">Orphaned</span>
+              )}
               <span className="text-sm text-muted-foreground">{item.href}</span>
               <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}>
                 <Pencil className="h-3.5 w-3.5" />
