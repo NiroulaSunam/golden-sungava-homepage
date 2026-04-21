@@ -26,8 +26,8 @@ const SiteConfigPage = () => {
   const [facebookLink, setFacebookLink] = useState('');
   const [whatsappValue, setWhatsappValue] = useState('');
   const [messengerLink, setMessengerLink] = useState('');
-  const [admissionMode, setAdmissionMode] = useState<'internal' | 'external'>('internal');
-  const [admissionExternalUrl, setAdmissionExternalUrl] = useState('');
+  const [admissionMode, setAdmissionMode] = useState<'internal' | 'external'>('external');
+  const [admissionExternalUrl, setAdmissionExternalUrl] = useState('https://ingrails.com/school/admission/form/golden-sungava-school');
 
   const form = useForm({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -84,7 +84,7 @@ export const SITE_DEFAULTS: SiteConfig = {
     ctaButtonText: 'Contact Us',
     tagline: 'Crafted with care for quality education',
   },
-  admissionMode: 'internal',
+  admissionMode: 'external',
   admissionExternalUrl: 'https://ingrails.com/school/admission/form/golden-sungava-school',
 };
 

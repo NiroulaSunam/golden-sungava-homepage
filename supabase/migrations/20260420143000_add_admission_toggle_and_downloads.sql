@@ -1,10 +1,10 @@
 alter table public.site_config
-  add column if not exists admission_mode text default 'internal',
+  add column if not exists admission_mode text default 'external',
   add column if not exists admission_external_url text;
 
 update public.site_config
 set
-  admission_mode = coalesce(admission_mode, 'internal'),
+  admission_mode = 'external',
   admission_external_url = coalesce(
     admission_external_url,
     'https://ingrails.com/school/admission/form/golden-sungava-school'
